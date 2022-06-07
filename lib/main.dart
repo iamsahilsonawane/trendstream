@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
             appBarTheme: Theme.of(context)
                 .appBarTheme
                 .copyWith(color: Colors.grey[900])),
-        home: const HomePage(),
+        home: const LoginView(),
       ),
     );
   }
