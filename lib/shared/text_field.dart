@@ -6,7 +6,7 @@ class AppTextField extends StatelessWidget {
     this.controller,
     this.prefixIcon,
     this.hintText,
-    this.isPassword = true,
+    this.isPassword = false,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -19,12 +19,13 @@ class AppTextField extends StatelessWidget {
     return TextField(
       autofocus: false,
       controller: controller,
+      obscureText: isPassword,
       decoration: InputDecoration(
           hintText: hintText,
           border: InputBorder.none,
           filled: true,
           fillColor: Colors.grey[800],
-          prefixIcon: const Icon(Icons.email),
+          prefixIcon: prefixIcon,
           contentPadding: const EdgeInsets.all(14)),
     );
   }

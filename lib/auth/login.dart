@@ -28,6 +28,7 @@ class LoginView extends StatelessWidget {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Continue where you left off',
@@ -35,6 +36,14 @@ class LoginView extends StatelessWidget {
                         fontSize: 24,
                         color: Colors.grey[900],
                         fontWeight: FontWeight.bold),
+                  ),
+                  verticalSpaceSmall,
+                  Text(
+                    "Sign in to continue using the app",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
                   ),
                   verticalSpaceMedium,
                   Column(
