@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:latest_movies/shared/image.dart';
 import 'package:latest_movies/shared/text_field.dart';
 import 'package:latest_movies/utilities/design_utility.dart';
 import 'package:latest_movies/utils/responsive.dart';
@@ -26,7 +29,7 @@ class MyApp extends StatelessWidget {
             appBarTheme: Theme.of(context)
                 .appBarTheme
                 .copyWith(color: Colors.grey[900])),
-        home: const LoginView(),
+        home: const HomePage(),
       ),
     );
   }
@@ -92,7 +95,7 @@ class HomePage extends StatelessWidget {
                   crossAxisSpacing: 10.0,
                 ),
                 itemBuilder: (BuildContext context, int index) {
-                  return const Focus(autofocus: true, child: MovieTile());
+                  return Focus(autofocus: true, child: MovieTile(index));
                 },
               ),
             ),
@@ -104,25 +107,28 @@ class HomePage extends StatelessWidget {
 }
 
 class MovieTile extends StatelessWidget {
-  const MovieTile({
+  const MovieTile(
+    this.index, {
     Key? key,
   }) : super(key: key);
+
+  final int index;
 
   @override
   Widget build(BuildContext context) {
     /// Get the [BuildContext] of the currently-focused
     /// input field anywhere in the entire widget tree.
-    final focusedCtx = FocusManager.instance.primaryFocus!.context;
+    // final focusedCtx = FocusManager.instance.primaryFocus!.context;
 
     /// If u call [ensureVisible] while the keyboard is moving up
     /// (the keyboard's display animation does not yet finish), this
     /// will not work. U have to wait for the keyboard to be fully visible
-    Future.delayed(const Duration(milliseconds: 400))
-        .then((_) => Scrollable.ensureVisible(
-              focusedCtx!,
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeIn,
-            ));
+    // Future.delayed(const Duration(milliseconds: 400))
+    //     .then((_) => Scrollable.ensureVisible(
+    //           focusedCtx!,
+    //           duration: const Duration(milliseconds: 250),
+    //           curve: Curves.easeIn,
+    //         ));
     return GestureDetector(
       onTap: () {
         Focus.of(context).requestFocus();
@@ -146,19 +152,20 @@ class MovieTile extends StatelessWidget {
                     spreadRadius: 1,
                     offset: Offset(0, 1)),
               ]),
-              child: Image.network(
-                "https://m.media-amazon.com/images/M/MV5BMTkzNjEzMDEzMF5BMl5BanBnXkFtZTgwMDI0MjE4MjE@._V1_.jpg",
-                fit: BoxFit.cover,
+              child: AppImage(
+                imageUrl: "https://picsum.photos/id/${index + 20}/200/300",
               ),
             ),
             verticalSpaceMedium,
-            Text("Peaky Blinders",
-                style: TextStyle(
-                  fontSize: 18.0,
-                  color: Focus.of(context).hasPrimaryFocus
-                      ? Colors.black
-                      : Colors.white,
-                )),
+            Text(
+              "Peaky Blinders",
+              style: TextStyle(
+                fontSize: 18.0,
+                color: Focus.of(context).hasPrimaryFocus
+                    ? Colors.black
+                    : Colors.white,
+              ),
+            ),
             const SizedBox(height: 5),
             Text(
               "2022",
