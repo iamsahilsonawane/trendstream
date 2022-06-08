@@ -4,9 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/app/ui/auth/auth_viewmodel.dart';
 
 import '../../../router/router.dart';
+import '../../constants/constants.dart';
 import '../../utilities/app_utility.dart';
 import '../../utilities/design_utility.dart';
 import '../shared/button.dart';
+import '../shared/popups.dart';
 import '../shared/text_field.dart';
 
 class LoginView extends HookConsumerWidget {
@@ -110,6 +112,36 @@ class LoginView extends HookConsumerWidget {
                             ),
                             isPassword: true,
                             validator: AppUtils.passwordValidate,
+                          ),
+                        ],
+                      ),
+                      verticalSpaceMedium,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            child: const Text(
+                              "Forgot Password",
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                            onPressed: () async {
+                              final result =
+                                  await AppDialogs.showForgotPasswordDialog(
+                                      context);
+                              if (result != null) {
+                                if (result == AppStrings.emailSent) {
+                                  // ignore: use_build_context_synchronously
+                                  AppUtils.showSnackBar(context,
+                                      message: 'Email sent successfully!',
+                                      color: Colors.white,
+                                      icon: const Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                        size: 20,
+                                      ));
+                                }
+                              }
+                            },
                           ),
                         ],
                       ),

@@ -73,8 +73,7 @@ class AuthViewModel with ChangeNotifier {
 
   ///Forgot password (email reset)
   Future<void> sendPasswordResetEmail(String email) async {
-    await _stateCallback(() => authService.sendPasswordResetEmail(email: email),
-        showLoader: false);
+    await _stateCallback(() => authService.sendPasswordResetEmail(email: email), showLoader: false);
   }
 
   Future<void> logout() async {
