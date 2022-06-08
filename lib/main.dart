@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:latest_movies/routing/app_router.dart';
 import 'package:latest_movies/shared/image.dart';
 import 'package:latest_movies/shared/text_field.dart';
 import 'package:latest_movies/utilities/design_utility.dart';
@@ -29,14 +30,16 @@ class MyApp extends StatelessWidget {
             appBarTheme: Theme.of(context)
                 .appBarTheme
                 .copyWith(color: Colors.grey[900])),
-        home: const LoginView(),
+        // home: const LoginView(),
+        onGenerateRoute: AppRouter.onGenerateRoute,
+        navigatorKey: AppRouter.navigatorKey,
       ),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomeView extends StatelessWidget {
+  const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
