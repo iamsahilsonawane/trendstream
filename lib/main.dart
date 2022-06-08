@@ -1,14 +1,12 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:latest_movies/routing/app_router.dart';
-import 'package:latest_movies/shared/image.dart';
-import 'package:latest_movies/shared/text_field.dart';
-import 'package:latest_movies/utilities/design_utility.dart';
-import 'package:latest_movies/utils/responsive.dart';
 
-import 'auth/login.dart';
+import 'app/ui/shared/image.dart';
+import 'app/ui/shared/text_field.dart';
+import 'app/utilities/design_utility.dart';
+import 'app/utilities/responsive.dart';
+import 'router/router.dart';
 
 void main() {
   runApp(const MyApp());
@@ -153,7 +151,7 @@ class MovieTile extends StatelessWidget {
                     color: Colors.black.withOpacity(.4),
                     blurRadius: 5,
                     spreadRadius: 1,
-                    offset: Offset(0, 1)),
+                    offset: const Offset(0, 1)),
               ]),
               child: AppImage(
                 imageUrl: "https://picsum.photos/id/${index + 20}/200/300",
@@ -203,8 +201,8 @@ class DashboardSideBar extends StatelessWidget {
             controller: ScrollController(),
             children: <Widget>[
               ListTile(
-                leading: Icon(Icons.list),
-                title: Text(
+                leading: const Icon(Icons.list),
+                title: const Text(
                   'Home',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -215,8 +213,8 @@ class DashboardSideBar extends StatelessWidget {
                 // selectedColor: Colors.white,
               ),
               ListTile(
-                leading: Icon(Icons.list),
-                title: Text('Favorites'),
+                leading: const Icon(Icons.list),
+                title: const Text('Favorites'),
                 selected: false,
                 onTap: () {},
                 selectedTileColor: Colors.grey[800],
@@ -224,8 +222,8 @@ class DashboardSideBar extends StatelessWidget {
                 selectedColor: Colors.white,
               ),
               ListTile(
-                leading: Icon(Icons.list),
-                title: Text('Watchlist'),
+                leading: const Icon(Icons.list),
+                title: const Text('Watchlist'),
                 selected: false,
                 onTap: () {},
                 selectedTileColor: Colors.grey[800],
@@ -233,8 +231,8 @@ class DashboardSideBar extends StatelessWidget {
                 selectedColor: Colors.white,
               ),
               ListTile(
-                leading: Icon(Icons.list),
-                title: Text('Series'),
+                leading: const Icon(Icons.list),
+                title: const Text('Series'),
                 selected: false,
                 onTap: () {},
                 selectedTileColor: Colors.grey[800],
@@ -242,8 +240,8 @@ class DashboardSideBar extends StatelessWidget {
                 selectedColor: Colors.white,
               ),
               ListTile(
-                leading: Icon(Icons.exit_to_app),
-                title: Text('Logout'),
+                leading: const Icon(Icons.exit_to_app),
+                title: const Text('Logout'),
                 selected: false,
                 onTap: () {},
                 selectedTileColor: Colors.grey[800],

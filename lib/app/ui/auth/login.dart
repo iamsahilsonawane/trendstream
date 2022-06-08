@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:latest_movies/routing/app_router.dart';
-import 'package:latest_movies/routing/routes.dart';
-import 'package:latest_movies/utilities/app_utility.dart';
 
+import '../../../router/router.dart';
+import '../../utilities/app_utility.dart';
+import '../../utilities/design_utility.dart';
 import '../shared/button.dart';
 import '../shared/text_field.dart';
-import '../utilities/design_utility.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});

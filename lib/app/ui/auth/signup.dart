@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:latest_movies/utilities/app_utility.dart';
 
+import '../../utilities/app_utility.dart';
+import '../../utilities/design_utility.dart';
 import '../shared/button.dart';
 import '../shared/text_field.dart';
-import '../utilities/design_utility.dart';
 
 class SignUpView extends StatefulWidget {
   const SignUpView({super.key});

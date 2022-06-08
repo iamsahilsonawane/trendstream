@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:latest_movies/utilities/design_utility.dart';
 
 import '../constants/constants.dart';
 import 'dart:math' as math;
+
+import 'design_utility.dart';
 
 class AppUtils {
   static bool emailValidation(String value) {

@@ -1,10 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:latest_movies/auth/login.dart';
-import 'package:latest_movies/auth/signup.dart';
 import 'package:latest_movies/main.dart';
-import 'package:latest_movies/routing/routes.dart';
+import 'package:latest_movies/router/_routes.dart';
+
+import '../app/ui/auth/login.dart';
+import '../app/ui/auth/signup.dart';
 
 class AppRouter {
   static final navigatorKey = GlobalKey<NavigatorState>();
