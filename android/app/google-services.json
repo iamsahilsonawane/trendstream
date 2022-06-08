@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "448821587678",
+    "project_id": "latest-movies-cff93",
+    "storage_bucket": "latest-movies-cff93.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448821587678:android:fc122bd02311cb41ba5c4f",
+        "android_client_info": {
+          "package_name": "com.example.latest_movies"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "448821587678-g6rm08me4qkuhbduq0qisof21is6qplg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPDpJTBHRUkJfpemB6m4J1C344frwKjc8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "448821587678-g6rm08me4qkuhbduq0qisof21is6qplg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
