@@ -16,6 +16,8 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,8 +71,9 @@ class _LoginViewState extends State<LoginView> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        const AppTextField(
-                          prefixIcon: Icon(Icons.email, size: 18),
+                        AppTextField(
+                          controller: _emailController,
+                          prefixIcon: const Icon(Icons.email, size: 18),
                           validator: AppUtils.emailValidate,
                         ),
                       ],
@@ -87,8 +90,9 @@ class _LoginViewState extends State<LoginView> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        const AppTextField(
-                          prefixIcon: Icon(
+                        AppTextField(
+                          controller: _passwordController,
+                          prefixIcon: const Icon(
                             Icons.password,
                             size: 18,
                           ),
