@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/app/ui/auth/auth_viewmodel.dart';
+import 'package:latest_movies/router/_app_router.dart';
 
 import '../../utilities/app_utility.dart';
 import '../../utilities/design_utility.dart';
@@ -17,7 +19,20 @@ class SignUpView extends HookConsumerWidget {
     final passwordController = useTextEditingController();
     final confirmPasswordController = useTextEditingController();
 
+    final authModel = ref.watch(authVMProvider);
+
+    ref.listen<AuthViewModel>(authVMProvider, (_, model) async {
+      if (model.error != null) {
+        AppUtils.showSnackBar(context,
+            message: model.error.message.toString(),
+            color: Colors.white,
+            icon: const Icon(Icons.error, color: Colors.red, size: 20));
+        model.error = null;
+      }
+    });
+
     return Scaffold(
+      appBar: AppBar(),
       body: SizedBox(
         width: double.infinity,
         child: Form(
@@ -129,8 +144,15 @@ class SignUpView extends HookConsumerWidget {
                         width: double.infinity,
                         child: AppButton(
                           text: 'Continue',
+                          isLoading: authModel.isLoading,
                           onTap: () {
-                            formKey.currentState?.validate();
+                            if (formKey.currentState?.validate() ?? false) {
+                              authModel.signUpWithEmail(
+                                context,
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim(),
+                              );
+                            }
                           },
                         ),
                       ),
@@ -143,7 +165,7 @@ class SignUpView extends HookConsumerWidget {
                           )),
                           const SizedBox(width: 10),
                           Text(
-                            'Don\'t have an account? ',
+                            'Already have an account?',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[800],
@@ -160,8 +182,10 @@ class SignUpView extends HookConsumerWidget {
                       SizedBox(
                         width: double.infinity,
                         child: AppButton.secondary(
-                          text: 'Create an account',
-                          onTap: () {},
+                          text: 'Login',
+                          onTap: () {
+                            AppRouter.pop();
+                          },
                         ),
                       ),
                     ],

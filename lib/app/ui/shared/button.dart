@@ -5,6 +5,7 @@ class AppButton extends StatelessWidget {
     Key? key,
     required this.text,
     required this.onTap,
+    this.isLoading = false,
   })  : isPrimary = true,
         super(key: key);
 
@@ -12,10 +13,12 @@ class AppButton extends StatelessWidget {
     Key? key,
     required this.text,
     required this.onTap,
+    this.isLoading = false,
   })  : isPrimary = false,
         super(key: key);
 
   final bool isPrimary;
+  final bool isLoading;
   final String text;
   final VoidCallback onTap;
 
@@ -28,10 +31,21 @@ class AppButton extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         onPrimary: !isPrimary ? Colors.black : null,
       ),
-      child: Text(
-        text,
-        style: TextStyle(color: isPrimary ? Colors.white : Colors.black),
-      ),
+      child: isLoading
+          ? Center(
+              child: SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                valueColor: isPrimary
+                    ? const AlwaysStoppedAnimation(Colors.white)
+                    : AlwaysStoppedAnimation(Colors.grey[900]),
+            ),
+              ))
+          : Text(
+              text,
+              style: TextStyle(color: isPrimary ? Colors.white : Colors.black),
+            ),
     );
   }
 }

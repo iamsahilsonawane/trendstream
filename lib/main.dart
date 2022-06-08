@@ -1,15 +1,25 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/app/ui/auth/auth_viewmodel.dart';
+import 'package:latest_movies/app/ui/auth/login.dart';
 
+import 'app/ui/auth/auth_widget.dart';
 import 'app/ui/shared/image.dart';
 import 'app/ui/shared/text_field.dart';
 import 'app/utilities/design_utility.dart';
 import 'app/utilities/responsive.dart';
 import 'router/router.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -28,7 +38,14 @@ class MyApp extends StatelessWidget {
             appBarTheme: Theme.of(context)
                 .appBarTheme
                 .copyWith(color: Colors.grey[900])),
-        // home: const LoginView(),
+        home: Consumer(
+          builder: (context, ref, child) => AuthWidget(
+            nonSignedInBuilder: (_) => const LoginView(),
+            signedInBuilder: (_) {
+              return const HomeView();
+            },
+          ),
+        ),
         onGenerateRoute: AppRouter.onGenerateRoute,
         navigatorKey: AppRouter.navigatorKey,
       ),
@@ -187,6 +204,8 @@ class MovieTile extends StatelessWidget {
 class DashboardSideBar extends StatelessWidget {
   const DashboardSideBar({super.key});
 
+  
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -239,14 +258,18 @@ class DashboardSideBar extends StatelessWidget {
                 textColor: Colors.white,
                 selectedColor: Colors.white,
               ),
-              ListTile(
-                leading: const Icon(Icons.exit_to_app),
-                title: const Text('Logout'),
-                selected: false,
-                onTap: () {},
-                selectedTileColor: Colors.grey[800],
-                textColor: Colors.white,
-                selectedColor: Colors.white,
+              Consumer(
+                builder: (context, ref, child) => ListTile(
+                  leading: const Icon(Icons.exit_to_app),
+                  title: const Text('Logout'),
+                  selected: false,
+                  onTap: () {
+                    ref.read(authVMProvider).logout();
+                  },
+                  selectedTileColor: Colors.grey[800],
+                  textColor: Colors.white,
+                  selectedColor: Colors.white,
+                ),
               ),
             ],
           ),
