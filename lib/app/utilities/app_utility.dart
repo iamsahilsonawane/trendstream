@@ -1,10 +1,9 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
 import '../constants/constants.dart';
-import 'dart:math' as math;
-
 import 'design_utility.dart';
 
 class AppUtils {

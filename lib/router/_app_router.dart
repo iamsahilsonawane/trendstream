@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:latest_movies/main.dart';
-import 'package:latest_movies/router/_routes.dart';
+import '../main.dart';
+import '_routes.dart';
 
 import '../app/ui/auth/login.dart';
 import '../app/ui/auth/signup.dart';
