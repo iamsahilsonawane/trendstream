@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../router/router.dart';
 import '../../utilities/app_utility.dart';
@@ -6,24 +8,20 @@ import '../../utilities/design_utility.dart';
 import '../shared/button.dart';
 import '../shared/text_field.dart';
 
-class LoginView extends StatefulWidget {
+class LoginView extends HookConsumerWidget {
   const LoginView({super.key});
 
   @override
-  State<LoginView> createState() => _LoginViewState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final formKey = useMemoized(() => GlobalKey<FormState>());
+    final emailController = useTextEditingController();
+    final passwordController = useTextEditingController();
 
-class _LoginViewState extends State<LoginView> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(
         width: double.infinity,
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -71,7 +69,7 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         const SizedBox(height: 10),
                         AppTextField(
-                          controller: _emailController,
+                          controller: emailController,
                           prefixIcon: const Icon(Icons.email, size: 18),
                           validator: AppUtils.emailValidate,
                         ),
@@ -90,7 +88,7 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         const SizedBox(height: 10),
                         AppTextField(
-                          controller: _passwordController,
+                          controller: passwordController,
                           prefixIcon: const Icon(
                             Icons.password,
                             size: 18,
@@ -106,7 +104,7 @@ class _LoginViewState extends State<LoginView> {
                       child: AppButton(
                         text: 'Continue',
                         onTap: () {
-                          _formKey.currentState?.validate();
+                          formKey.currentState?.validate();
                         },
                       ),
                     ),

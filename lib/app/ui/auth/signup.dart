@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../utilities/app_utility.dart';
 import '../../utilities/design_utility.dart';
 import '../shared/button.dart';
 import '../shared/text_field.dart';
 
-class SignUpView extends StatefulWidget {
+class SignUpView extends HookConsumerWidget {
   const SignUpView({super.key});
 
   @override
-  State<SignUpView> createState() => _SignUpViewState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final formKey = useMemoized(() => GlobalKey<FormState>());
+    final emailController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final confirmPasswordController = useTextEditingController();
 
-class _SignUpViewState extends State<SignUpView> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: SizedBox(
         width: double.infinity,
         child: Form(
-          key: _formKey,
+          key: formKey,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,7 +70,7 @@ class _SignUpViewState extends State<SignUpView> {
                           ),
                           const SizedBox(height: 10),
                           AppTextField(
-                            controller: _emailController,
+                            controller: emailController,
                             prefixIcon: const Icon(Icons.email, size: 18),
                             validator: AppUtils.emailValidate,
                           ),
@@ -92,7 +89,7 @@ class _SignUpViewState extends State<SignUpView> {
                           ),
                           const SizedBox(height: 10),
                           AppTextField(
-                            controller: _passwordController,
+                            controller: passwordController,
                             prefixIcon: const Icon(
                               Icons.password,
                               size: 18,
@@ -115,7 +112,7 @@ class _SignUpViewState extends State<SignUpView> {
                           ),
                           const SizedBox(height: 10),
                           AppTextField(
-                            controller: _confirmPasswordController,
+                            controller: confirmPasswordController,
                             prefixIcon: const Icon(
                               Icons.password,
                               size: 18,
@@ -123,7 +120,7 @@ class _SignUpViewState extends State<SignUpView> {
                             isPassword: true,
                             validator: (text) =>
                                 AppUtils.passwordValidateWithEquality(
-                                    text, _passwordController.text),
+                                    text, passwordController.text),
                           ),
                         ],
                       ),
@@ -133,7 +130,7 @@ class _SignUpViewState extends State<SignUpView> {
                         child: AppButton(
                           text: 'Continue',
                           onTap: () {
-                            _formKey.currentState?.validate();
+                            formKey.currentState?.validate();
                           },
                         ),
                       ),
