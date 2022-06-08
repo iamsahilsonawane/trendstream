@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:latest_movies/routing/app_router.dart';
+import 'package:latest_movies/routing/routes.dart';
 import 'package:latest_movies/utilities/app_utility.dart';
 
 import '../shared/button.dart';
@@ -68,7 +70,6 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         const SizedBox(height: 10),
                         const AppTextField(
-
                           prefixIcon: Icon(Icons.email, size: 18),
                           validator: AppUtils.emailValidate,
                         ),
@@ -133,7 +134,9 @@ class _LoginViewState extends State<LoginView> {
                       width: double.infinity,
                       child: AppButton.secondary(
                         text: 'Create an account',
-                        onTap: () {},
+                        onTap: () {
+                          AppRouter.navigateToPage(Routes.signUpView);
+                        },
                       ),
                     ),
                   ],
