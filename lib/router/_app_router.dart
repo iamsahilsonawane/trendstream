@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import '../main.dart';
+import 'package:latest_movies/app/ui/movies/movie_details/movie_details.dart';
+import '../app/ui/movies/movies_dashboard/movies_dashboard.dart';
 import '_routes.dart';
 
 import '../app/ui/auth/login.dart';
@@ -61,6 +62,12 @@ class AppRouter {
       case Routes.homeView:
         return MaterialPageRoute<dynamic>(
           builder: (_) => const HomeView(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
+      case Routes.detailsView:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => const MovieDetailsView(),
           settings: settings,
           fullscreenDialog: false,
         );
