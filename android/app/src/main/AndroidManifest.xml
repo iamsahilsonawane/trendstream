@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.latest_movies">
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-feature android:name="android.software.leanback"
        android:required="false" />
    <uses-feature android:name="android.hardware.touchscreen"
@@ -8,6 +9,8 @@
         android:label="latest_movies"
         android:name="${applicationName}"
         android:banner="@drawable/banner"
+        android:usesCleartextTraffic="true"
+         
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
