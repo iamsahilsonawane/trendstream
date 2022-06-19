@@ -69,7 +69,7 @@ class HomeView extends StatelessWidget {
                   crossAxisSpacing: 10.0,
                 ),
                 itemBuilder: (BuildContext context, int index) {
-                  return Focus(autofocus: true, child: MovieTile(index));
+                  return Focus(autofocus: index == 0, child: MovieTile(index));
                 },
               ),
             ),
@@ -103,55 +103,77 @@ class MovieTile extends StatelessWidget {
     //           duration: const Duration(milliseconds: 250),
     //           curve: Curves.easeIn,
     //         ));
-    return GestureDetector(
-      onTap: () {
-        Focus.of(context).requestFocus();
-        AppRouter.navigateToPage(Routes.detailsView);
+    return Actions(
+      actions: {
+        ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) {
+          {
+            Focus.of(context).requestFocus();
+            AppRouter.navigateToPage(Routes.detailsView);
+          }
+        }),
+        ButtonActivateIntent:
+            CallbackAction<ButtonActivateIntent>(onInvoke: (_) {
+          {
+            Focus.of(context).requestFocus();
+            AppRouter.navigateToPage(Routes.detailsView);
+          }
+        }),
+        SelectIntent: CallbackAction<SelectIntent>(onInvoke: (_) {
+          {
+            AppRouter.navigateToPage(Routes.detailsView);
+          }
+        }), 
       },
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5.0),
-          color: Focus.of(context).hasPrimaryFocus
-              ? Colors.white
-              : Colors.transparent,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DecoratedBox(
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                    color: Colors.black.withOpacity(.4),
-                    blurRadius: 5,
-                    spreadRadius: 1,
-                    offset: const Offset(0, 1)),
-              ]),
-              child: AppImage(
-                imageUrl: "https://picsum.photos/id/${index + 20}/200/300",
+      child: GestureDetector(
+        onTap: () {
+          Focus.of(context).requestFocus();
+          AppRouter.navigateToPage(Routes.detailsView);
+        },
+        child: Container(
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5.0),
+            color: Focus.of(context).hasPrimaryFocus
+                ? Colors.white
+                : Colors.transparent,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              DecoratedBox(
+                decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(.4),
+                      blurRadius: 5,
+                      spreadRadius: 1,
+                      offset: const Offset(0, 1)),
+                ]),
+                child: AppImage(
+                  imageUrl: "https://picsum.photos/id/${index + 20}/200/300",
+                ),
               ),
-            ),
-            verticalSpaceMedium,
-            Text(
-              "Peaky Blinders",
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Focus.of(context).hasPrimaryFocus
-                    ? Colors.black
-                    : Colors.white,
+              verticalSpaceMedium,
+              Text(
+                "Peaky Blinders",
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Focus.of(context).hasPrimaryFocus
+                      ? Colors.black
+                      : Colors.white,
+                ),
               ),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              "2022",
-              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-            ),
-            const SizedBox(height: 5),
-            Text(
-              "Lorem ipsum",
-              style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-            ),
-          ],
+              const SizedBox(height: 5),
+              Text(
+                "2022",
+                style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                "Lorem ipsum",
+                style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+              ),
+            ],
+          ),
         ),
       ),
     );

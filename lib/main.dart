@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/app/ui/auth/login.dart';
+import 'package:latest_movies/app/ui/movies/movie_details/movie_details.dart';
 
 import 'app/ui/auth/auth_widget.dart';
 import 'app/ui/movies/movies_dashboard/movies_dashboard.dart';
@@ -12,9 +13,9 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -28,13 +29,15 @@ class MyApp extends StatelessWidget {
         LogicalKeySet(LogicalKeyboardKey.select): const ActivateIntent(),
       },
       child: MaterialApp(
+
         debugShowCheckedModeBanner: false,
         title: 'Latest Movies',
         theme: ThemeData.dark().copyWith(
+          platform: TargetPlatform.macOS,
             appBarTheme: Theme.of(context)
                 .appBarTheme
                 .copyWith(color: Colors.grey[900])),
-        home: Consumer(
+        home: true? MovieDetailsView() :Consumer(
           builder: (context, ref, child) => AuthWidget(
             nonSignedInBuilder: (_) => const LoginView(),
             signedInBuilder: (_) {
