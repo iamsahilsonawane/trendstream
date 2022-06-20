@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/router/_app_router.dart';
 
@@ -6,6 +7,7 @@ import '../../../../router/router.dart';
 import '../../../utilities/design_utility.dart';
 import '../../../utilities/responsive.dart';
 import '../../auth/auth_viewmodel.dart';
+import '../../shared/focus_widget.dart';
 import '../../shared/image.dart';
 import '../../shared/text_field.dart';
 
@@ -69,7 +71,7 @@ class HomeView extends StatelessWidget {
                   crossAxisSpacing: 10.0,
                 ),
                 itemBuilder: (BuildContext context, int index) {
-                  return Focus(autofocus: index == 0, child: MovieTile(index));
+                  return MovieTile(index, autofocus: index == 0);
                 },
               ),
             ),
@@ -83,10 +85,12 @@ class HomeView extends StatelessWidget {
 class MovieTile extends StatelessWidget {
   const MovieTile(
     this.index, {
+    this.autofocus = false,
     Key? key,
   }) : super(key: key);
 
   final int index;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -103,79 +107,74 @@ class MovieTile extends StatelessWidget {
     //           duration: const Duration(milliseconds: 250),
     //           curve: Curves.easeIn,
     //         ));
-    return Actions(
-      actions: {
-        ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) {
-          {
-            Focus.of(context).requestFocus();
-            AppRouter.navigateToPage(Routes.detailsView);
-          }
-        }),
-        ButtonActivateIntent:
-            CallbackAction<ButtonActivateIntent>(onInvoke: (_) {
-          {
-            Focus.of(context).requestFocus();
-            AppRouter.navigateToPage(Routes.detailsView);
-          }
-        }),
-        SelectIntent: CallbackAction<SelectIntent>(onInvoke: (_) {
-          {
-            AppRouter.navigateToPage(Routes.detailsView);
-          }
-        }), 
-      },
-      child: GestureDetector(
-        onTap: () {
-          Focus.of(context).requestFocus();
+    return FocusWidget(
+      autofocus: autofocus,
+      event: (event) {
+        if (event.logicalKey == LogicalKeyboardKey.select) {
           AppRouter.navigateToPage(Routes.detailsView);
-        },
-        child: Container(
-          padding: const EdgeInsets.all(10.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.0),
-            color: Focus.of(context).hasPrimaryFocus
-                ? Colors.white
-                : Colors.transparent,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              DecoratedBox(
-                decoration: BoxDecoration(boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withOpacity(.4),
-                      blurRadius: 5,
-                      spreadRadius: 1,
-                      offset: const Offset(0, 1)),
-                ]),
-                child: AppImage(
-                  imageUrl: "https://picsum.photos/id/${index + 20}/200/300",
+        }
+        // if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        //   Scrollable.ensureVisible(
+        //     context,
+        //     duration: const Duration(milliseconds: 250),
+        //     curve: Curves.easeIn,
+        //   );
+        // }
+      },
+      child: Builder(builder: (context) {
+        return GestureDetector(
+          onTap: () {
+            Focus.of(context).requestFocus();
+            AppRouter.navigateToPage(Routes.detailsView);
+          },
+          child: Container(
+            padding: const EdgeInsets.all(10.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.0),
+              color: Focus.of(context).hasPrimaryFocus
+                  ? Colors.white
+                  : Colors.transparent,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                DecoratedBox(
+                  decoration: BoxDecoration(boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withOpacity(.4),
+                        blurRadius: 5,
+                        spreadRadius: 1,
+                        offset: const Offset(0, 1)),
+                  ]),
+                  child: AppImage(
+                    imageUrl: "https://picsum.photos/id/${index + 20}/200/300",
+                  ),
                 ),
-              ),
-              verticalSpaceMedium,
-              Text(
-                "Peaky Blinders",
-                style: TextStyle(
-                  fontSize: 18.0,
-                  color: Focus.of(context).hasPrimaryFocus
-                      ? Colors.black
-                      : Colors.white,
+                verticalSpaceMedium,
+                Text(
+                  "Peaky Blinders",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    color: Focus.of(context).hasPrimaryFocus
+                        ? Colors.black
+                        : Colors.white,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                "2022",
-                style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                "Lorem ipsum",
-                style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-              ),
-            ],
+                const SizedBox(height: 5),
+                Text(
+                  "2022",
+                  style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  "Lorem ipsum",
+                  style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

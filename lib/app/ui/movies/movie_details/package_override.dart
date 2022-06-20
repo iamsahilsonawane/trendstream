@@ -422,12 +422,21 @@ class _MaterialDesktopControlsState1 extends State<MaterialDesktopControls1>
           );
     }
 
-    return FocusableActionDetector(
+    return FocusScope(
+      // onKey: (node, event) {
+      //   print(event.toString());
+      //   node.nextFocus();
+      //   return KeyEventResult.handled;
+      // },
+      node: FocusScopeNode(),
+
       onFocusChange: (bool isChildrenFocussed) {
         if (isChildrenFocussed) {
           _cancelTimer();
         } else {
+          print('isChildrenFocussed: $isChildrenFocussed');
           _cancelAndRestartTimer();
+          FocusScope.of(context).unfocus();
         }
       },
       child: MouseRegion(
@@ -440,6 +449,42 @@ class _MaterialDesktopControlsState1 extends State<MaterialDesktopControls1>
             absorbing: notifier.hideStuff,
             child: Stack(
               children: [
+                Positioned(
+                  left: 20,
+                  top: 20,
+                  child: AnimatedOpacity(
+                    opacity: widget.showPlayButton &&
+                            !_dragging &&
+                            !notifier.hideStuff
+                        ? 1.0
+                        : 0.0,
+                    duration: const Duration(milliseconds: 300),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.black54,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+
+                          // Always set the iconSize on the IconButton, not on the Icon itself:
+                          // https://github.com/flutter/flutter/issues/52980
+                          child: IconButton(
+                            focusColor: Colors.blue,
+                            iconSize: 32,
+                            icon: const Icon(Icons.arrow_back,
+                                color: Colors.white),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 if (_latestValue.isBuffering)
                   const Center(
                     child: CircularProgressIndicator(),
@@ -794,7 +839,7 @@ class _MaterialDesktopControlsState1 extends State<MaterialDesktopControls1>
           });
         }
       },
-      child: CenterPlayButton(
+      child: CenterPlayButton1(
         backgroundColor: Colors.black54,
         iconColor: Colors.white,
         isFinished: isFinished,
@@ -1020,6 +1065,61 @@ class _MaterialDesktopControlsState1 extends State<MaterialDesktopControls1>
               bufferedColor: Theme.of(context).backgroundColor.withOpacity(0.5),
               backgroundColor: Theme.of(context).disabledColor.withOpacity(.5),
             ),
+      ),
+    );
+  }
+}
+
+class CenterPlayButton1 extends StatelessWidget {
+  const CenterPlayButton1({
+    Key? key,
+    required this.backgroundColor,
+    this.iconColor,
+    required this.show,
+    required this.isPlaying,
+    required this.isFinished,
+    this.onPressed,
+  }) : super(key: key);
+
+  final Color backgroundColor;
+  final Color? iconColor;
+  final bool show;
+  final bool isPlaying;
+  final bool isFinished;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: AnimatedOpacity(
+        opacity: show ? 1.0 : 0.0,
+        duration: const Duration(milliseconds: 300),
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.black54,
+              shape: BoxShape.circle,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+
+              // Always set the iconSize on the IconButton, not on the Icon itself:
+              // https://github.com/flutter/flutter/issues/52980
+              child: IconButton(
+                focusColor: Colors.blue,
+                iconSize: 32,
+                icon: isFinished
+                    ? Icon(Icons.replay, color: iconColor)
+                    : AnimatedPlayPause(
+                        color: iconColor,
+                        playing: isPlaying,
+                      ),
+                onPressed: onPressed,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
