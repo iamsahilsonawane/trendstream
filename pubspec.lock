@@ -210,7 +210,7 @@ packages:
     description:
       path: "."
       ref: main
-      resolved-ref: "4fabceebbb1ac5f2703be414b73cedfeb8c4a114"
+      resolved-ref: adb13181f1264ba66cfd0713cf644adbdec6af96
       url: "https://github.com/iamsahilsonawane/focus_notifier.git"
     source: git
     version: "0.0.1"
