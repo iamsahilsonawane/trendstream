@@ -5,6 +5,7 @@ import 'package:latest_movies/app/ui/auth/login.dart';
 
 import 'app/ui/auth/auth_widget.dart';
 import 'app/ui/movies/movies_dashboard/movies_dashboard.dart';
+import 'app/ui/movies/player_view/player_view.dart';
 import 'router/router.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -34,18 +35,19 @@ class MyApp extends StatelessWidget {
             appBarTheme: Theme.of(context)
                 .appBarTheme
                 .copyWith(color: Colors.grey[900])),
-        home: Consumer(
-          builder: (context, ref, child) => AuthWidget(
-            nonSignedInBuilder: (_) => const LoginView(),
-            signedInBuilder: (_) {
-              return const HomeView();
-            },
-          ),
-        ),
+        home: true
+            ? PlayerView()
+            : Consumer(
+                builder: (context, ref, child) => AuthWidget(
+                  nonSignedInBuilder: (_) => const LoginView(),
+                  signedInBuilder: (_) {
+                    return const HomeView();
+                  },
+                ),
+              ),
         onGenerateRoute: AppRouter.onGenerateRoute,
         navigatorKey: AppRouter.navigatorKey,
       ),
     );
   }
 }
-
