@@ -40,9 +40,6 @@ class PlayerControls extends HookConsumerWidget {
               },
               child: FocusScope(
                 autofocus: true,
-                onFocusChange: (onFocussed) {
-                  //only get exec on first time focus to the decendant
-                },
                 child: Stack(
                   children: [
                     Align(
