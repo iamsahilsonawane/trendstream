@@ -21,107 +21,105 @@ class PlayerControls extends HookConsumerWidget {
     final sliderFocusNode =
         useFocusNode(canRequestFocus: false, skipTraversal: true);
 
-    return Positioned.fill(
-      child: AnimatedOpacity(
-        opacity: controlsModel.hideStuff ? 0.0 : 1.0,
-        duration: const Duration(milliseconds: 300),
-        child: MouseRegion(
-          onHover: (_) {
-            controlsModel.onHover();
-          },
-          child: Scaffold(
-            backgroundColor: Colors.black.withOpacity(0.5),
-            body: NotificationListener<FocusNotification>(
-              onNotification: (notification) {
-                debugPrint(
-                    "New widget focused: ${notification.childKey.toString()}");
-                controlsModel.showControlsNoCancel();
-                return true;
-              },
-              child: FocusScope(
-                autofocus: true,
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: const Alignment(-0.98, -0.95),
-                      child: FocusNotifier(
-                        key: const Key("navigateBack"),
-                        builder: (context, node) => IconButton(
-                          iconSize: 30,
-                          focusNode: node,
-                          focusColor: Colors.white.withOpacity(0.2),
-                          color: Colors.white,
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () => AppRouter.pop(),
-                        ),
+    return AnimatedOpacity(
+      opacity: controlsModel.hideStuff ? 0.0 : 1.0,
+      duration: const Duration(milliseconds: 300),
+      child: MouseRegion(
+        onHover: (_) {
+          controlsModel.onHover();
+        },
+        child: Scaffold(
+          backgroundColor: Colors.black.withOpacity(0.5),
+          body: NotificationListener<FocusNotification>(
+            onNotification: (notification) {
+              debugPrint(
+                  "New widget focused: ${notification.childKey.toString()}");
+              controlsModel.showControlsNoCancel();
+              return true;
+            },
+            child: FocusScope(
+              autofocus: true,
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: const Alignment(-0.98, -0.95),
+                    child: FocusNotifier(
+                      key: const Key("navigateBack"),
+                      builder: (context, node) => IconButton(
+                        iconSize: 30,
+                        focusNode: node,
+                        focusColor: Colors.white.withOpacity(0.2),
+                        color: Colors.white,
+                        icon: const Icon(Icons.arrow_back),
+                        onPressed: () => AppRouter.pop(),
                       ),
                     ),
-                    Align(
-                      alignment: const Alignment(0, 0.9),
-                      child: Column(
-                        children: [
-                          const Expanded(child: SizedBox()),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              FocusNotifier(
-                                key: const Key("seekBackward"),
-                                builder: (context, node) => IconButton(
-                                  focusNode: node,
-                                  iconSize: 30,
-                                  focusColor: Colors.white.withOpacity(0.2),
-                                  color: Colors.white,
-                                  onPressed: () {
-                                    controlsModel.seekBackward();
-                                  },
-                                  icon: const Icon(Icons.fast_rewind),
-                                ),
+                  ),
+                  Align(
+                    alignment: const Alignment(0, 0.9),
+                    child: Column(
+                      children: [
+                        const Expanded(child: SizedBox()),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FocusNotifier(
+                              key: const Key("seekBackward"),
+                              builder: (context, node) => IconButton(
+                                focusNode: node,
+                                iconSize: 30,
+                                focusColor: Colors.white.withOpacity(0.2),
+                                color: Colors.white,
+                                onPressed: () {
+                                  controlsModel.seekBackward();
+                                },
+                                icon: const Icon(Icons.fast_rewind),
                               ),
-                              FocusNotifier(
-                                key: const Key("playPause"),
-                                builder: (context, node) =>
-                                    buildPlaybackControl(
-                                        controlsModel.playingState,
-                                        controlsModel,
-                                        node),
-                              ),
-                              FocusNotifier(
-                                key: const Key("seekForward"),
-                                builder: (context, node) => IconButton(
-                                  iconSize: 30,
-                                  focusNode: node,
-                                  focusColor: Colors.white.withOpacity(0.2),
-                                  color: Colors.white,
-                                  onPressed: () {
-                                    controlsModel.seekForward();
-                                  },
-                                  icon: const Icon(Icons.fast_forward),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SliderTheme(
-                            data: Theme.of(context).sliderTheme.copyWith(
-                                  thumbShape: SliderComponentShape.noThumb,
-                                  trackHeight: 5,
-                                ),
-                            child: Slider(
-                              focusNode: sliderFocusNode,
-                              activeColor: Colors.redAccent,
-                              inactiveColor: Colors.white70,
-                              value: controlsModel.playbackPosition.inSeconds
-                                  .toDouble(),
-                              min: 0.0,
-                              max: vlcPlayerController.value.duration.inSeconds
-                                  .toDouble(),
-                              onChanged: (_) {},
                             ),
+                            FocusNotifier(
+                              key: const Key("playPause"),
+                              builder: (context, node) =>
+                                  buildPlaybackControl(
+                                      controlsModel.playingState,
+                                      controlsModel,
+                                      node),
+                            ),
+                            FocusNotifier(
+                              key: const Key("seekForward"),
+                              builder: (context, node) => IconButton(
+                                iconSize: 30,
+                                focusNode: node,
+                                focusColor: Colors.white.withOpacity(0.2),
+                                color: Colors.white,
+                                onPressed: () {
+                                  controlsModel.seekForward();
+                                },
+                                icon: const Icon(Icons.fast_forward),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SliderTheme(
+                          data: Theme.of(context).sliderTheme.copyWith(
+                                thumbShape: SliderComponentShape.noThumb,
+                                trackHeight: 5,
+                              ),
+                          child: Slider(
+                            focusNode: sliderFocusNode,
+                            activeColor: Colors.redAccent,
+                            inactiveColor: Colors.white70,
+                            value: controlsModel.playbackPosition.inSeconds
+                                .toDouble(),
+                            min: 0.0,
+                            max: vlcPlayerController.value.duration.inSeconds
+                                .toDouble(),
+                            onChanged: (_) {},
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
