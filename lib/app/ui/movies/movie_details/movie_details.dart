@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:latest_movies/app/ui/shared/button.dart';
 import 'package:latest_movies/app/ui/shared/default_app_padding.dart';
+import 'package:latest_movies/router/router.dart';
 
 
 import '../../../../router/router.dart';
@@ -140,17 +141,17 @@ class MovieDetailsView extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 10),
-                        // const Text(
-                        //   "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac urna quis ex eleifend tempus. In pharetra purus neque. Phasellus pulvinar justo at posuere iaculis. Aenean vulputate ac sem efficitur pretium. Sed viverra elit sed orci vestibulum ullamcorper. Donec tincidunt bibendum magna, ut mollis justo blandit ut. Vivamus eget ipsum augue. Donec condimentum felis augue, quis consequat est rhoncus sit amet. Sed dignissim ut nisi nec dictum. Integer mattis, purus gravida efficitur cursus, est mi auctor dui, eget maximus elit nisl a enim. Nunc vel tellus et nunc blandit porta. Mauris blandit nisi ut nulla tristique, nec feugiat ex molestie. \n\nUt aliquet lacinia libero, in aliquet ligula. Donec at aliquet felis. Proin metus enim, cursus nec sodales et, tincidunt id erat. Pellentesque pellentesque pulvinar tristique. Sed sed lacus metus. Suspendisse eros libero, viverra quis condimentum a, hendrerit vel dolor. Maecenas ultrices consectetur lacus commodo pulvinar. Nullam ultricies convallis aliquam. Nullam lorem felis, volutpat in malesuada sed, ullamcorper ut velit. Nam lobortis ornare quam, eget lacinia lorem convallis vitae. Duis et faucibus felis. Nunc fermentum scelerisque sapien, id molestie dui vehicula elementum. Sed a orci ut nisi vulputate facilisis. Fusce quis justo ut lectus scelerisque blandit quis quis sem. Morbi eget volutpat felis.",
-                        //   style: TextStyle(
-                        //     fontSize: 14.0,
-                        //     color: Colors.white,
-                        //     fontWeight: FontWeight.w300,
-                        //   ),
-                        // ),
+                        const Text(
+                          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac urna quis ex eleifend tempus. In pharetra purus neque. Phasellus pulvinar justo at posuere iaculis. Aenean vulputate ac sem efficitur pretium. Sed viverra elit sed orci vestibulum ullamcorper. Donec tincidunt bibendum magna, ut mollis justo blandit ut. Vivamus eget ipsum augue. \n\nUt aliquet lacinia libero, in aliquet ligula. Donec at aliquet felis. Proin metus enim, cursus nec sodales et, tincidunt id erat. Pellentesque pellentesque pulvinar tristique. Sed sed lacus metus. Suspendisse eros libero, viverra quis condimentum a, hendrerit vel dolor. Maecenas ultrices consectetur lacus commodo pulvinar. ",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
                         const Expanded(child: SizedBox()),
                         AppButton.secondary(text: "Watch Now", onTap: () {
-                          AppRouter.navigateToPage(Routes.playerView);
+                            AppRouter.navigateToPage(Routes.playerView);
                         }),
                       ],
                     ),
