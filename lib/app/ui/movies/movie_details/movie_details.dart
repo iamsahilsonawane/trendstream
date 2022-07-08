@@ -3,11 +3,13 @@ import 'package:latest_movies/app/ui/shared/button.dart';
 import 'package:latest_movies/app/ui/shared/default_app_padding.dart';
 import 'package:latest_movies/router/router.dart';
 
+
+import '../../../../router/router.dart';
 import '../../shared/image.dart';
 
 class MovieDetailsView extends StatelessWidget {
-  const MovieDetailsView({super.key});
 
+  const MovieDetailsView({super.key});
   final posterContainerHeight = 450.0;
   final trailerContainerHeight = 300.0;
 

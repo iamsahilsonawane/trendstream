@@ -1,16 +1,34 @@
-# latest_movies
+# Latest Movies
 
-A new Flutter project.
+This is the primary source for the Latest Movies flutter application. This is a private repo and does not contain any License.
 
-## Getting Started
+## Usage
 
-This project is a starting point for a Flutter application.
+Add git user as a collaborator and follow the steps to setup the project environment.
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+git clone "URL" && cd project_folder
+```
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Install the dependencies
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+flutter pub get
+```
+
+Run the project
+
+```bash
+flutter run
+```
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Follow the Github guide/workflow stated by [Sahil Sonawane]("https://github.com/iamsahilsonawane") (for commits, branch usage, no direct master commit and more)
+
+Please make sure to update tests as appropriate (IF ANY).
+
+## License
+
+No license (PRIVATE PROJECT)

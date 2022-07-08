@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:latest_movies/app/ui/movies/movie_details/movie_details.dart';
+import 'package:latest_movies/app/ui/movies/movie_details/player_view.dart';
 import '../app/ui/movies/movies_dashboard/movies_dashboard.dart';
 import '../app/ui/movies/player_view/player_view.dart';
 import '_routes.dart';
