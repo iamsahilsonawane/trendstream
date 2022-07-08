@@ -40,16 +40,14 @@ class MyApp extends StatelessWidget {
             appBarTheme: Theme.of(context)
                 .appBarTheme
                 .copyWith(color: Colors.grey[900])),
-        home: true
-            ? PlayerView()
-            : Consumer(
-                builder: (context, ref, child) => AuthWidget(
-                  nonSignedInBuilder: (_) => const LoginView(),
-                  signedInBuilder: (_) {
-                    return const HomeView();
-                  },
-                ),
-              ),
+        home: Consumer(
+          builder: (context, ref, child) => AuthWidget(
+            nonSignedInBuilder: (_) => const LoginView(),
+            signedInBuilder: (_) {
+              return const HomeView();
+            },
+          ),
+        ),
         onGenerateRoute: AppRouter.onGenerateRoute,
         navigatorKey: AppRouter.navigatorKey,
       ),

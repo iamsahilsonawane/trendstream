@@ -15,7 +15,7 @@ class _PlayerViewState extends State<PlayerView> {
   void initState() {
     super.initState();
     _videoPlayerController = VlcPlayerController.network(
-      'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
+      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
       hwAcc: HwAcc.full,
       autoPlay: false,
     );
