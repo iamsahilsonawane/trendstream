@@ -16,12 +16,12 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
 
   // Pass all uncaught errors from the framework to Crashlytics.
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
             appBarTheme: Theme.of(context)
                 .appBarTheme
                 .copyWith(color: Colors.grey[900])),
-        home: true? HomeView() :Consumer(
+        home: true? PlayerView() :Consumer(
           builder: (context, ref, child) => AuthWidget(
             nonSignedInBuilder: (_) => const LoginView(),
             signedInBuilder: (_) {

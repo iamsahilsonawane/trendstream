@@ -14,7 +14,17 @@ class PlayerControlsNotifier extends ChangeNotifier {
     init.call();
   }
 
+  ///Main init function
+  Future<void> init() async {
+    playingState = vlcPlayerController.value.playingState;
+    vlcPlayerController.addListener(_updatesListener);
+  }
+
   final VlcPlayerController vlcPlayerController;
+  String duration = "00:00";
+
+  // ---- Getters & Setters ----
+
   Timer? _hideTimer;
   bool _hideStuff = false;
   bool get hideStuff => _hideStuff;
@@ -22,27 +32,6 @@ class PlayerControlsNotifier extends ChangeNotifier {
     if (newVal == _hideStuff) return;
     _hideStuff = newVal;
     notifyListeners();
-  }
-
-  void _startHideTimer() {
-    const hideControlsTimer = Duration(seconds: 2);
-    _hideTimer = Timer(hideControlsTimer, () {
-      hideStuff = true;
-    });
-  }
-
-  void _cancelAndRestartTimer() {
-    _hideTimer?.cancel();
-    hideStuff = false;
-    _startHideTimer();
-  }
-
-  Future<void> init() async {
-    playingState = vlcPlayerController.value.playingState;
-    vlcPlayerController.addListener(() {
-      playingState = vlcPlayerController.value.playingState;
-      playbackPosition = vlcPlayerController.value.position;
-    });
   }
 
   PlayingState _playingState = PlayingState.initializing;
@@ -60,6 +49,50 @@ class PlayerControlsNotifier extends ChangeNotifier {
     _playbackPosition = newState;
     notifyListeners();
   }
+  // ---- Getters & Setters END ----
+
+
+  // ---- Helper Methods ----
+
+  void _startHideTimer() {
+    const hideControlsTimer = Duration(seconds: 2);
+    _hideTimer = Timer(hideControlsTimer, () {
+      hideStuff = true;
+    });
+  }
+
+  void _cancelAndRestartTimer() {
+    _hideTimer?.cancel();
+    hideStuff = false;
+    _startHideTimer();
+  }
+
+  Future<void> _updatesListener() async {
+    //not using setter for all as it would call notifyListeners() each time
+    _playingState = vlcPlayerController.value.playingState;
+    _playbackPosition = vlcPlayerController.value.position;
+    duration = _formatDurationToString(vlcPlayerController.value.duration);
+    notifyListeners();
+  }
+
+  ///Formats duration for the player
+  _formatDurationToString(Duration oDuration) {
+    if (oDuration.inHours == 0) {
+      var strDuration = oDuration.toString().split('.')[0];
+      return "${strDuration.split(':')[1]}:${strDuration.split(':')[2]}";
+    } else {
+      return oDuration.toString().split('.')[0];
+    }
+  }
+  
+  void onHover() {
+    _cancelAndRestartTimer();
+  }
+
+  // ---- Helper Methods END ----
+
+
+  // ---- Public Methods ----
 
   Future<void> play() {
     _cancelAndRestartTimer();
@@ -100,12 +133,10 @@ class PlayerControlsNotifier extends ChangeNotifier {
     return _seekRelative(Duration(seconds: -(seconds.abs())));
   }
 
-  void onHover() {
-    _cancelAndRestartTimer();
-  }
-
   void showControlsNoCancel() {
     if (_hideTimer?.isActive ?? false) _hideTimer!.cancel();
     _hideStuff = false;
   }
+
+  // ---- Public Methods END ----
 }

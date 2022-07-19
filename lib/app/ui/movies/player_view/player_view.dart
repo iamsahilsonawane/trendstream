@@ -15,9 +15,28 @@ class _PlayerViewState extends State<PlayerView> {
   void initState() {
     super.initState();
     _videoPlayerController = VlcPlayerController.network(
-      'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+      'https://media.w3.org/2010/05/sintel/trailer.mp4',
       hwAcc: HwAcc.full,
       autoPlay: false,
+      options: VlcPlayerOptions(
+        advanced: VlcAdvancedOptions([
+          VlcAdvancedOptions.networkCaching(2000),
+        ]),
+        subtitle: VlcSubtitleOptions([
+          VlcSubtitleOptions.boldStyle(true),
+          VlcSubtitleOptions.fontSize(30),
+          VlcSubtitleOptions.outlineColor(VlcSubtitleColor.yellow),
+          VlcSubtitleOptions.outlineThickness(VlcSubtitleThickness.normal),
+          // works only on externally added subtitles
+          VlcSubtitleOptions.color(VlcSubtitleColor.navy),
+        ]),
+        http: VlcHttpOptions([
+          VlcHttpOptions.httpReconnect(true),
+        ]),
+        rtp: VlcRtpOptions([
+          VlcRtpOptions.rtpOverRtsp(true),
+        ]),
+      ),
     );
   }
 
@@ -42,6 +61,7 @@ class _PlayerViewState extends State<PlayerView> {
                 aspectRatio: 16 / 9,
                 placeholder: const Center(child: CircularProgressIndicator()),
               ),
+              // child: Center()
             ),
           ),
           Positioned.fill(
