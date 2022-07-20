@@ -58,7 +58,22 @@ class PlayerControls extends HookConsumerWidget {
     final upCounter = useRef(0);
     final downCounter = useRef(0);
 
+    final isSubtitlesAdded = useRef(false);
+
     useEffect(() {
+      subtitlesInitListener() async {
+        await vlcPlayerController.addSubtitleFromNetwork(
+            "https://gist.githubusercontent.com/iamsahilsonawane/7ea2c530d96dd4837f27527a6f31aed9/raw/9959e9e37d72195e642130bd0dcc6b8d81420ae5/test.srt");
+        await vlcPlayerController.setSpuTrack(0);
+      }
+
+      vlcPlayerController.addOnInitListener(subtitlesInitListener);
+      focusScopeNode.addListener(() {
+        if (focusScopeNode.hasFocus) {
+          log("Focus Scope Node has focus");
+          controlsModel.hideStuff = false;
+        }
+      });
       sliderFocusNode.addListener(() {
         if (sliderFocusNode.hasPrimaryFocus) {
           controlsModel.hideStuff = false;
@@ -66,6 +81,7 @@ class PlayerControls extends HookConsumerWidget {
       });
       return () {
         sliderFocusNode.dispose();
+        vlcPlayerController.removeOnInitListener(subtitlesInitListener);
       };
     }, [sliderFocusNode]);
 
@@ -219,99 +235,34 @@ class PlayerControls extends HookConsumerWidget {
                                       max: vlcPlayerController
                                           .value.duration.inSeconds
                                           .toDouble(),
-                                      onChangeStart: (_) {
-                                        log("onChangeStart");
-                                      },
-                                      onChanged: (_) {
-                                        log("calling onchange");
-                                      },
-                                      onChangeEnd: (_) {
-                                        log("onChangeEnd");
-                                      },
+                                      onChanged: (_) {},
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            horizontalSpaceSmall,
+                            // horizontalSpaceSmall,
                             Text(
                               controlsModel.duration,
                               style: const TextStyle(color: Colors.white),
                             ),
+                            horizontalSpaceSmall,
                           ],
                         ),
                         Row(
                           children: [
-                            Stack(
-                              children: [
-                                IconButton(
-                                  tooltip: 'Get Subtitle Tracks',
-                                  icon: const Icon(Icons.closed_caption),
-                                  color: Colors.white,
-                                  onPressed: () => _getSubtitleTracks(context),
-                                ),
-                                Positioned(
-                                  top: 8,
-                                  right: 8,
-                                  child: IgnorePointer(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.orange,
-                                        borderRadius: BorderRadius.circular(1),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 1,
-                                        horizontal: 2,
-                                      ),
-                                      child: Text(
-                                        vlcPlayerController.value.spuTracksCount
-                                            .toString(),
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            IconButton(
+                              tooltip: 'Get Subtitle Tracks',
+                              icon: const Icon(Icons.closed_caption),
+                              color: Colors.white,
+                              onPressed: () => _getSubtitleTracks(
+                                  context, isSubtitlesAdded.value),
                             ),
-                            Stack(
-                              children: [
-                                IconButton(
-                                  tooltip: 'Get Audio Tracks',
-                                  icon: const Icon(Icons.audiotrack),
-                                  color: Colors.white,
-                                  onPressed: () => _getAudioTracks(context),
-                                ),
-                                Positioned(
-                                  top: 8,
-                                  right: 8,
-                                  child: IgnorePointer(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.orange,
-                                        borderRadius: BorderRadius.circular(1),
-                                      ),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 1,
-                                        horizontal: 2,
-                                      ),
-                                      child: Text(
-                                        vlcPlayerController
-                                            .value.audioTracksCount
-                                            .toString(),
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            IconButton(
+                              tooltip: 'Get Audio Tracks',
+                              icon: const Icon(Icons.audiotrack),
+                              color: Colors.white,
+                              onPressed: () => _getAudioTracks(context),
                             ),
                           ],
                         )
@@ -327,10 +278,11 @@ class PlayerControls extends HookConsumerWidget {
     );
   }
 
-  void _getSubtitleTracks(BuildContext context) async {
+  void _getSubtitleTracks(BuildContext context, bool isSubtitlesAdded) async {
     if (!vlcPlayerController.value.isPlaying) return;
 
     var subtitleTracks = await vlcPlayerController.getSpuTracks();
+    log("Found Subtitle Tracks: ${subtitleTracks.length}");
 
     if (subtitleTracks.isNotEmpty) {
       var selectedSubId = await showDialog(
@@ -372,7 +324,7 @@ class PlayerControls extends HookConsumerWidget {
   }
 
   void _getAudioTracks(BuildContext context) async {
-    if (!vlcPlayerController.value.isPlaying) return;
+    // if (!vlcPlayerController.value.isPlaying) return;
 
     var audioTracks = await vlcPlayerController.getAudioTracks();
 
