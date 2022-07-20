@@ -75,7 +75,7 @@ class PlayerControls extends HookConsumerWidget {
         }
       });
       sliderFocusNode.addListener(() {
-        if (sliderFocusNode.hasPrimaryFocus) {
+        if (sliderFocusNode.hasFocus) {
           controlsModel.hideStuff = false;
         } else {}
       });

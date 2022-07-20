@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:latest_movies/router/_app_router.dart';
 
 import '../../../../router/router.dart';
 import '../../../utilities/design_utility.dart';
 import '../../../utilities/responsive.dart';
-import '../../auth/auth_viewmodel.dart';
 import '../../shared/focus_widget.dart';
 import '../../shared/image.dart';
 import '../../shared/text_field.dart';
@@ -240,7 +238,7 @@ class DashboardSideBar extends StatelessWidget {
                   title: const Text('Logout'),
                   selected: false,
                   onTap: () {
-                    ref.read(authVMProvider).logout();
+                    // ref.read(authVMProvider).logout();
                   },
                   selectedTileColor: Colors.grey[800],
                   textColor: Colors.white,

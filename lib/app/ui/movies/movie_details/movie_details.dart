@@ -16,7 +16,8 @@ class MovieDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -26,7 +27,7 @@ class MovieDetailsView extends StatelessWidget {
               height: posterContainerHeight,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+              children: [
                   SizedBox(
                     height: posterContainerHeight - 40,
                     width: 250,
@@ -197,7 +198,7 @@ class MovieDetailsView extends StatelessWidget {
                     itemCount: 5,
                     scrollDirection: Axis.horizontal,
                     separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(width: 10);
+                      return const SizedBox(width: 10);
                     },
                   )),
                 ],
