@@ -92,19 +92,6 @@ class MovieTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// Get the [BuildContext] of the currently-focused
-    /// input field anywhere in the entire widget tree.
-    // final focusedCtx = FocusManager.instance.primaryFocus!.context;
-
-    /// If u call [ensureVisible] while the keyboard is moving up
-    /// (the keyboard's display animation does not yet finish), this
-    /// will not work. U have to wait for the keyboard to be fully visible
-    // Future.delayed(const Duration(milliseconds: 400))
-    //     .then((_) => Scrollable.ensureVisible(
-    //           focusedCtx!,
-    //           duration: const Duration(milliseconds: 250),
-    //           curve: Curves.easeIn,
-    //         ));
     return FocusWidget(
       autofocus: autofocus,
       event: (event) {
