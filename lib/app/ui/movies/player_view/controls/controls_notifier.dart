@@ -19,6 +19,16 @@ class PlayerControlsNotifier extends ChangeNotifier {
   Future<void> init() async {
     playingState = vlcPlayerController.value.playingState;
     vlcPlayerController.addListener(_updatesListener);
+    if (vlcPlayerController.autoPlay) {
+      _cancelAndRestartTimer();
+    }
+  }
+
+  @override
+  void dispose() {
+    vlcPlayerController.removeListener(_updatesListener);
+    _hideTimer?.cancel();
+    super.dispose();
   }
 
   final VlcPlayerController vlcPlayerController;
@@ -55,9 +65,11 @@ class PlayerControlsNotifier extends ChangeNotifier {
   // ---- Helper Methods ----
 
   void _startHideTimer() {
-    const hideControlsTimer = Duration(seconds: 2);
+    const hideControlsTimer = Duration(seconds: 4);
+    log("_startHideTimer");
     _hideTimer = Timer(hideControlsTimer, () {
       hideStuff = true;
+      log("Timer complete");
     });
   }
 
@@ -78,11 +90,19 @@ class PlayerControlsNotifier extends ChangeNotifier {
     _playbackPosition = vlcPlayerController.value.position;
     duration = _formatDurationToString(vlcPlayerController.value.duration);
     log("Playing State: ${describeEnum(_playingState)}");
-    if (_playingState == PlayingState.stopped ||
-        _playingState == PlayingState.ended) {
+    if (playingState == PlayingState.ended) {
       log("Video has been ended / stopped. Cancelling timer");
       stopTimer();
     }
+    // } else if (_playingState == PlayingState.playing) {
+    //   log("Video is playing. Starting timer");
+    //   if (!_hideStuff) {
+    //     _startHideTimer();
+    //   }
+    // } else if (_playingState == PlayingState.paused) {
+    //   log("Video is paused. Cancelling timer");
+    //   stopTimer();
+    // }
     notifyListeners();
   }
 
@@ -97,7 +117,10 @@ class PlayerControlsNotifier extends ChangeNotifier {
   }
 
   void onHover() {
-    _cancelAndRestartTimer();
+    if (vlcPlayerController.value.playingState != PlayingState.stopped &&
+        vlcPlayerController.value.playingState != PlayingState.ended) {
+      _cancelAndRestartTimer();
+    }
   }
 
   // ---- Helper Methods END ----

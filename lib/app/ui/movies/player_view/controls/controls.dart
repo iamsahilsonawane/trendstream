@@ -94,182 +94,192 @@ class PlayerControls extends HookConsumerWidget {
         },
         child: Scaffold(
           backgroundColor: Colors.black.withOpacity(0.5),
-          body: NotificationListener<FocusNotification>(
-            onNotification: (notification) {
-              debugPrint(
-                  "New widget focused: ${notification.childKey.toString()}");
-              // controlsModel.stopTimer();
-              return true;
+          body: RawKeyboardListener(
+            focusNode: FocusNode(canRequestFocus: false),
+            onKey: (event) {
+              log("event: ${event.logicalKey}");
+              controlsModel
+                  .onHover(); //restart the timer if any item is focused
             },
-            child: FocusScope(
-              autofocus: true,
-              node: focusScopeNode,
-              child: Stack(
-                children: [
-                  Align(
-                    alignment: const Alignment(-0.98, -0.95),
-                    child: FocusNotifier(
-                      key: const Key("navigateBack"),
-                      builder: (context, node) => IconButton(
-                        autofocus: true,
-                        iconSize: 30,
-                        focusNode: node,
-                        focusColor: Colors.white.withOpacity(0.2),
-                        color: Colors.white,
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: () => AppRouter.pop(),
+            child: NotificationListener<FocusNotification>(
+              onNotification: (notification) {
+                debugPrint(
+                    "New widget focused: ${notification.childKey.toString()}");
+                // controlsModel
+                //     .onHover(); //restart the timer if any item is focused
+                return true;
+              },
+              child: FocusScope(
+                autofocus: true,
+                node: focusScopeNode,
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: const Alignment(-0.98, -0.95),
+                      child: FocusNotifier(
+                        key: const Key("navigateBack"),
+                        builder: (context, node) => IconButton(
+                          autofocus: true,
+                          iconSize: 30,
+                          focusNode: node,
+                          focusColor: Colors.white.withOpacity(0.2),
+                          color: Colors.white,
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => AppRouter.pop(),
+                        ),
                       ),
                     ),
-                  ),
-                  Align(
-                    alignment: const Alignment(0, 0.9),
-                    child: Column(
-                      children: [
-                        const Expanded(child: SizedBox()),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            FocusNotifier(
-                              key: const Key("seekBackward"),
-                              builder: (context, node) => IconButton(
-                                focusNode: node,
-                                iconSize: 30,
-                                focusColor: Colors.white.withOpacity(0.2),
-                                color: Colors.white,
-                                onPressed: () {
-                                  controlsModel.seekBackward();
-                                },
-                                icon: const Icon(Icons.fast_rewind),
+                    Align(
+                      alignment: const Alignment(0, 0.9),
+                      child: Column(
+                        children: [
+                          const Expanded(child: SizedBox()),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FocusNotifier(
+                                key: const Key("seekBackward"),
+                                builder: (context, node) => IconButton(
+                                  focusNode: node,
+                                  iconSize: 30,
+                                  focusColor: Colors.white.withOpacity(0.2),
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    controlsModel.seekBackward();
+                                  },
+                                  icon: const Icon(Icons.fast_rewind),
+                                ),
                               ),
-                            ),
-                            FocusNotifier(
-                              key: const Key("playPause"),
-                              builder: (context, node) => buildPlaybackControl(
-                                  controlsModel.playingState,
-                                  controlsModel,
-                                  node),
-                            ),
-                            FocusNotifier(
-                              key: const Key("seekForward"),
-                              builder: (context, node) => IconButton(
-                                iconSize: 30,
-                                focusNode: node,
-                                focusColor: Colors.white.withOpacity(0.2),
-                                color: Colors.white,
-                                onPressed: () {
-                                  controlsModel.seekForward();
-                                },
-                                icon: const Icon(Icons.fast_forward),
+                              FocusNotifier(
+                                key: const Key("playPause"),
+                                builder: (context, node) =>
+                                    buildPlaybackControl(
+                                        controlsModel.playingState,
+                                        controlsModel,
+                                        node),
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SliderTheme(
-                                data: Theme.of(context)
-                                    .sliderTheme
-                                    .copyWith(trackHeight: 5),
-                                child: Focus(
-                                  descendantsAreFocusable: true,
-                                  descendantsAreTraversable: true,
-                                  canRequestFocus: false,
-                                  child: RawKeyboardListener(
-                                    focusNode: sliderControllerFocusNode,
-                                    onKey: (e) {
-                                      if (e.physicalKey ==
-                                          PhysicalKeyboardKey.arrowRight) {
-                                        if (sliderFocusNode.hasPrimaryFocus) {
-                                          log("Right arrow pressed");
-                                          sliderChangeDebouncer.run(() {
-                                            controlsModel.seekForward(
-                                                seconds: 5);
-                                          });
+                              FocusNotifier(
+                                key: const Key("seekForward"),
+                                builder: (context, node) => IconButton(
+                                  iconSize: 30,
+                                  focusNode: node,
+                                  focusColor: Colors.white.withOpacity(0.2),
+                                  color: Colors.white,
+                                  onPressed: () {
+                                    controlsModel.seekForward();
+                                  },
+                                  icon: const Icon(Icons.fast_forward),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: SliderTheme(
+                                  data: Theme.of(context)
+                                      .sliderTheme
+                                      .copyWith(trackHeight: 5),
+                                  child: Focus(
+                                    descendantsAreFocusable: true,
+                                    descendantsAreTraversable: true,
+                                    canRequestFocus: false,
+                                    child: RawKeyboardListener(
+                                      focusNode: sliderControllerFocusNode,
+                                      onKey: (e) {
+                                        if (e.physicalKey ==
+                                            PhysicalKeyboardKey.arrowRight) {
+                                          if (sliderFocusNode.hasPrimaryFocus) {
+                                            log("Right arrow pressed");
+                                            sliderChangeDebouncer.run(() {
+                                              controlsModel.seekForward(
+                                                  seconds: 5);
+                                            });
+                                          }
+                                        } else if (e.physicalKey ==
+                                            PhysicalKeyboardKey.arrowLeft) {
+                                          if (sliderFocusNode.hasPrimaryFocus) {
+                                            log("Left arrow pressed");
+                                            upDebouncer.run(() {
+                                              controlsModel.seekBackward(
+                                                  seconds: 5);
+                                            });
+                                          }
+                                        } else if (e.physicalKey ==
+                                            PhysicalKeyboardKey.arrowUp) {
+                                          if (sliderFocusNode.hasPrimaryFocus) {
+                                            upDebouncer.run(() {
+                                              if (upCounter.value < 3) {
+                                                upCounter.value++;
+                                              }
+                                              if (upCounter.value == 3) {
+                                                focusScopeNode.previousFocus();
+                                                upCounter.value = 0;
+                                              }
+                                            });
+                                          }
+                                        } else if (e.physicalKey ==
+                                            PhysicalKeyboardKey.arrowDown) {
+                                          if (sliderFocusNode.hasPrimaryFocus) {
+                                            downDebouncer.run(() {
+                                              if (downCounter.value < 3) {
+                                                downCounter.value++;
+                                              }
+                                              if (downCounter.value == 3) {
+                                                focusScopeNode.nextFocus();
+                                                downCounter.value = 0;
+                                              }
+                                            });
+                                          }
                                         }
-                                      } else if (e.physicalKey ==
-                                          PhysicalKeyboardKey.arrowLeft) {
-                                        if (sliderFocusNode.hasPrimaryFocus) {
-                                          log("Left arrow pressed");
-                                          upDebouncer.run(() {
-                                            controlsModel.seekBackward(
-                                                seconds: 5);
-                                          });
-                                        }
-                                      } else if (e.physicalKey ==
-                                          PhysicalKeyboardKey.arrowUp) {
-                                        if (sliderFocusNode.hasPrimaryFocus) {
-                                          upDebouncer.run(() {
-                                            if (upCounter.value < 3) {
-                                              upCounter.value++;
-                                            }
-                                            if (upCounter.value == 3) {
-                                              focusScopeNode.previousFocus();
-                                              upCounter.value = 0;
-                                            }
-                                          });
-                                        }
-                                      } else if (e.physicalKey ==
-                                          PhysicalKeyboardKey.arrowDown) {
-                                        if (sliderFocusNode.hasPrimaryFocus) {
-                                          downDebouncer.run(() {
-                                            if (downCounter.value < 3) {
-                                              downCounter.value++;
-                                            }
-                                            if (downCounter.value == 3) {
-                                              focusScopeNode.nextFocus();
-                                              downCounter.value = 0;
-                                            }
-                                          });
-                                        }
-                                      }
-                                    },
-                                    child: Slider(
-                                      focusNode: sliderFocusNode,
-                                      activeColor: Colors.redAccent,
-                                      inactiveColor: Colors.white70,
-                                      value: controlsModel
-                                          .playbackPosition.inSeconds
-                                          .toDouble(),
-                                      min: 0.0,
-                                      max: vlcPlayerController
-                                          .value.duration.inSeconds
-                                          .toDouble(),
-                                      onChanged: (_) {},
+                                      },
+                                      child: Slider(
+                                        focusNode: sliderFocusNode,
+                                        activeColor: Colors.redAccent,
+                                        inactiveColor: Colors.white70,
+                                        value: controlsModel
+                                            .playbackPosition.inSeconds
+                                            .toDouble(),
+                                        min: 0.0,
+                                        max: vlcPlayerController
+                                            .value.duration.inSeconds
+                                            .toDouble(),
+                                        onChanged: (_) {},
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            // horizontalSpaceSmall,
-                            Text(
-                              controlsModel.duration,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            horizontalSpaceSmall,
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            IconButton(
-                              tooltip: 'Get Subtitle Tracks',
-                              icon: const Icon(Icons.closed_caption),
-                              color: Colors.white,
-                              onPressed: () => _getSubtitleTracks(
-                                  context, isSubtitlesAdded.value),
-                            ),
-                            IconButton(
-                              tooltip: 'Get Audio Tracks',
-                              icon: const Icon(Icons.audiotrack),
-                              color: Colors.white,
-                              onPressed: () => _getAudioTracks(context),
-                            ),
-                          ],
-                        )
-                      ],
+                              // horizontalSpaceSmall,
+                              Text(
+                                controlsModel.duration,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                              horizontalSpaceSmall,
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                tooltip: 'Get Subtitle Tracks',
+                                icon: const Icon(Icons.closed_caption),
+                                color: Colors.white,
+                                onPressed: () => _getSubtitleTracks(
+                                    context, isSubtitlesAdded.value),
+                              ),
+                              IconButton(
+                                tooltip: 'Get Audio Tracks',
+                                icon: const Icon(Icons.audiotrack),
+                                color: Colors.white,
+                                onPressed: () => _getAudioTracks(context),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
