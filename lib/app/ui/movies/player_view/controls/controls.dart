@@ -98,7 +98,7 @@ class PlayerControls extends HookConsumerWidget {
             onNotification: (notification) {
               debugPrint(
                   "New widget focused: ${notification.childKey.toString()}");
-              controlsModel.showControlsNoCancel();
+              // controlsModel.stopTimer();
               return true;
             },
             child: FocusScope(
@@ -371,7 +371,6 @@ class PlayerControls extends HookConsumerWidget {
       PlayerControlsNotifier controlsNotifier, FocusNode node) {
     switch (playingState) {
       case PlayingState.initialized:
-      case PlayingState.stopped:
       case PlayingState.paused:
         return IconButton(
           onPressed: controlsNotifier.play,
@@ -392,6 +391,7 @@ class PlayerControls extends HookConsumerWidget {
           color: Colors.white,
         );
       case PlayingState.ended:
+      case PlayingState.stopped:
       case PlayingState.error:
         return IconButton(
           onPressed: controlsNotifier.replay,

@@ -1,6 +1,7 @@
 import 'dart:async';
+import 'dart:developer';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -51,7 +52,6 @@ class PlayerControlsNotifier extends ChangeNotifier {
   }
   // ---- Getters & Setters END ----
 
-
   // ---- Helper Methods ----
 
   void _startHideTimer() {
@@ -67,11 +67,22 @@ class PlayerControlsNotifier extends ChangeNotifier {
     _startHideTimer();
   }
 
+  void stopTimer() {
+    if (_hideTimer?.isActive ?? false) _hideTimer!.cancel();
+    _hideStuff = false;
+  }
+
   Future<void> _updatesListener() async {
     //not using setter for all as it would call notifyListeners() each time
     _playingState = vlcPlayerController.value.playingState;
     _playbackPosition = vlcPlayerController.value.position;
     duration = _formatDurationToString(vlcPlayerController.value.duration);
+    log("Playing State: ${describeEnum(_playingState)}");
+    if (_playingState == PlayingState.stopped ||
+        _playingState == PlayingState.ended) {
+      log("Video has been ended / stopped. Cancelling timer");
+      stopTimer();
+    }
     notifyListeners();
   }
 
@@ -84,13 +95,12 @@ class PlayerControlsNotifier extends ChangeNotifier {
       return oDuration.toString().split('.')[0];
     }
   }
-  
+
   void onHover() {
     _cancelAndRestartTimer();
   }
 
   // ---- Helper Methods END ----
-
 
   // ---- Public Methods ----
 
@@ -131,11 +141,6 @@ class PlayerControlsNotifier extends ChangeNotifier {
     assert(seconds < 100, "Cannot seek back 100 seconds");
 
     return _seekRelative(Duration(seconds: -(seconds.abs())));
-  }
-
-  void showControlsNoCancel() {
-    if (_hideTimer?.isActive ?? false) _hideTimer!.cancel();
-    _hideStuff = false;
   }
 
   // ---- Public Methods END ----
