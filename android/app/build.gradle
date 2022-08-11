@@ -47,10 +47,11 @@ android {
 
     defaultConfig {
         applicationId "com.example.latest_movies"
-        minSdkVersion localProperties.getProperty('flutter.minSdkVersion').toInteger()
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        multiDexEnabled true
     }
 
     buildTypes {

@@ -255,7 +255,7 @@ class PlayerControls extends HookConsumerWidget {
                                 controlsModel.duration,
                                 style: const TextStyle(color: Colors.white),
                               ),
-                              horizontalSpaceSmall,
+                              horizontalSpaceMedium,
                             ],
                           ),
                           Row(
@@ -273,6 +273,20 @@ class PlayerControls extends HookConsumerWidget {
                                 color: Colors.white,
                                 onPressed: () => _getAudioTracks(context),
                               ),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    tooltip: 'Get Playback Speeds',
+                                    icon: const Icon(Icons.speed),
+                                    color: Colors.white,
+                                    onPressed: () => _getPlaybackSpeeds(context,
+                                        controlsModel: controlsModel),
+                                  ),
+                                  Text("${controlsModel.currentPlaybackSpeed}x",
+                                      style:
+                                          const TextStyle(color: Colors.white)),
+                                ],
+                              ),
                             ],
                           )
                         ],
@@ -286,6 +300,46 @@ class PlayerControls extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  void _getPlaybackSpeeds(BuildContext context,
+      {required PlayerControlsNotifier controlsModel}) async {
+    var playbackSpeeds = controlsModel.playbackSpeeds;
+    log("Found Playback Speeds: ${playbackSpeeds.length}");
+
+    if (playbackSpeeds.isNotEmpty) {
+      var selectedSpeedIndex = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Select Playback Speed'),
+            content: SizedBox(
+              width: double.maxFinite,
+              height: 250,
+              child: ListView.builder(
+                itemCount: playbackSpeeds.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(
+                      "${playbackSpeeds[index]}x",
+                    ),
+                    onTap: () {
+                      Navigator.pop(
+                        context,
+                        index,
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          );
+        },
+      );
+      if (selectedSpeedIndex != null) {
+        await controlsModel.setPlaybackSpeed(selectedSpeedIndex);
+      }
+    }
   }
 
   void _getSubtitleTracks(BuildContext context, bool isSubtitlesAdded) async {

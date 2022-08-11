@@ -60,9 +60,24 @@ class PlayerControlsNotifier extends ChangeNotifier {
     _playbackPosition = newState;
     notifyListeners();
   }
+
+  List<double> playbackSpeeds = [0.5, 1.0, 2.0];
+  int playbackSpeedIndex = 0;
+  double get currentPlaybackSpeed => playbackSpeeds[playbackSpeedIndex];
+
   // ---- Getters & Setters END ----
 
   // ---- Helper Methods ----
+
+  Future<void> setPlaybackSpeed(int playbackIndex) async {
+    if (playbackIndex >= playbackSpeeds.length) return;
+
+    playbackSpeedIndex = playbackIndex;
+    notifyListeners();
+
+    return await vlcPlayerController
+        .setPlaybackSpeed(playbackSpeeds.elementAt(playbackSpeedIndex));
+  }
 
   void _startHideTimer() {
     const hideControlsTimer = Duration(seconds: 4);
