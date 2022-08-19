@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:latest_movies/app/features/movies/views/movie_details/movie_details.dart';
 import 'package:latest_movies/app/features/movies/views/movies_dashboard/movies_dashboard.dart';
 import 'package:latest_movies/app/features/movies/views/player_view/player_view.dart';
-import 'package:latest_movies/app/ui/auth/signup.dart';
-import '../../app/ui/auth/login.dart';
+import '../../app/features/auth/views/login.dart';
+import '../../app/features/auth/views/signup.dart';
 import '_routes.dart';
 
 class AppRouter {

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/app/features/auth/controllers/auth_controller.dart';
 
 import '../../../core/router/_app_router.dart';
 import '../../constants/constants.dart';
 import '../../utilities/app_utility.dart';
 import '../../utilities/design_utility.dart';
-import '../auth/auth_viewmodel.dart';
 import 'button.dart';
 import 'default_app_padding.dart';
 import 'text_field.dart';
