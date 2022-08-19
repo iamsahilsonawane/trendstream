@@ -6,8 +6,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:focus_notifier/focus_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/utilities/design_utility.dart';
 import '../../../../../../core/router/_app_router.dart';
-import '../../../../../utilities/design_utility.dart';
 
 import 'controls_notifier.dart';
 

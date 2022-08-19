@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/router/_app_router.dart';
-
-import 'app/features/movies/views/movies_dashboard/movies_dashboard.dart';
+import 'package:latest_movies/features/movies/views/movies_dashboard/movies_dashboard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

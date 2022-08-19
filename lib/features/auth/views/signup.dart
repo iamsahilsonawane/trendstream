@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:latest_movies/core/router/_app_router.dart';
-import '../../../../core/router/_routes.dart';
-import '../../../constants/constants.dart';
-
-import '../../../ui/shared/button.dart';
-import '../../../ui/shared/popups.dart';
-import '../../../ui/shared/text_field.dart';
-import '../../../utilities/app_utility.dart';
-import '../../../utilities/design_utility.dart';
+import 'package:latest_movies/core/shared_widgets/button.dart';
+import 'package:latest_movies/core/shared_widgets/text_field.dart';
+import 'package:latest_movies/core/utilities/app_utility.dart';
+import 'package:latest_movies/core/utilities/design_utility.dart';
+import '../../../../core/router/_app_router.dart';
 import '../controllers/auth_controller.dart';
 
-class LoginView extends HookConsumerWidget {
-  const LoginView({super.key});
+class SignUpView extends HookConsumerWidget {
+  const SignUpView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formKey = useMemoized(() => GlobalKey<FormState>());
     final emailController = useTextEditingController();
     final passwordController = useTextEditingController();
+    final confirmPasswordController = useTextEditingController();
 
     final authModel = ref.watch(authVMProvider);
 
@@ -60,7 +57,7 @@ class LoginView extends HookConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Continue where you left off',
+                        'Join to watch great movies at your fingertips',
                         style: TextStyle(
                             fontSize: 24,
                             color: Colors.grey[900],
@@ -68,7 +65,7 @@ class LoginView extends HookConsumerWidget {
                       ),
                       verticalSpaceSmall,
                       Text(
-                        "Sign in to continue using the app",
+                        "Movies, series and more. You're all covered up",
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
@@ -117,32 +114,27 @@ class LoginView extends HookConsumerWidget {
                         ],
                       ),
                       verticalSpaceMedium,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          TextButton(
-                            child: const Text(
-                              "Forgot Password",
-                              style: TextStyle(fontWeight: FontWeight.w500),
+                          Text(
+                            'Confirm Password: ',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[800],
                             ),
-                            onPressed: () async {
-                              final result =
-                                  await AppDialogs.showForgotPasswordDialog(
-                                      context);
-                              if (result != null) {
-                                if (result == AppStrings.emailSent) {
-                                  // ignore: use_build_context_synchronously
-                                  AppUtils.showSnackBar(context,
-                                      message: 'Email sent successfully!',
-                                      color: Colors.white,
-                                      icon: const Icon(
-                                        Icons.check_circle,
-                                        color: Colors.green,
-                                        size: 20,
-                                      ));
-                                }
-                              }
-                            },
+                          ),
+                          const SizedBox(height: 10),
+                          AppTextField(
+                            controller: confirmPasswordController,
+                            prefixIcon: const Icon(
+                              Icons.password,
+                              size: 18,
+                            ),
+                            isPassword: true,
+                            validator: (text) =>
+                                AppUtils.passwordValidateWithEquality(
+                                    text, passwordController.text),
                           ),
                         ],
                       ),
@@ -154,7 +146,7 @@ class LoginView extends HookConsumerWidget {
                           isLoading: authModel.isLoading,
                           onTap: () {
                             if (formKey.currentState?.validate() ?? false) {
-                              authModel.signInWithEmail(
+                              authModel.signUpWithEmail(
                                 context,
                                 email: emailController.text.trim(),
                                 password: passwordController.text.trim(),
@@ -172,7 +164,7 @@ class LoginView extends HookConsumerWidget {
                           )),
                           const SizedBox(width: 10),
                           Text(
-                            'Don\'t have an account? ',
+                            'Already have an account?',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey[800],
@@ -189,9 +181,9 @@ class LoginView extends HookConsumerWidget {
                       SizedBox(
                         width: double.infinity,
                         child: AppButton.secondary(
-                          text: 'Create an account',
+                          text: 'Login',
                           onTap: () {
-                            AppRouter.navigateToPage(Routes.signUpView);
+                            AppRouter.pop();
                           },
                         ),
                       ),

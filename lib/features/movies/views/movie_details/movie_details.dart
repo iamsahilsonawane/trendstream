@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:latest_movies/core/shared_widgets/button.dart';
+import 'package:latest_movies/core/shared_widgets/default_app_padding.dart';
+import 'package:latest_movies/core/shared_widgets/image.dart';
 import '../../../../../core/router/_app_router.dart';
 import '../../../../../core/router/_routes.dart';
-import '../../../../ui/shared/button.dart';
-import '../../../../ui/shared/default_app_padding.dart';
-import '../../../../ui/shared/image.dart';
 
 class MovieDetailsView extends StatelessWidget {
   const MovieDetailsView({super.key});

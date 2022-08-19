@@ -4,11 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../../core/router/_app_router.dart';
 import '../../../../../core/router/_routes.dart';
-import '../../../../ui/shared/focus_widget.dart';
-import '../../../../ui/shared/image.dart';
-import '../../../../ui/shared/text_field.dart';
-import '../../../../utilities/design_utility.dart';
-import '../../../../utilities/responsive.dart';
+import '../../../../core/shared_widgets/focus_widget.dart';
+import '../../../../core/shared_widgets/image.dart';
+import '../../../../core/shared_widgets/text_field.dart';
+import '../../../../core/utilities/design_utility.dart';
+import '../../../../core/utilities/responsive.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});

@@ -1,11 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:latest_movies/app/features/movies/views/movie_details/movie_details.dart';
-import 'package:latest_movies/app/features/movies/views/movies_dashboard/movies_dashboard.dart';
-import 'package:latest_movies/app/features/movies/views/player_view/player_view.dart';
-import '../../app/features/auth/views/login.dart';
-import '../../app/features/auth/views/signup.dart';
+import 'package:latest_movies/features/auth/views/login.dart';
+import 'package:latest_movies/features/auth/views/signup.dart';
+import 'package:latest_movies/features/movies/views/movies_dashboard/movies_dashboard.dart';
+import '../../features/movies/views/movie_details/movie_details.dart';
+import '../../features/movies/views/player_view/player_view.dart';
 import '_routes.dart';
 
 class AppRouter {
