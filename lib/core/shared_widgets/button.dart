@@ -34,14 +34,14 @@ class AppButton extends StatelessWidget {
       child: isLoading
           ? Center(
               child: SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
                 valueColor: isPrimary
                     ? const AlwaysStoppedAnimation(Colors.white)
                     : AlwaysStoppedAnimation(Colors.grey[900]),
-            ),
-              ))
+              ),
+            ))
           : Text(
               text,
               style: TextStyle(color: isPrimary ? Colors.white : Colors.black),

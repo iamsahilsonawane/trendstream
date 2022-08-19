@@ -260,16 +260,16 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                         'Size: ${_controller.value.size.width.toInt()}x${_controller.value.size.height.toInt()}',
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: Colors.white, fontSize: 10),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 10),
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        'Status: ${_controller.value.playingState
-                                .toString()
-                                .split('.')[1]}',
+                        'Status: ${_controller.value.playingState.toString().split('.')[1]}',
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: Colors.white, fontSize: 10),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 10),
                       ),
                     ],
                   ),
@@ -288,7 +288,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
                   child: VlcPlayer(
                     controller: _controller,
                     aspectRatio: 16 / 9,
-                    placeholder: const Center(child: const CircularProgressIndicator()),
+                    placeholder:
+                        const Center(child: const CircularProgressIndicator()),
                   ),
                 ),
                 Positioned(
@@ -569,8 +570,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
       );
       await _controller.castToRenderer(selectedCastDeviceName);
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: const Text('No Display Device Found!')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: const Text('No Display Device Found!')));
     }
   }
 
@@ -578,7 +579,8 @@ class VlcPlayerWithControlsState extends State<VlcPlayerWithControls>
     var snapshot = await _controller.takeSnapshot();
     _overlayEntry?.remove();
     _overlayEntry = _createSnapshotThumbnail(snapshot);
-    if (_overlayEntry != null && mounted) Overlay.of(context)?.insert(_overlayEntry!);
+    if (_overlayEntry != null && mounted)
+      Overlay.of(context)?.insert(_overlayEntry!);
   }
 
   OverlayEntry _createSnapshotThumbnail(Uint8List snapshot) {

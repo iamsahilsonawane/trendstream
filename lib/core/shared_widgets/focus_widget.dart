@@ -6,7 +6,8 @@ class FocusWidget extends StatefulWidget {
   final Function(bool hasFocus)? hasFocus;
   final Function(RawKeyEvent event) event;
 
-  const FocusWidget({Key? key, 
+  const FocusWidget({
+    Key? key,
     required this.child,
     required this.event,
     this.autofocus,

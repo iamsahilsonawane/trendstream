@@ -1,6 +1,3 @@
-
-
-
 class Routes {
   static const String loginView = "/";
   static const String signUpView = "/signup";

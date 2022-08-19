@@ -28,7 +28,7 @@
 //       videoPlayerController: videoPlayerController,
 //       autoPlay: true,
 //       looping: true,
-      
+
 //     );
 //     setState(() {});
 //   }

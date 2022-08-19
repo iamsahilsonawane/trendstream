@@ -18,11 +18,12 @@ class AppStrings {
   static const String somethingWentWrong = "Something went wrong";
   static const String retry = "Retry";
 
-  static const String  emailSent = "Email sent successfully!";
+  static const String emailSent = "Email sent successfully!";
 
   static const String resetPassword = "Reset Password";
 
-  static const String wellSendEmailPasswordReset = "We'll send you an email with a link to reset your password";
+  static const String wellSendEmailPasswordReset =
+      "We'll send you an email with a link to reset your password";
 
   static const String sendEmail = "Send Email";
 }
