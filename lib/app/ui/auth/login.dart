@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../../core/router/_app_router.dart';
+import '../../../core/router/_routes.dart';
 import 'auth_viewmodel.dart';
-
-import '../../../router/router.dart';
 import '../../constants/constants.dart';
 import '../../utilities/app_utility.dart';
 import '../../utilities/design_utility.dart';

@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/router/_app_router.dart';
 
-import '../../../router/router.dart';
-import '../../../services/firebase_auth.dart';
-import '../../../services/shared_preferences_service.dart';
+import '../../../core/router/_routes.dart';
+import '../../../core/services/firebase_auth.dart';
+import '../../../core/services/shared_preferences_service.dart';
 
 final authVMProvider = ChangeNotifierProvider<AuthViewModel>(
   (ref) => AuthViewModel(

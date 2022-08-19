@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../../../../core/router/_app_router.dart';
+import '../../../../../core/router/_routes.dart';
 import '../../../../ui/shared/button.dart';
 import '../../../../ui/shared/default_app_padding.dart';
-import '../../../../../router/router.dart';
 import '../../../../ui/shared/image.dart';
 
 class MovieDetailsView extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../../../services/firebase_auth.dart';
+import 'package:latest_movies/core/services/firebase_auth.dart';
 
 class AuthWidget extends ConsumerWidget {
   const AuthWidget({

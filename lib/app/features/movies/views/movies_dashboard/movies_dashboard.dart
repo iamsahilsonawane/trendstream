@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../../router/_app_router.dart';
-import '../../../../../router/_routes.dart';
+import '../../../../../core/router/_app_router.dart';
+import '../../../../../core/router/_routes.dart';
 import '../../../../ui/shared/focus_widget.dart';
 import '../../../../ui/shared/image.dart';
 import '../../../../ui/shared/text_field.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../router/_app_router.dart';
+import '../../../core/router/_app_router.dart';
 import '../../constants/constants.dart';
 import '../../utilities/app_utility.dart';
 import '../../utilities/design_utility.dart';
