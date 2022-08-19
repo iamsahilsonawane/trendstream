@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:latest_movies/app/ui/movies/movie_details/movie_details.dart';
-import '../app/ui/movies/movies_dashboard/movies_dashboard.dart';
-import '../app/ui/movies/player_view/player_view.dart';
+import 'package:latest_movies/app/features/movies/views/movie_details/movie_details.dart';
+import 'package:latest_movies/app/features/movies/views/player_view/player_view.dart';
+import '../app/features/movies/views/movies_dashboard/movies_dashboard.dart';
 import '_routes.dart';
 
 import '../app/ui/auth/login.dart';

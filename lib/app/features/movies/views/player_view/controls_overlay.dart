@@ -118,8 +118,6 @@ class ControlsOverlay extends StatelessWidget {
 
   /// Returns a callback which seeks the video relative to current playing time.
   Future<void> _seekRelative(Duration seekStep) async {
-    if (controller.value.duration != null) {
-      await controller.seekTo(controller.value.position + seekStep);
-    }
+    await controller.seekTo(controller.value.position + seekStep);
   }
 }

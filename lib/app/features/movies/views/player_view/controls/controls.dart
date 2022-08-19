@@ -6,13 +6,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:focus_notifier/focus_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:latest_movies/app/ui/movies/player_view/controls/focus_scope_node_hook.dart';
-import 'package:latest_movies/app/utilities/design_utility.dart';
+import '../../../../../../router/_app_router.dart';
+import '../../../../../utilities/design_utility.dart';
 
-import '../../../../../router/router.dart';
 import 'controls_notifier.dart';
 
 import 'dart:async';
+
+import 'focus_scope_node_hook.dart';
 
 class Debouncer {
   final int milliseconds;

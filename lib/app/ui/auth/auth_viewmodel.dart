@@ -49,7 +49,7 @@ class AuthViewModel with ChangeNotifier {
     required String password,
   }) async {
     await _stateCallback(() async {
-      UserCredential creds = await authService.signUpWithEmailAndPassword(
+      await authService.signUpWithEmailAndPassword(
           email: email, password: password);
     });
 
@@ -73,7 +73,8 @@ class AuthViewModel with ChangeNotifier {
 
   ///Forgot password (email reset)
   Future<void> sendPasswordResetEmail(String email) async {
-    await _stateCallback(() => authService.sendPasswordResetEmail(email: email), showLoader: false);
+    await _stateCallback(() => authService.sendPasswordResetEmail(email: email),
+        showLoader: false);
   }
 
   Future<void> logout() async {

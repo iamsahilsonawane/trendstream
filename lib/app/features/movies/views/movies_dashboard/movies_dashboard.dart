@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../router/router.dart';
-import '../../../utilities/design_utility.dart';
-import '../../../utilities/responsive.dart';
-import '../../shared/focus_widget.dart';
-import '../../shared/image.dart';
-import '../../shared/text_field.dart';
+import '../../../../../router/_app_router.dart';
+import '../../../../../router/_routes.dart';
+import '../../../../ui/shared/focus_widget.dart';
+import '../../../../ui/shared/image.dart';
+import '../../../../ui/shared/text_field.dart';
+import '../../../../utilities/design_utility.dart';
+import '../../../../utilities/responsive.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});

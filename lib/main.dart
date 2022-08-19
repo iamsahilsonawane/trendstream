@@ -1,12 +1,8 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:latest_movies/app/ui/auth/login.dart';
-import 'package:latest_movies/firebase_options.dart';
 
-import 'app/ui/auth/auth_widget.dart';
-import 'app/ui/movies/movies_dashboard/movies_dashboard.dart';
+import 'app/features/movies/views/movies_dashboard/movies_dashboard.dart';
 import 'router/router.dart';
 
 void main() async {
@@ -42,7 +38,7 @@ class MyApp extends StatelessWidget {
         // home: true
         //     ? const PlayerView()
         //     : Consumer(
-          home: const HomeView(),
+        home: const HomeView(),
         // home: Consumer(
         //   builder: (context, ref, child) => AuthWidget(
         //     nonSignedInBuilder: (_) => const LoginView(),

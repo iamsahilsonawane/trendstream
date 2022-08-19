@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:latest_movies/app/ui/shared/button.dart';
-import 'package:latest_movies/app/ui/shared/default_app_padding.dart';
-import 'package:latest_movies/router/router.dart';
-
-
-import '../../../../router/router.dart';
-import '../../shared/image.dart';
+import '../../../../ui/shared/button.dart';
+import '../../../../ui/shared/default_app_padding.dart';
+import '../../../../../router/router.dart';
+import '../../../../ui/shared/image.dart';
 
 class MovieDetailsView extends StatelessWidget {
-
   const MovieDetailsView({super.key});
   final posterContainerHeight = 450.0;
   final trailerContainerHeight = 300.0;
@@ -16,8 +12,7 @@ class MovieDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-      ),
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -27,7 +22,7 @@ class MovieDetailsView extends StatelessWidget {
               height: posterContainerHeight,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+                children: [
                   SizedBox(
                     height: posterContainerHeight - 40,
                     width: 250,
@@ -151,9 +146,11 @@ class MovieDetailsView extends StatelessWidget {
                           ),
                         ),
                         const Expanded(child: SizedBox()),
-                        AppButton.secondary(text: "Watch Now", onTap: () {
-                            AppRouter.navigateToPage(Routes.playerView);
-                        }),
+                        AppButton.secondary(
+                            text: "Watch Now",
+                            onTap: () {
+                              AppRouter.navigateToPage(Routes.playerView);
+                            }),
                       ],
                     ),
                   )

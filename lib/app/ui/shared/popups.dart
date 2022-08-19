@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:latest_movies/app/ui/shared/default_app_padding.dart';
-import 'package:latest_movies/app/ui/shared/text_field.dart';
-import 'package:latest_movies/app/utilities/design_utility.dart';
 
 import '../../../router/_app_router.dart';
 import '../../constants/constants.dart';
 import '../../utilities/app_utility.dart';
+import '../../utilities/design_utility.dart';
 import '../auth/auth_viewmodel.dart';
 import 'button.dart';
+import 'default_app_padding.dart';
+import 'text_field.dart';
 
 class AppDialogs {
   static Future<dynamic>? showAppDialog(context, List<Widget> children) {

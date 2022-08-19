@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
-import 'package:latest_movies/app/ui/movies/player_view/controls/controls.dart';
+
+import 'controls/controls.dart';
 
 class PlayerView extends StatefulWidget {
   const PlayerView({Key? key}) : super(key: key);
