@@ -27,3 +27,5 @@ double screenWidthPercentage(BuildContext context, {double percentage = 1}) =>
 
 ThemeData theme(BuildContext context) => Theme.of(context);
 TextTheme textTheme(BuildContext context) => Theme.of(context).textTheme;
+
+String validString(String? text) => text ?? "N/A";

@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/features/movies/widgets/movies_grid.dart';
 
-import '../../../../../core/router/_app_router.dart';
-import '../../../../../core/router/_routes.dart';
-import '../../../../core/shared_widgets/focus_widget.dart';
-import '../../../../core/shared_widgets/image.dart';
 import '../../../../core/shared_widgets/text_field.dart';
 import '../../../../core/utilities/design_utility.dart';
-import '../../../../core/utilities/responsive.dart';
+import '../../widgets/dashboard_sidebar.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -51,191 +46,12 @@ class HomeView extends StatelessWidget {
               flex: 2,
               child: FocusTraversalGroup(child: const DashboardSideBar())),
           horizontalSpaceMedium,
-          Expanded(
+          const Expanded(
             flex: 8,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: GridView.builder(
-                key: GlobalKey(debugLabel: "dashboardGrid"),
-                controller: ScrollController(),
-                itemCount: 30,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: ResponsiveWidget.isMediumScreen(context)
-                      ? 4
-                      : ResponsiveWidget.isSmallScreen(context)
-                          ? 2
-                          : 6,
-                  childAspectRatio: cardWidth / cardHeight,
-                  mainAxisSpacing: 10.0,
-                  crossAxisSpacing: 10.0,
-                ),
-                itemBuilder: (BuildContext context, int index) {
-                  return MovieTile(index, autofocus: index == 0);
-                },
-              ),
-            ),
+            child:
+                Padding(padding: EdgeInsets.only(top: 10), child: MoviesGrid()),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class MovieTile extends StatelessWidget {
-  const MovieTile(
-    this.index, {
-    this.autofocus = false,
-    Key? key,
-  }) : super(key: key);
-
-  final int index;
-  final bool autofocus;
-
-  @override
-  Widget build(BuildContext context) {
-    return FocusWidget(
-      autofocus: autofocus,
-      event: (event) {
-        if (event.logicalKey == LogicalKeyboardKey.select) {
-          AppRouter.navigateToPage(Routes.detailsView);
-        }
-        // if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-        //   Scrollable.ensureVisible(
-        //     context,
-        //     duration: const Duration(milliseconds: 250),
-        //     curve: Curves.easeIn,
-        //   );
-        // }
-      },
-      child: Builder(builder: (context) {
-        return GestureDetector(
-          onTap: () {
-            Focus.of(context).requestFocus();
-            AppRouter.navigateToPage(Routes.detailsView);
-          },
-          child: Container(
-            padding: const EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5.0),
-              color: Focus.of(context).hasPrimaryFocus
-                  ? Colors.white
-                  : Colors.transparent,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                DecoratedBox(
-                  decoration: BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(.4),
-                        blurRadius: 5,
-                        spreadRadius: 1,
-                        offset: const Offset(0, 1)),
-                  ]),
-                  child: AppImage(
-                    imageUrl: "https://picsum.photos/id/${index + 20}/200/300",
-                  ),
-                ),
-                verticalSpaceMedium,
-                Text(
-                  "Peaky Blinders",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Focus.of(context).hasPrimaryFocus
-                        ? Colors.black
-                        : Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  "2022",
-                  style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                ),
-                const SizedBox(height: 5),
-                Text(
-                  "Lorem ipsum",
-                  style: TextStyle(fontSize: 14, color: Colors.grey[700]),
-                ),
-              ],
-            ),
-          ),
-        );
-      }),
-    );
-  }
-}
-
-class DashboardSideBar extends StatelessWidget {
-  const DashboardSideBar({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: double.infinity,
-      child: Ink(
-        decoration: BoxDecoration(color: Colors.grey[900]),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 10),
-          child: ListView(
-            key: GlobalKey(debugLabel: "dashboardSideBar"),
-            shrinkWrap: true,
-            controller: ScrollController(),
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.list),
-                title: const Text(
-                  'Home',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                selected: true,
-                onTap: () {},
-                selectedTileColor: Colors.grey[800],
-                textColor: Colors.white,
-                // selectedColor: Colors.white,
-              ),
-              ListTile(
-                leading: const Icon(Icons.list),
-                title: const Text('Favorites'),
-                selected: false,
-                onTap: () {},
-                selectedTileColor: Colors.grey[800],
-                textColor: Colors.white,
-                selectedColor: Colors.white,
-              ),
-              ListTile(
-                leading: const Icon(Icons.list),
-                title: const Text('Watchlist'),
-                selected: false,
-                onTap: () {},
-                selectedTileColor: Colors.grey[800],
-                textColor: Colors.white,
-                selectedColor: Colors.white,
-              ),
-              ListTile(
-                leading: const Icon(Icons.list),
-                title: const Text('Series'),
-                selected: false,
-                onTap: () {},
-                selectedTileColor: Colors.grey[800],
-                textColor: Colors.white,
-                selectedColor: Colors.white,
-              ),
-              Consumer(
-                builder: (context, ref, child) => ListTile(
-                  leading: const Icon(Icons.exit_to_app),
-                  title: const Text('Logout'),
-                  selected: false,
-                  onTap: () {
-                    // ref.read(authVMProvider).logout();
-                  },
-                  selectedTileColor: Colors.grey[800],
-                  textColor: Colors.white,
-                  selectedColor: Colors.white,
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

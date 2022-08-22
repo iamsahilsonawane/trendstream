@@ -1,6 +1,6 @@
 import 'package:latest_movies/core/config/config.dart';
 import 'package:latest_movies/core/services/http/http_service.dart';
-import 'package:latest_movies/features/movies/models/movie.dart';
+import 'package:latest_movies/features/movies/models/movie/movie.dart';
 import 'package:latest_movies/core/models/paginated_response.dart';
 import 'package:latest_movies/features/movies/repositories/movies_repository.dart';
 
@@ -16,7 +16,7 @@ class HttpMoviesRepository implements MoviesRepository {
   String get path => "/movie";
 
   @override
-  Future<PaginatedResponse<Movie>> getMovies(
+  Future<PaginatedResponse<Movie>> getPopularMovies(
       {int page = 1, bool forceRefresh = false}) async {
     final responseData = await httpService.get(
       '$path/popular',
