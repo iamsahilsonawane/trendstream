@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:latest_movies/core/shared_widgets/app_loader.dart';
 
 class AppImage extends StatelessWidget {
   const AppImage({
@@ -17,7 +18,7 @@ class AppImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return CachedNetworkImage(
       imageUrl: imageUrl,
-      placeholder: (context, url) => const CircularProgressIndicator(),
+      placeholder: (context, url) => const AppLoader(),
       errorWidget: (context, url, error) => const Icon(Icons.error),
       fit: fit,
     );

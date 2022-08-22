@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:latest_movies/features/movies/controllers/current_popular_movies_provider.dart';
 
 import '../../../../core/utilities/design_utility.dart';
@@ -69,23 +70,25 @@ class MovieTile extends HookConsumerWidget {
                     ),
                     verticalSpaceRegular,
                     Text(
-                      validString(movie.originalTitle),
+                      validString(movie.releaseDate != null
+                          ? DateFormat("dd MMM yyyy").format(
+                              DateFormat("yyyy-MM-dd")
+                                  .parse(movie.releaseDate!))
+                          : null),
                       style: TextStyle(
-                        fontSize: 18.0,
-                        color: Focus.of(context).hasPrimaryFocus
-                            ? Colors.black
-                            : Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      validString(movie.releaseDate),
-                      style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                          fontSize: 14,
+                          color: Focus.of(context).hasPrimaryFocus
+                              ? Colors.black
+                              : Colors.grey[700]),
                     ),
                     const SizedBox(height: 5),
                     Text(
                       "⭐️ ${validString(movie.voteAverage.toString())}",
-                      style: TextStyle(fontSize: 14, color: Colors.grey[700]),
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Focus.of(context).hasPrimaryFocus
+                              ? Colors.black
+                              : Colors.grey[700]),
                     ),
                   ],
                 ),
