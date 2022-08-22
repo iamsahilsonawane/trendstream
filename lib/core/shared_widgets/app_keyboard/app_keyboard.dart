@@ -20,10 +20,12 @@ class AppKeyboardState {
 }
 
 class AppOnScreenKeyboard extends StatefulWidget {
-  const AppOnScreenKeyboard({Key? key, required this.onValueChanged})
+  const AppOnScreenKeyboard(
+      {Key? key, required this.onValueChanged, this.focusColor})
       : super(key: key);
 
   final ValueChanged<String> onValueChanged;
+  final Color? focusColor;
 
   @override
   State<AppOnScreenKeyboard> createState() => _AppOnScreenKeyboardState();
@@ -83,7 +85,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
                   itemBuilder: (context, index) {
                     return KeyboardKeyButton(
                       autofocus: false,
-                      // focusColor: widget.focusColor ?? widget.focusColor,
+                      focusColor: widget.focusColor,
                       // borderColor: widget.borderColor ?? widget.borderColor,
                       // buttonColor: widget.buttonColor ?? widget.buttonColor,
                       buttonColor: Colors.grey[700],
@@ -106,7 +108,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
             Expanded(
               child: KeyboardKeyButton(
                 autofocus: false,
-                // focusColor: widget.focusColor ?? widget.focusColor,
+                focusColor: widget.focusColor,
                 // borderColor: widget.borderColor ?? widget.borderColor,
                 // buttonColor: widget.buttonColor ?? widget.buttonColor,
                 buttonColor: Colors.grey[700],
@@ -129,7 +131,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
                 builder: (context, AppKeyboardState state, child) {
                   return KeyboardKeyButton(
                     autofocus: false,
-                    // focusColor: widget.focusColor ?? widget.focusColor,
+                    focusColor: widget.focusColor,
                     // borderColor: widget.borderColor ?? widget.borderColor,
                     // buttonColor: widget.buttonColor ?? widget.buttonColor,
                     buttonColor: Colors.grey[700],
@@ -163,7 +165,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
                 builder: (context, value, child) {
                   return KeyboardKeyButton(
                     autofocus: false,
-                    // focusColor: widget.focusColor ?? widget.focusColor,
+                    focusColor: widget.focusColor,
                     // borderColor: widget.borderColor ?? widget.borderColor,
                     // buttonColor: widget.buttonColor ?? widget.buttonColor,
 
@@ -204,7 +206,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
             Flexible(
               child: KeyboardKeyButton(
                 autofocus: false,
-                // focusColor: widget.focusColor ?? widget.focusColor,
+                focusColor: widget.focusColor,
                 // borderColor: widget.borderColor ?? widget.borderColor,
                 // buttonColor: widget.buttonColor ?? widget.buttonColor,
                 buttonColor: Colors.grey[700],
@@ -221,7 +223,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
             Flexible(
               child: KeyboardKeyButton(
                 autofocus: true,
-                // focusColor: widget.focusColor ?? widget.focusColor,
+                focusColor: widget.focusColor,
                 // borderColor: widget.borderColor ?? widget.borderColor,
                 // buttonColor: widget.buttonColor ?? widget.buttonColor,
                 buttonColor: Colors.grey[700],
