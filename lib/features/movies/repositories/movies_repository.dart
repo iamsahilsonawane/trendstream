@@ -22,4 +22,10 @@ abstract class MoviesRepository {
     int page = 1,
     bool forceRefresh = false,
   });
+
+  Future<PaginatedResponse<Movie>> searchMovie({
+    required String query,
+    int page = 1,
+    bool forceRefresh = false,
+  });
 }

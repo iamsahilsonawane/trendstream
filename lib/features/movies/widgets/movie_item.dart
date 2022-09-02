@@ -70,7 +70,7 @@ class MovieTile extends HookConsumerWidget {
                     ),
                     verticalSpaceRegular,
                     Text(
-                      validString(movie.releaseDate != null
+                      validString(movie.releaseDate != null && movie.releaseDate!.isNotEmpty
                           ? DateFormat("dd MMM yyyy").format(
                               DateFormat("yyyy-MM-dd")
                                   .parse(movie.releaseDate!))

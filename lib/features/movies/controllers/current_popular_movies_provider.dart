@@ -5,3 +5,4 @@ import '../models/movie/movie.dart';
 final currentPopularMovieProvider = Provider<AsyncValue<Movie>>((ref) {
   throw UnimplementedError();
 });
+

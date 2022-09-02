@@ -1,11 +1,17 @@
 import "package:flutter/material.dart";
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/features/movies/controllers/side_bar_controller.dart';
 
-class DashboardSideBar extends StatelessWidget {
+import '../enums/sidebar_options.dart';
+
+class DashboardSideBar extends HookConsumerWidget {
   const DashboardSideBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final sidebarState = ref.watch(sidebarStateProvider);
+    final sidebarStateNotifier = ref.watch(sidebarStateProvider.notifier);
+
     return SizedBox(
       height: double.infinity,
       child: Ink(
@@ -18,19 +24,31 @@ class DashboardSideBar extends StatelessWidget {
             controller: ScrollController(),
             children: <Widget>[
               ListTile(
-                leading: const Icon(Icons.list),
+                leading: const Icon(Icons.home),
                 title: const Text(
                   'Home',
-                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                selected: true,
-                onTap: () {},
+                selected: sidebarState.sidebarOptions == SidebarOptions.home,
+                onTap: () {
+                  sidebarStateNotifier.setSidebarOption(SidebarOptions.home);
+                },
                 selectedTileColor: Colors.grey[800],
                 textColor: Colors.white,
-                // selectedColor: Colors.white,
               ),
               ListTile(
-                leading: const Icon(Icons.list),
+                leading: const Icon(Icons.search),
+                title: const Text(
+                  'Search',
+                ),
+                selected: sidebarState.sidebarOptions == SidebarOptions.search,
+                onTap: () {
+                  sidebarStateNotifier.setSidebarOption(SidebarOptions.search);
+                },
+                selectedTileColor: Colors.grey[800],
+                textColor: Colors.white,
+              ),
+              ListTile(
+                leading: const Icon(Icons.favorite),
                 title: const Text('Favorites'),
                 selected: false,
                 onTap: () {},

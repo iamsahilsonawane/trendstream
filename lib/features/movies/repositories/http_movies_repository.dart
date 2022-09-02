@@ -36,4 +36,27 @@ class HttpMoviesRepository implements MoviesRepository {
       ),
     );
   }
+
+  @override
+  Future<PaginatedResponse<Movie>> searchMovie(
+      {required String query, int page = 1, bool forceRefresh = false}) async {
+    final responseData = await httpService.get(
+      '/search/movie',
+      forceRefresh: forceRefresh,
+      queryParameters: {
+        'query': query,
+        'page': page,
+        'api_key': apiKey,
+      },
+    );
+
+    return PaginatedResponse.fromJson(
+      responseData,
+      results: List<Movie>.from(
+        responseData['results'].map(
+          (x) => Movie.fromJson(x),
+        ),
+      ),
+    );
+  }
 }

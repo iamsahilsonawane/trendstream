@@ -16,9 +16,6 @@ class MoviesGrid extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double cardWidth = MediaQuery.of(context).size.width / 10;
-    double cardHeight = MediaQuery.of(context).size.width / 5;
-
     final popularMoviesCount = ref.watch(popularPeopleCountProvider);
 
     return popularMoviesCount.map(

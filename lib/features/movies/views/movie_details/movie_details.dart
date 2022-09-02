@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:latest_movies/core/shared_widgets/button.dart';
 import 'package:latest_movies/core/shared_widgets/default_app_padding.dart';
 import 'package:latest_movies/core/shared_widgets/image.dart';
+import 'package:latest_movies/core/utilities/debouncer.dart';
 import '../../../../../core/router/_app_router.dart';
 import '../../../../../core/router/_routes.dart';
 
@@ -13,7 +14,16 @@ class MovieDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.keyboard_arrow_left),
+          onPressed: () {
+            Debouncer(delay: const Duration(milliseconds: 500)).call(() {
+              AppRouter.pop();
+            });
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
