@@ -65,6 +65,9 @@ class PlayerControlsNotifier extends ChangeNotifier {
   int playbackSpeedIndex = 0;
   double get currentPlaybackSpeed => playbackSpeeds[playbackSpeedIndex];
 
+  int selectedAudioTrackId = -1;
+  int selectedSubtitleId = -1;
+
   // ---- Getters & Setters END ----
 
   // ---- Helper Methods ----

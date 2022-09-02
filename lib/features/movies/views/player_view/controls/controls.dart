@@ -99,6 +99,15 @@ class PlayerControls extends HookConsumerWidget {
             focusNode: FocusNode(canRequestFocus: false),
             onKey: (event) {
               log("event: ${event.logicalKey}");
+              if (event.logicalKey == LogicalKeyboardKey.select &&
+                  sliderFocusNode.hasPrimaryFocus) {
+                if (controlsModel.playingState == PlayingState.playing) {
+                  vlcPlayerController.pause();
+                } else {
+                  vlcPlayerController.play();
+                }
+              }
+
               controlsModel
                   .onHover(); //restart the timer if any item is focused
             },
@@ -266,13 +275,13 @@ class PlayerControls extends HookConsumerWidget {
                                 icon: const Icon(Icons.closed_caption),
                                 color: Colors.white,
                                 onPressed: () => _getSubtitleTracks(
-                                    context, isSubtitlesAdded.value),
+                                    context, isSubtitlesAdded.value, playerController: controlsModel),
                               ),
                               IconButton(
                                 tooltip: 'Get Audio Tracks',
                                 icon: const Icon(Icons.audiotrack),
                                 color: Colors.white,
-                                onPressed: () => _getAudioTracks(context),
+                                onPressed: () => _getAudioTracks(context, playerController: controlsModel),
                               ),
                               Row(
                                 children: [
@@ -324,6 +333,8 @@ class PlayerControls extends HookConsumerWidget {
                     title: Text(
                       "${playbackSpeeds[index]}x",
                     ),
+                    selected: controlsModel.currentPlaybackSpeed ==
+                        playbackSpeeds[index],
                     onTap: () {
                       Navigator.pop(
                         context,
@@ -343,7 +354,8 @@ class PlayerControls extends HookConsumerWidget {
     }
   }
 
-  void _getSubtitleTracks(BuildContext context, bool isSubtitlesAdded) async {
+  void _getSubtitleTracks(BuildContext context, bool isSubtitlesAdded,
+      {required PlayerControlsNotifier playerController}) async {
     if (!vlcPlayerController.value.isPlaying) return;
 
     var subtitleTracks = await vlcPlayerController.getSpuTracks();
@@ -367,6 +379,9 @@ class PlayerControls extends HookConsumerWidget {
                           ? subtitleTracks.values.elementAt(index).toString()
                           : 'Disable',
                     ),
+                    selected: index < subtitleTracks.keys.length
+                        ? playerController.selectedSubtitleId == subtitleTracks.keys.elementAt(index)
+                        : playerController.selectedSubtitleId == -1,
                     onTap: () {
                       Navigator.pop(
                         context,
@@ -383,12 +398,14 @@ class PlayerControls extends HookConsumerWidget {
         },
       );
       if (selectedSubId != null) {
+        playerController.selectedSubtitleId = selectedSubId;
         await vlcPlayerController.setSpuTrack(selectedSubId);
       }
     }
   }
 
-  void _getAudioTracks(BuildContext context) async {
+  void _getAudioTracks(BuildContext context,
+      {required PlayerControlsNotifier playerController}) async {
     // if (!vlcPlayerController.value.isPlaying) return;
 
     var audioTracks = await vlcPlayerController.getAudioTracks();
@@ -411,6 +428,9 @@ class PlayerControls extends HookConsumerWidget {
                           ? audioTracks.values.elementAt(index).toString()
                           : 'Disable',
                     ),
+                    selected: index < audioTracks.keys.length
+                        ? playerController.selectedAudioTrackId == audioTracks.keys.elementAt(index)
+                        : playerController.selectedAudioTrackId == -1,
                     onTap: () {
                       Navigator.pop(
                         context,
@@ -427,6 +447,7 @@ class PlayerControls extends HookConsumerWidget {
         },
       );
       if (selectedAudioTrackId != null) {
+        playerController.selectedAudioTrackId = selectedAudioTrackId;
         await vlcPlayerController.setAudioTrack(selectedAudioTrackId);
       }
     }
