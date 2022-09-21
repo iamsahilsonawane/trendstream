@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
+import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/movie_search_controller.dart';
 import 'package:latest_movies/features/movies/controllers/search_movie_count_provider.dart';
 import 'package:latest_movies/features/movies/controllers/search_paginated_movies_provider.dart';
@@ -63,8 +64,17 @@ class SearchGrid extends HookConsumerWidget {
                   .response
                   ?.data['errors']
                   .contains('query must be provided')) {
-                return const Center(
-                  child: Text("Type the name of a movie..."),
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      CupertinoIcons.search,
+                      size: 100,
+                      color: Color(0xFF1E365C),
+                    ),
+                    verticalSpaceRegular,
+                    Text("Try searching for \"Top Gun Maverick\""),
+                  ],
                 );
               }
             } catch (e) {}

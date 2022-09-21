@@ -86,9 +86,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
                     return KeyboardKeyButton(
                       autofocus: false,
                       focusColor: widget.focusColor,
-                      // borderColor: widget.borderColor ?? widget.borderColor,
-                      // buttonColor: widget.buttonColor ?? widget.buttonColor,
-                      buttonColor: Colors.grey[700],
+                      buttonColor: const Color(0xFF1E365C).withOpacity(.2),
                       label: Text(
                         state.keys[index],
                         style: const TextStyle(fontSize: 25),
@@ -111,7 +109,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
                 focusColor: widget.focusColor,
                 // borderColor: widget.borderColor ?? widget.borderColor,
                 // buttonColor: widget.buttonColor ?? widget.buttonColor,
-                buttonColor: Colors.grey[700],
+                buttonColor: const Color(0xFF1E365C).withOpacity(.2),
                 onPressed: () {
                   if (txtController.text.isNotEmpty) {
                     txtController.text = txtController.text
@@ -134,7 +132,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
                     focusColor: widget.focusColor,
                     // borderColor: widget.borderColor ?? widget.borderColor,
                     // buttonColor: widget.buttonColor ?? widget.buttonColor,
-                    buttonColor: Colors.grey[700],
+                    buttonColor: const Color(0xFF1E365C).withOpacity(.2),
                     onPressed: () {
                       if (state.keyboardType == AppKeyboardType.symbols) {
                         valueListenable.value =
@@ -171,7 +169,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
 
                     buttonColor: shiftIndexNotifier.value != 0
                         ? Colors.white
-                        : Colors.grey[700],
+                        : const Color(0xFF1E365C).withOpacity(.2),
                     onPressed: () {
                       if (shiftIndexNotifier.value == 2) {
                         shiftIndexNotifier.value = 0;
@@ -209,7 +207,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
                 focusColor: widget.focusColor,
                 // borderColor: widget.borderColor ?? widget.borderColor,
                 // buttonColor: widget.buttonColor ?? widget.buttonColor,
-                buttonColor: Colors.grey[700],
+                buttonColor: const Color(0xFF1E365C).withOpacity(.2),
                 onPressed: () {
                   txtController.clear();
                 },
@@ -226,7 +224,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
                 focusColor: widget.focusColor,
                 // borderColor: widget.borderColor ?? widget.borderColor,
                 // buttonColor: widget.buttonColor ?? widget.buttonColor,
-                buttonColor: Colors.grey[700],
+                buttonColor: const Color(0xFF1E365C).withOpacity(.2),
                 onPressed: () {
                   txtController.text += ' ';
                 },

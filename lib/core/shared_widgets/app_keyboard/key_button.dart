@@ -39,7 +39,11 @@ class KeyboardKeyButtonState extends State<KeyboardKeyButton> {
       hoverElevation: 0,
       autofocus: widget.autofocus ?? widget.autofocus!,
       fillColor: widget.buttonColor ?? widget.buttonColor,
-      shape: ContinuousRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      shape: ContinuousRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: widget.borderColor != null
+              ? BorderSide(color: widget.borderColor!)
+              : BorderSide.none),
       elevation: 0,
       focusColor: widget.focusColor ?? widget.focusColor,
       focusNode: _node,

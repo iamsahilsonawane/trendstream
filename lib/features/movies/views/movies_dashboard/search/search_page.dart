@@ -23,26 +23,33 @@ class SearchPage extends HookConsumerWidget {
                 onValueChanged: (value) {
                   ref.read(searchKeywordProvider.notifier).setKeyword(value);
                 },
-                focusColor: Colors.lightBlue),
+                focusColor: const Color(0xFF1E365C)),
           ),
           horizontalSpaceRegular,
           Expanded(
             flex: 6,
             child: Column(
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.search),
-                    horizontalSpaceSmall,
-                    Text(
-                      keyword.isEmpty ? "Search for movies..." : keyword,
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: keyword.isEmpty
-                              ? Colors.grey[600]
-                              : Colors.white),
-                    )
-                  ],
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: const Color(0xFF1E365C).withOpacity(.2),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.search),
+                      horizontalSpaceSmall,
+                      Text(
+                        keyword.isEmpty ? "Search for movies..." : keyword,
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: keyword.isEmpty
+                                ? Colors.grey[600]
+                                : Colors.white),
+                      )
+                    ],
+                  ),
                 ),
                 verticalSpaceRegular,
                 Expanded(
