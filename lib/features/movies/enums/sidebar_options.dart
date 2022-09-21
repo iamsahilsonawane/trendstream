@@ -2,4 +2,6 @@
 enum SidebarOptions {
   home,
   search,
+  favorites,
+  watchlist,
 }

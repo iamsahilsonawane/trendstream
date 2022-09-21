@@ -18,7 +18,6 @@ class HomeView extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
         centerTitle: false,
         actions: [
           GestureDetector(
@@ -44,7 +43,7 @@ class HomeView extends HookConsumerWidget {
               flex: 2,
               child: FocusTraversalGroup(child: const DashboardSideBar())),
           Expanded(
-            flex: 8,
+            flex: 10,
             child: DefaultAppPadding(
               child: sidebarState.sidebarOptions == SidebarOptions.home
                   ? const MoviesGrid()

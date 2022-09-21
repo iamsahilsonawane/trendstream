@@ -30,10 +30,12 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Latest Movies',
         theme: ThemeData.dark().copyWith(
-            platform: TargetPlatform.macOS,
-            appBarTheme: Theme.of(context)
-                .appBarTheme
-                .copyWith(color: Colors.grey[900])),
+          platform: TargetPlatform.macOS,
+          appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                color: const Color(0xFF17181A),
+              ),
+              scaffoldBackgroundColor: const Color(0xFF17181A)
+        ),
         // home: true
         //     ? const PlayerView()
         //     : Consumer(

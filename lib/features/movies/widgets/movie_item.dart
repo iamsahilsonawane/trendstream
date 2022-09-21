@@ -38,6 +38,7 @@ class MovieTile extends HookConsumerWidget {
             }
           },
           child: Builder(builder: (context) {
+            final bool hasFocus = Focus.of(context).hasPrimaryFocus;
             return GestureDetector(
               onTap: () {
                 Focus.of(context).requestFocus();
@@ -48,9 +49,6 @@ class MovieTile extends HookConsumerWidget {
                 padding: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5.0),
-                  color: Focus.of(context).hasPrimaryFocus
-                      ? Colors.white
-                      : Colors.transparent,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,15 +56,24 @@ class MovieTile extends HookConsumerWidget {
                     Container(
                       height: 250,
                       width: double.infinity,
-                      decoration: BoxDecoration(boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(.4),
-                            blurRadius: 5,
-                            spreadRadius: 1,
-                            offset: const Offset(0, 1)),
-                      ]),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.black.withOpacity(.4),
+                              blurRadius: 5,
+                              spreadRadius: 1,
+                              offset: const Offset(0, 1)),
+                        ],
+                        border: hasFocus
+                            ? Border.all(
+                                width: 4,
+                                color: const Color(0xFF2B56B6),
+                              )
+                            : null,
+                      ),
                       child: AppImage(
-                        imageUrl: "${Configs.baseImagePath}${movie.posterPath}",
+                        imageUrl:
+                            "${Configs.baseImagePath}${movie.posterPath}",
                       ),
                     ),
                     verticalSpaceRegular,
@@ -79,18 +86,18 @@ class MovieTile extends HookConsumerWidget {
                           : null),
                       style: TextStyle(
                           fontSize: 14,
-                          color: Focus.of(context).hasPrimaryFocus
-                              ? Colors.black
-                              : Colors.grey[700]),
+                          color: hasFocus ? Colors.white : Colors.grey[700],
+                          fontWeight:
+                              hasFocus ? FontWeight.w700 : FontWeight.w600),
                     ),
                     const SizedBox(height: 5),
                     Text(
                       "⭐️ ${validString(movie.voteAverage.toString())}",
                       style: TextStyle(
                           fontSize: 14,
-                          color: Focus.of(context).hasPrimaryFocus
-                              ? Colors.black
-                              : Colors.grey[700]),
+                          color: hasFocus ? Colors.white : Colors.grey[700],
+                          fontWeight:
+                              hasFocus ? FontWeight.w700 : FontWeight.w600),
                     ),
                   ],
                 ),

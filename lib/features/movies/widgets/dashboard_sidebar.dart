@@ -15,7 +15,9 @@ class DashboardSideBar extends HookConsumerWidget {
     return SizedBox(
       height: double.infinity,
       child: Ink(
-        decoration: BoxDecoration(color: Colors.grey[900]),
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 18, 19, 21),
+        ),
         child: Padding(
           padding: const EdgeInsets.only(top: 10),
           child: ListView(
@@ -23,74 +25,87 @@ class DashboardSideBar extends HookConsumerWidget {
             shrinkWrap: true,
             controller: ScrollController(),
             children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.home),
-                title: const Text(
-                  'Home',
-                ),
-                selected: sidebarState.sidebarOptions == SidebarOptions.home,
+              DrawerItem(
+                title: 'Home',
+                iconData: Icons.home,
+                isSelected: sidebarState.sidebarOptions == SidebarOptions.home,
                 onTap: () {
                   sidebarStateNotifier.setSidebarOption(SidebarOptions.home);
                 },
-                selectedTileColor: Colors.grey[800],
-                textColor: Colors.white,
               ),
-              ListTile(
-                leading: const Icon(Icons.search),
-                title: const Text(
-                  'Search',
-                ),
-                selected: sidebarState.sidebarOptions == SidebarOptions.search,
+              DrawerItem(
+                title: 'Search',
+                iconData: Icons.search,
+                isSelected:
+                    sidebarState.sidebarOptions == SidebarOptions.search,
                 onTap: () {
                   sidebarStateNotifier.setSidebarOption(SidebarOptions.search);
                 },
-                selectedTileColor: Colors.grey[800],
-                textColor: Colors.white,
               ),
-              ListTile(
-                leading: const Icon(Icons.favorite),
-                title: const Text('Favorites'),
-                selected: false,
+              DrawerItem(
+                title: 'Favorites',
+                iconData: Icons.favorite,
+                isSelected:
+                    sidebarState.sidebarOptions == SidebarOptions.favorites,
                 onTap: () {},
-                selectedTileColor: Colors.grey[800],
-                textColor: Colors.white,
-                selectedColor: Colors.white,
               ),
-              ListTile(
-                leading: const Icon(Icons.list),
-                title: const Text('Watchlist'),
-                selected: false,
+              DrawerItem(
+                title: 'Watchlist',
+                iconData: Icons.list,
+                isSelected:
+                    sidebarState.sidebarOptions == SidebarOptions.watchlist,
                 onTap: () {},
-                selectedTileColor: Colors.grey[800],
-                textColor: Colors.white,
-                selectedColor: Colors.white,
               ),
-              ListTile(
-                leading: const Icon(Icons.list),
-                title: const Text('Series'),
-                selected: false,
-                onTap: () {},
-                selectedTileColor: Colors.grey[800],
-                textColor: Colors.white,
-                selectedColor: Colors.white,
-              ),
-              Consumer(
-                builder: (context, ref, child) => ListTile(
-                  leading: const Icon(Icons.exit_to_app),
-                  title: const Text('Logout'),
-                  selected: false,
-                  onTap: () {
-                    // ref.read(authVMProvider).logout();
-                  },
-                  selectedTileColor: Colors.grey[800],
-                  textColor: Colors.white,
-                  selectedColor: Colors.white,
-                ),
-              ),
+
+              // Consumer(
+              //   builder: (context, ref, child) => ListTile(
+              //     leading: const Icon(Icons.exit_to_app),
+              //     title: const Text('Logout'),
+              //     selected: false,
+              //     onTap: () {
+              //       // ref.read(authVMProvider).logout();
+              //     },
+              //     selectedTileColor: Colors.grey[800],
+              //     textColor: Colors.white,
+              //     selectedColor: Colors.white,
+              //   ),
+              // ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class DrawerItem extends StatelessWidget {
+  const DrawerItem(
+      {Key? key,
+      required this.isSelected,
+      required this.onTap,
+      required this.title,
+      required this.iconData})
+      : super(key: key);
+
+  final bool isSelected;
+  final VoidCallback onTap;
+  final String title;
+  final IconData iconData;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(iconData, size: 20),
+      title: Text(title),
+      horizontalTitleGap: 5,
+      style: ListTileStyle.drawer,
+      selectedTileColor: const Color(0xFF1E365C).withOpacity(.6),
+      selected: isSelected,
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
+      visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+      onTap: onTap,
+      textColor: Colors.white,
     );
   }
 }
