@@ -19,16 +19,6 @@ class HomeView extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        actions: [
-          GestureDetector(
-            onTap: () {},
-            child: const CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage("https://i.pravatar.cc/300"),
-            ),
-          ),
-          const SizedBox(width: 10),
-        ],
         title: Row(
           children: const [
             FlutterLogo(),
