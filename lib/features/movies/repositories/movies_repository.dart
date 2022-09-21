@@ -4,6 +4,7 @@ import 'package:latest_movies/features/movies/repositories/http_movies_repositor
 
 import '../../../core/models/paginated_response.dart';
 import '../models/movie/movie.dart';
+import '../models/movie_video/movie_video.dart';
 
 final moviesRepositoryProvider = Provider<MoviesRepository>(
   (ref) {
@@ -30,6 +31,11 @@ abstract class MoviesRepository {
   });
 
   Future<Movie> fetchMovieDetails({
+    required int movieId,
+    bool forceRefresh = false,
+  });
+
+  Future<List<MovieVideo>> fetchMovieVideos({
     required int movieId,
     bool forceRefresh = false,
   });

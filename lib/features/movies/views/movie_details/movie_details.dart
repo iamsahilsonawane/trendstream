@@ -6,7 +6,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/shared_widgets/app_loader.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/core/shared_widgets/image.dart';
+import 'package:latest_movies/core/utilities/app_utility.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
+import 'package:latest_movies/features/movies/controllers/movie_videos_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../../core/router/_app_router.dart';
 import '../../../../core/config/config.dart';
 import '../../../../core/router/_routes.dart';
@@ -22,6 +25,7 @@ class MovieDetailsView extends HookConsumerWidget {
     final movieId =
         useMemoized(() => ModalRoute.of(context)!.settings.arguments as int);
     final movieDetailsAsync = ref.watch(movieDetailsProvider(movieId));
+    final movieVideosAsync = ref.watch(movieVideosProvider(movieId));
     final posterContainerHeight = MediaQuery.of(context).size.height * 0.7;
 
     return Scaffold(
@@ -51,6 +55,9 @@ class MovieDetailsView extends HookConsumerWidget {
                             AppRouter.pop();
                           });
                         },
+                        style: TextButton.styleFrom(
+                          primary: Colors.white,
+                        ),
                         icon: const Icon(Icons.arrow_back),
                         label: const Text("Back")),
                   ),
@@ -211,12 +218,37 @@ class MovieDetailsView extends HookConsumerWidget {
                                     ),
                                   ),
                                   horizontalSpaceRegular,
-                                  AppButton(
-                                    text: "Watch Trailer",
-                                    onTap: () {
-                                      AppRouter.navigateToPage(
-                                          Routes.playerView);
+                                  movieVideosAsync.when(
+                                    data: (videos) {
+                                      final hasTrailer = videos.any((element) =>
+                                          element.type == "Trailer" &&
+                                          (element.official ?? false));
+
+                                      return AppButton(
+                                        text: "Watch Trailer",
+                                        onTap: !hasTrailer
+                                            ? null
+                                            : () async {
+                                                final firstTrailer = videos
+                                                    .firstWhere((element) =>
+                                                        element.type ==
+                                                            "Trailer" &&
+                                                        (element.official ??
+                                                            false));
+                                                if (!await launchUrl(Uri.parse(
+                                                    "https://youtube.com/watch?v=${firstTrailer.key}"))) {
+                                                  AppUtils.showSnackBar(context,
+                                                      message:
+                                                          "This TV does not support opening URLs");
+                                                }
+                                              },
+                                      );
                                     },
+                                    loading: () => const AppButton(
+                                        text: "Watch Trailer",
+                                        isLoading: true,
+                                        onTap: null),
+                                    error: (e, s) => const SizedBox.shrink(),
                                   ),
                                 ],
                               ),

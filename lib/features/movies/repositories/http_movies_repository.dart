@@ -4,6 +4,8 @@ import 'package:latest_movies/features/movies/models/movie/movie.dart';
 import 'package:latest_movies/core/models/paginated_response.dart';
 import 'package:latest_movies/features/movies/repositories/movies_repository.dart';
 
+import '../models/movie_video/movie_video.dart';
+
 class HttpMoviesRepository implements MoviesRepository {
   final HttpService httpService;
 
@@ -72,5 +74,21 @@ class HttpMoviesRepository implements MoviesRepository {
     );
 
     return Movie.fromJson(responseData);
+  }
+
+  @override
+  Future<List<MovieVideo>> fetchMovieVideos(
+      {required int movieId, bool forceRefresh = false}) async {
+    final responseData = await httpService.get(
+      '/movie/$movieId/videos',
+      forceRefresh: forceRefresh,
+      queryParameters: {
+        'api_key': apiKey,
+      },
+    );
+
+    return (responseData['results'] as List)
+        .map((x) => MovieVideo.fromJson(x))
+        .toList();
   }
 }

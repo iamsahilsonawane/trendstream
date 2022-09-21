@@ -14,7 +14,7 @@ class AppButton extends StatelessWidget {
   final bool isLoading;
   final String text;
   final Widget? prefix;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool autofocus;
 
   @override
