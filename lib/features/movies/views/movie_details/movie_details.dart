@@ -222,19 +222,24 @@ class MovieDetailsView extends HookConsumerWidget {
                                     data: (videos) {
                                       final hasTrailer = videos.any((element) =>
                                           element.type == "Trailer" &&
-                                          (element.official ?? false));
+                                          (element.official ?? false) &&
+                                          element.site == "YouTube");
 
                                       return AppButton(
                                         text: "Watch Trailer",
                                         onTap: !hasTrailer
                                             ? null
                                             : () async {
-                                                final firstTrailer = videos
-                                                    .firstWhere((element) =>
-                                                        element.type ==
-                                                            "Trailer" &&
-                                                        (element.official ??
-                                                            false));
+                                                final firstTrailer =
+                                                    videos.firstWhere(
+                                                  (element) =>
+                                                      element.type ==
+                                                          "Trailer" &&
+                                                      (element.official ??
+                                                          false) &&
+                                                      element.site == "YouTube",
+                                                );
+
                                                 if (!await launchUrl(Uri.parse(
                                                     "https://youtube.com/watch?v=${firstTrailer.key}"))) {
                                                   AppUtils.showSnackBar(context,
