@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/shared_widgets/app_keyboard/lowercase_keys.dart';
 import 'package:latest_movies/core/shared_widgets/app_keyboard/symbol_keys.dart';
 import 'package:latest_movies/core/shared_widgets/app_keyboard/uppercase_keys.dart';
@@ -86,7 +87,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
                     return KeyboardKeyButton(
                       autofocus: false,
                       focusColor: widget.focusColor,
-                      buttonColor: const Color(0xFF1E365C).withOpacity(.2),
+                      buttonColor: kPrimaryColor.withOpacity(.2),
                       label: Text(
                         state.keys[index],
                         style: const TextStyle(fontSize: 25),
@@ -107,9 +108,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
               child: KeyboardKeyButton(
                 autofocus: false,
                 focusColor: widget.focusColor,
-                // borderColor: widget.borderColor ?? widget.borderColor,
-                // buttonColor: widget.buttonColor ?? widget.buttonColor,
-                buttonColor: const Color(0xFF1E365C).withOpacity(.2),
+                buttonColor: kPrimaryColor.withOpacity(.2),
                 onPressed: () {
                   if (txtController.text.isNotEmpty) {
                     txtController.text = txtController.text
@@ -130,9 +129,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
                   return KeyboardKeyButton(
                     autofocus: false,
                     focusColor: widget.focusColor,
-                    // borderColor: widget.borderColor ?? widget.borderColor,
-                    // buttonColor: widget.buttonColor ?? widget.buttonColor,
-                    buttonColor: const Color(0xFF1E365C).withOpacity(.2),
+                    buttonColor: kPrimaryColor.withOpacity(.2),
                     onPressed: () {
                       if (state.keyboardType == AppKeyboardType.symbols) {
                         valueListenable.value =
@@ -164,12 +161,9 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
                   return KeyboardKeyButton(
                     autofocus: false,
                     focusColor: widget.focusColor,
-                    // borderColor: widget.borderColor ?? widget.borderColor,
-                    // buttonColor: widget.buttonColor ?? widget.buttonColor,
-
                     buttonColor: shiftIndexNotifier.value != 0
                         ? Colors.white
-                        : const Color(0xFF1E365C).withOpacity(.2),
+                        : kPrimaryColor.withOpacity(.2),
                     onPressed: () {
                       if (shiftIndexNotifier.value == 2) {
                         shiftIndexNotifier.value = 0;
@@ -205,9 +199,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
               child: KeyboardKeyButton(
                 autofocus: false,
                 focusColor: widget.focusColor,
-                // borderColor: widget.borderColor ?? widget.borderColor,
-                // buttonColor: widget.buttonColor ?? widget.buttonColor,
-                buttonColor: const Color(0xFF1E365C).withOpacity(.2),
+                buttonColor: kPrimaryColor.withOpacity(.2),
                 onPressed: () {
                   txtController.clear();
                 },
@@ -222,9 +214,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
               child: KeyboardKeyButton(
                 autofocus: true,
                 focusColor: widget.focusColor,
-                // borderColor: widget.borderColor ?? widget.borderColor,
-                // buttonColor: widget.buttonColor ?? widget.buttonColor,
-                buttonColor: const Color(0xFF1E365C).withOpacity(.2),
+                buttonColor: kPrimaryColor.withOpacity(.2),
                 onPressed: () {
                   txtController.text += ' ';
                 },

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/movie_search_controller.dart';
@@ -70,7 +71,7 @@ class SearchGrid extends HookConsumerWidget {
                     Icon(
                       CupertinoIcons.search,
                       size: 100,
-                      color: Color(0xFF1E365C),
+                      color: kPrimaryColor,
                     ),
                     verticalSpaceRegular,
                     Text("Try searching for \"Top Gun Maverick\""),

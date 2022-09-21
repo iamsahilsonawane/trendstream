@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/widgets/search_grid.dart';
 
@@ -23,7 +24,7 @@ class SearchPage extends HookConsumerWidget {
                 onValueChanged: (value) {
                   ref.read(searchKeywordProvider.notifier).setKeyword(value);
                 },
-                focusColor: const Color(0xFF1E365C)),
+                focusColor: kPrimaryColor),
           ),
           horizontalSpaceRegular,
           Expanded(
@@ -34,7 +35,7 @@ class SearchPage extends HookConsumerWidget {
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
-                    color: const Color(0xFF1E365C).withOpacity(.2),
+                    color: kPrimaryColor.withOpacity(.2),
                   ),
                   child: Row(
                     children: [

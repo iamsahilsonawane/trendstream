@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:latest_movies/core/constants/colors.dart';
 
 class AppButton extends StatelessWidget {
   const AppButton({
@@ -21,14 +22,13 @@ class AppButton extends StatelessWidget {
     return ElevatedButton(
       autofocus: autofocus,
       onPressed: onTap,
-      style:
-          ElevatedButton.styleFrom(primary: const Color(0xFF1E365C)).copyWith(
+      style: ElevatedButton.styleFrom(primary: kPrimaryColor).copyWith(
         backgroundColor: MaterialStateProperty.resolveWith(
           (states) {
             if (states.contains(MaterialState.focused)) {
-              return const Color(0xFF1E365C).withOpacity(.7);
+              return kPrimaryColor.withOpacity(.7);
             }
-            return const Color(0xFF1E365C);
+            return kPrimaryColor;
           },
         ),
         side: MaterialStateProperty.resolveWith(
@@ -38,9 +38,7 @@ class AppButton extends StatelessWidget {
                 color: Colors.white,
               );
             }
-            return const BorderSide(
-              color: Color(0xFF1E365C),
-            );
+            return const BorderSide(color: kPrimaryColor);
           },
         ),
       ),

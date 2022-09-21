@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/router/_app_router.dart';
 import 'package:latest_movies/features/movies/views/movies_dashboard/movies_dashboard.dart';
 
@@ -31,14 +32,10 @@ class MyApp extends StatelessWidget {
         title: 'Latest Movies',
         theme: ThemeData.dark().copyWith(
           platform: TargetPlatform.macOS,
-          appBarTheme: Theme.of(context).appBarTheme.copyWith(
-                color: const Color(0xFF17181A),
-              ),
-              scaffoldBackgroundColor: const Color(0xFF17181A)
+          appBarTheme:
+              Theme.of(context).appBarTheme.copyWith(color: kBackgroundColor),
+          scaffoldBackgroundColor: kBackgroundColor,
         ),
-        // home: true
-        //     ? const PlayerView()
-        //     : Consumer(
         home: const HomeView(),
         // home: Consumer(
         //   builder: (context, ref, child) => AuthWidget(

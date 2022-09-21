@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/features/movies/controllers/current_popular_movies_provider.dart';
 
 import '../../../../core/utilities/design_utility.dart';
@@ -67,13 +68,12 @@ class MovieTile extends HookConsumerWidget {
                         border: hasFocus
                             ? Border.all(
                                 width: 4,
-                                color: const Color(0xFF2B56B6),
+                                color: kPrimaryAccentColor,
                               )
                             : null,
                       ),
                       child: AppImage(
-                        imageUrl:
-                            "${Configs.baseImagePath}${movie.posterPath}",
+                        imageUrl: "${Configs.baseImagePath}${movie.posterPath}",
                       ),
                     ),
                     verticalSpaceRegular,

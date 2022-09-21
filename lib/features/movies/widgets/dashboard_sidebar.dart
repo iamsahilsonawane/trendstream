@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/features/movies/controllers/side_bar_controller.dart';
 
 import '../enums/sidebar_options.dart';
@@ -60,7 +61,7 @@ class DashboardSideBar extends HookConsumerWidget {
                     sidebarState.sidebarOptions == SidebarOptions.watchlist,
                 onTap: () {},
               ),
-
+              //logout button
               // Consumer(
               //   builder: (context, ref, child) => ListTile(
               //     leading: const Icon(Icons.exit_to_app),
@@ -105,7 +106,7 @@ class DrawerItem extends StatelessWidget {
       title: Text(title),
       horizontalTitleGap: 5,
       style: ListTileStyle.drawer,
-      selectedTileColor: const Color(0xFF1E365C).withOpacity(.6),
+      selectedTileColor: kPrimaryColor.withOpacity(.6),
       selected: isSelected,
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
