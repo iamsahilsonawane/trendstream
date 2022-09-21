@@ -7,16 +7,19 @@ class AppButton extends StatelessWidget {
     required this.onTap,
     this.prefix,
     this.isLoading = false,
+    this.autofocus = false,
   }) : super(key: key);
 
   final bool isLoading;
   final String text;
   final Widget? prefix;
   final VoidCallback onTap;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
+      autofocus: autofocus,
       onPressed: onTap,
       style:
           ElevatedButton.styleFrom(primary: const Color(0xFF1E365C)).copyWith(

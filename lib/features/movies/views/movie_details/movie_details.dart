@@ -17,14 +17,12 @@ import '../../controllers/movie_details_provider.dart';
 class MovieDetailsView extends HookConsumerWidget {
   const MovieDetailsView({super.key});
 
-  final posterContainerHeight = 450.0;
-  final trailerContainerHeight = 300.0;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final movieId =
         useMemoized(() => ModalRoute.of(context)!.settings.arguments as int);
     final movieDetailsAsync = ref.watch(movieDetailsProvider(movieId));
+    final posterContainerHeight = MediaQuery.of(context).size.height * 0.7;
 
     return Scaffold(
       body: movieDetailsAsync.when(
@@ -44,23 +42,26 @@ class MovieDetailsView extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.keyboard_arrow_left),
-                    onPressed: () {
-                      Debouncer(delay: const Duration(milliseconds: 500))
-                          .call(() {
-                        AppRouter.pop();
-                      });
-                    },
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: TextButton.icon(
+                        onPressed: () {
+                          Debouncer(delay: const Duration(milliseconds: 500))
+                              .call(() {
+                            AppRouter.pop();
+                          });
+                        },
+                        icon: const Icon(Icons.arrow_back),
+                        label: const Text("Back")),
                   ),
                   Container(
-                    padding: const EdgeInsets.all(40.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
                     height: posterContainerHeight,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
-                          height: posterContainerHeight - 40,
+                          height: posterContainerHeight,
                           width: 250,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(8),
@@ -198,6 +199,7 @@ class MovieDetailsView extends HookConsumerWidget {
                               Row(
                                 children: [
                                   AppButton(
+                                    autofocus: true,
                                     text: "Watch Now",
                                     onTap: () {
                                       AppRouter.navigateToPage(
