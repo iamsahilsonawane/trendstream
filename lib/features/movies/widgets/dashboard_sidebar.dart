@@ -27,7 +27,8 @@ class DashboardSideBar extends HookConsumerWidget {
             children: <Widget>[
               DrawerItem(
                 title: 'Home',
-                iconData: Icons.home,
+                iconData: Icons.home_outlined,
+                selectedIconData: Icons.home,
                 isSelected: sidebarState.sidebarOptions == SidebarOptions.home,
                 onTap: () {
                   sidebarStateNotifier.setSidebarOption(SidebarOptions.home);
@@ -35,7 +36,8 @@ class DashboardSideBar extends HookConsumerWidget {
               ),
               DrawerItem(
                 title: 'Search',
-                iconData: Icons.search,
+                iconData: Icons.search_outlined,
+                selectedIconData: Icons.search,
                 isSelected:
                     sidebarState.sidebarOptions == SidebarOptions.search,
                 onTap: () {
@@ -44,14 +46,16 @@ class DashboardSideBar extends HookConsumerWidget {
               ),
               DrawerItem(
                 title: 'Favorites',
-                iconData: Icons.favorite,
+                iconData: Icons.favorite_border,
+                selectedIconData: Icons.favorite,
                 isSelected:
                     sidebarState.sidebarOptions == SidebarOptions.favorites,
                 onTap: () {},
               ),
               DrawerItem(
                 title: 'Watchlist',
-                iconData: Icons.list,
+                iconData: Icons.list_outlined,
+                selectedIconData: Icons.list,
                 isSelected:
                     sidebarState.sidebarOptions == SidebarOptions.watchlist,
                 onTap: () {},
@@ -84,18 +88,20 @@ class DrawerItem extends StatelessWidget {
       required this.isSelected,
       required this.onTap,
       required this.title,
-      required this.iconData})
+      required this.iconData,
+      required this.selectedIconData})
       : super(key: key);
 
   final bool isSelected;
   final VoidCallback onTap;
   final String title;
   final IconData iconData;
+  final IconData selectedIconData;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(iconData, size: 20),
+      leading: Icon(isSelected ? selectedIconData : iconData, size: 20),
       title: Text(title),
       horizontalTitleGap: 5,
       style: ListTileStyle.drawer,
