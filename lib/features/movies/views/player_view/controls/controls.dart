@@ -275,13 +275,15 @@ class PlayerControls extends HookConsumerWidget {
                                 icon: const Icon(Icons.closed_caption),
                                 color: Colors.white,
                                 onPressed: () => _getSubtitleTracks(
-                                    context, isSubtitlesAdded.value, playerController: controlsModel),
+                                    context, isSubtitlesAdded.value,
+                                    playerController: controlsModel),
                               ),
                               IconButton(
                                 tooltip: 'Get Audio Tracks',
                                 icon: const Icon(Icons.audiotrack),
                                 color: Colors.white,
-                                onPressed: () => _getAudioTracks(context, playerController: controlsModel),
+                                onPressed: () => _getAudioTracks(context,
+                                    playerController: controlsModel),
                               ),
                               Row(
                                 children: [
@@ -380,7 +382,8 @@ class PlayerControls extends HookConsumerWidget {
                           : 'Disable',
                     ),
                     selected: index < subtitleTracks.keys.length
-                        ? playerController.selectedSubtitleId == subtitleTracks.keys.elementAt(index)
+                        ? playerController.selectedSubtitleId ==
+                            subtitleTracks.keys.elementAt(index)
                         : playerController.selectedSubtitleId == -1,
                     onTap: () {
                       Navigator.pop(
@@ -429,7 +432,8 @@ class PlayerControls extends HookConsumerWidget {
                           : 'Disable',
                     ),
                     selected: index < audioTracks.keys.length
-                        ? playerController.selectedAudioTrackId == audioTracks.keys.elementAt(index)
+                        ? playerController.selectedAudioTrackId ==
+                            audioTracks.keys.elementAt(index)
                         : playerController.selectedAudioTrackId == -1,
                     onTap: () {
                       Navigator.pop(

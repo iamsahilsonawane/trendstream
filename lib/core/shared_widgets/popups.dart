@@ -82,7 +82,7 @@ class AppDialogs {
                       StatefulBuilder(
                         builder: (context, setState) => SizedBox(
                           width: double.infinity,
-                          child: AppButton.secondary(
+                          child: AppButton(
                             text: AppStrings.sendEmail,
                             isLoading: isLoading,
                             onTap: () async {

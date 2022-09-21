@@ -188,7 +188,7 @@ class LoginView extends HookConsumerWidget {
                       verticalSpaceMedium,
                       SizedBox(
                         width: double.infinity,
-                        child: AppButton.secondary(
+                        child: AppButton(
                           text: 'Create an account',
                           onTap: () {
                             AppRouter.navigateToPage(Routes.signUpView);

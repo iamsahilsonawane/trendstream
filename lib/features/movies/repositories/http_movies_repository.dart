@@ -59,4 +59,18 @@ class HttpMoviesRepository implements MoviesRepository {
       ),
     );
   }
+
+  @override
+  Future<Movie> fetchMovieDetails(
+      {required int movieId, bool forceRefresh = false}) async {
+    final responseData = await httpService.get(
+      '/movie/$movieId',
+      forceRefresh: forceRefresh,
+      queryParameters: {
+        'api_key': apiKey,
+      },
+    );
+
+    return Movie.fromJson(responseData);
+  }
 }

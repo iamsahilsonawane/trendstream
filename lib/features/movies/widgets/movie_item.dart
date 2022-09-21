@@ -34,14 +34,15 @@ class MovieTile extends HookConsumerWidget {
           autofocus: autofocus,
           event: (event) {
             if (event.logicalKey == LogicalKeyboardKey.select) {
-              AppRouter.navigateToPage(Routes.detailsView);
+              AppRouter.navigateToPage(Routes.detailsView, arguments: movie.id);
             }
           },
           child: Builder(builder: (context) {
             return GestureDetector(
               onTap: () {
                 Focus.of(context).requestFocus();
-                AppRouter.navigateToPage(Routes.detailsView);
+                AppRouter.navigateToPage(Routes.detailsView,
+                    arguments: movie.id);
               },
               child: Container(
                 padding: const EdgeInsets.all(10.0),
@@ -70,7 +71,8 @@ class MovieTile extends HookConsumerWidget {
                     ),
                     verticalSpaceRegular,
                     Text(
-                      validString(movie.releaseDate != null && movie.releaseDate!.isNotEmpty
+                      validString(movie.releaseDate != null &&
+                              movie.releaseDate!.isNotEmpty
                           ? DateFormat("dd MMM yyyy").format(
                               DateFormat("yyyy-MM-dd")
                                   .parse(movie.releaseDate!))

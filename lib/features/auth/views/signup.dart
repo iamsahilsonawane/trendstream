@@ -180,7 +180,7 @@ class SignUpView extends HookConsumerWidget {
                       verticalSpaceMedium,
                       SizedBox(
                         width: double.infinity,
-                        child: AppButton.secondary(
+                        child: AppButton(
                           text: 'Login',
                           onTap: () {
                             AppRouter.pop();

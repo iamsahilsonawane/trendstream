@@ -28,4 +28,9 @@ abstract class MoviesRepository {
     int page = 1,
     bool forceRefresh = false,
   });
+
+  Future<Movie> fetchMovieDetails({
+    required int movieId,
+    bool forceRefresh = false,
+  });
 }

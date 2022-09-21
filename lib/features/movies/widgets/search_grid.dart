@@ -27,15 +27,15 @@ class SearchGrid extends HookConsumerWidget {
       child: searchedMoviesCount.map(
         data: (asyncData) {
           return AlignedGridView.count(
-            
-            key: const PageStorageKey<String>('preserve_search_grid_scroll_and_focus'),
+            key: const PageStorageKey<String>(
+                'preserve_search_grid_scroll_and_focus'),
             controller: ScrollController(),
             itemCount: asyncData.value,
             crossAxisCount: ResponsiveWidget.isMediumScreen(context)
                 ? 3
                 : ResponsiveWidget.isSmallScreen(context)
                     ? 2
-                    : 6,  
+                    : 6,
             mainAxisSpacing: 10.0,
             crossAxisSpacing: 10.0,
             itemBuilder: (BuildContext context, int index) {
