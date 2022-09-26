@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -5,12 +6,14 @@ import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/router/_app_router.dart';
 import 'package:latest_movies/features/movies/views/movies_dashboard/movies_dashboard.dart';
 
+import 'firebase_options.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await Firebase.initializeApp(
-  //   options: DefaultFirebaseOptions.currentPlatform,
-  // );
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // Pass all uncaught errors from the framework to Crashlytics.
   // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;

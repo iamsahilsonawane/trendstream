@@ -9,6 +9,7 @@ class AppButton extends StatelessWidget {
     this.prefix,
     this.isLoading = false,
     this.autofocus = false,
+    this.focusNode,
   }) : super(key: key);
 
   final bool isLoading;
@@ -16,11 +17,13 @@ class AppButton extends StatelessWidget {
   final Widget? prefix;
   final VoidCallback? onTap;
   final bool autofocus;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       autofocus: autofocus,
+      focusNode: focusNode,
       onPressed: onTap,
       style: ElevatedButton.styleFrom(primary: kPrimaryColor).copyWith(
         backgroundColor: MaterialStateProperty.resolveWith(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/shared_widgets/default_app_padding.dart';
 import 'package:latest_movies/features/movies/enums/sidebar_options.dart';
@@ -7,6 +8,7 @@ import 'package:latest_movies/features/movies/widgets/movies_grid.dart';
 
 import '../../../../core/utilities/design_utility.dart';
 import '../../controllers/side_bar_controller.dart';
+import '../../controllers/update_dowload_providers/update_download_manager_provider.dart';
 import '../../widgets/dashboard_sidebar.dart';
 
 class HomeView extends HookConsumerWidget {
@@ -15,6 +17,11 @@ class HomeView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sidebarState = ref.watch(sidebarStateProvider);
+
+    useEffect(() {
+      ref.read(updateDownloadManagerProvider).checkAndDownloadUpdate(context);
+      return null;
+    }, []);
 
     return Scaffold(
       appBar: AppBar(
