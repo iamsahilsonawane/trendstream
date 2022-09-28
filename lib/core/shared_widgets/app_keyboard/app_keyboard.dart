@@ -85,7 +85,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
                   ),
                   itemBuilder: (context, index) {
                     return KeyboardKeyButton(
-                      autofocus: false,
+                      autofocus: index == 0,
                       focusColor: widget.focusColor,
                       buttonColor: kPrimaryColor.withOpacity(.2),
                       label: Text(
@@ -212,7 +212,7 @@ class _AppOnScreenKeyboardState extends State<AppOnScreenKeyboard> {
             const SizedBox(width: 5),
             Flexible(
               child: KeyboardKeyButton(
-                autofocus: true,
+                autofocus: false,
                 focusColor: widget.focusColor,
                 buttonColor: kPrimaryColor.withOpacity(.2),
                 onPressed: () {
