@@ -5,6 +5,7 @@ class FocusWidget extends StatefulWidget {
   final bool? autofocus;
   final Function(bool hasFocus)? hasFocus;
   final Function(RawKeyEvent event) event;
+  final FocusNode? customFocusNode;
 
   const FocusWidget({
     Key? key,
@@ -12,6 +13,7 @@ class FocusWidget extends StatefulWidget {
     required this.event,
     this.autofocus,
     this.hasFocus,
+    this.customFocusNode,
   }) : super(key: key);
 
   @override
@@ -22,18 +24,22 @@ class FocusWidget extends StatefulWidget {
 class _FocusWidgetState extends State<FocusWidget> {
   final FocusNode fn = FocusNode();
 
+  void listener() {
+    widget.hasFocus?.call(widget.customFocusNode?.hasFocus ?? fn.hasFocus);
+  }
+
+  FocusNode get _primaryFocusNode => (widget.customFocusNode ?? fn);
+
   @override
   void initState() {
     super.initState();
-    fn.addListener(() {
-      widget.hasFocus?.call(fn.hasFocus);
-    });
+    _primaryFocusNode.addListener(listener);
   }
 
   @override
   void dispose() {
-    fn.removeListener(() {});
-    fn.dispose();
+    _primaryFocusNode.removeListener(listener);
+    _primaryFocusNode.dispose();
     super.dispose();
   }
 
@@ -41,7 +47,7 @@ class _FocusWidgetState extends State<FocusWidget> {
   Widget build(BuildContext context) {
     return RawKeyboardListener(
       autofocus: widget.autofocus ?? false,
-      focusNode: fn,
+      focusNode: widget.customFocusNode ?? fn,
       onKey: (event) {
         widget.event.call(event);
       },

@@ -94,7 +94,7 @@ class DrawerItem extends StatelessWidget {
       : super(key: key);
 
   final bool isSelected;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final String title;
   final IconData iconData;
   final IconData selectedIconData;
