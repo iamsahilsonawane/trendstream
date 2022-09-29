@@ -98,7 +98,6 @@ class PlayerControls extends HookConsumerWidget {
           body: RawKeyboardListener(
             focusNode: FocusNode(canRequestFocus: false),
             onKey: (event) {
-              log("event: ${event.logicalKey}");
               if (event.logicalKey == LogicalKeyboardKey.select &&
                   sliderFocusNode.hasPrimaryFocus) {
                 if (controlsModel.playingState == PlayingState.playing) {
@@ -115,8 +114,6 @@ class PlayerControls extends HookConsumerWidget {
               onNotification: (notification) {
                 debugPrint(
                     "New widget focused: ${notification.childKey.toString()}");
-                // controlsModel
-                //     .onHover(); //restart the timer if any item is focused
                 return true;
               },
               child: FocusScope(
@@ -129,7 +126,7 @@ class PlayerControls extends HookConsumerWidget {
                       child: FocusNotifier(
                         key: const Key("navigateBack"),
                         builder: (context, node) => IconButton(
-                          autofocus: true,
+                          autofocus: false,
                           iconSize: 30,
                           focusNode: node,
                           focusColor: Colors.white.withOpacity(0.2),
@@ -200,7 +197,6 @@ class PlayerControls extends HookConsumerWidget {
                                         if (e.physicalKey ==
                                             PhysicalKeyboardKey.arrowRight) {
                                           if (sliderFocusNode.hasPrimaryFocus) {
-                                            log("Right arrow pressed");
                                             sliderChangeDebouncer.run(() {
                                               controlsModel.seekForward(
                                                   seconds: 5);
@@ -209,7 +205,6 @@ class PlayerControls extends HookConsumerWidget {
                                         } else if (e.physicalKey ==
                                             PhysicalKeyboardKey.arrowLeft) {
                                           if (sliderFocusNode.hasPrimaryFocus) {
-                                            log("Left arrow pressed");
                                             upDebouncer.run(() {
                                               controlsModel.seekBackward(
                                                   seconds: 5);
@@ -241,9 +236,22 @@ class PlayerControls extends HookConsumerWidget {
                                               }
                                             });
                                           }
+
+                                          // Play/pause video on select press while slider is focused
+                                          if (e.physicalKey ==
+                                                  PhysicalKeyboardKey.select &&
+                                              sliderFocusNode.hasPrimaryFocus) {
+                                            if (controlsModel.playingState ==
+                                                PlayingState.playing) {
+                                              vlcPlayerController.pause();
+                                            } else {
+                                              vlcPlayerController.play();
+                                            }
+                                          }
                                         }
                                       },
                                       child: Slider(
+                                        autofocus: true,
                                         focusNode: sliderFocusNode,
                                         activeColor: Colors.redAccent,
                                         inactiveColor: Colors.white70,
