@@ -27,12 +27,21 @@ class DashboardSideBar extends HookConsumerWidget {
             controller: ScrollController(),
             children: <Widget>[
               DrawerItem(
-                title: 'Home',
+                title: 'Movies',
                 iconData: Icons.home_outlined,
                 selectedIconData: Icons.home,
                 isSelected: sidebarState.sidebarOptions == SidebarOptions.home,
                 onTap: () {
                   sidebarStateNotifier.setSidebarOption(SidebarOptions.home);
+                },
+              ),
+              DrawerItem(
+                title: 'TV Shows',
+                iconData: Icons.tv_outlined,
+                selectedIconData: Icons.tv,
+                isSelected: sidebarState.sidebarOptions == SidebarOptions.tvShows,
+                onTap: () {
+                  sidebarStateNotifier.setSidebarOption(SidebarOptions.tvShows);
                 },
               ),
               DrawerItem(
