@@ -58,8 +58,10 @@ class AppButton extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (prefix != null) prefix!,
-                const SizedBox(width: 10),
+                if (prefix != null) ...[
+                  prefix!,
+                  const SizedBox(width: 10),
+                ],
                 Text(
                   text,
                 ),
