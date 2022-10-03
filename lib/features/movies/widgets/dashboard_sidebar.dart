@@ -39,7 +39,8 @@ class DashboardSideBar extends HookConsumerWidget {
                 title: 'TV Shows',
                 iconData: Icons.tv_outlined,
                 selectedIconData: Icons.tv,
-                isSelected: sidebarState.sidebarOptions == SidebarOptions.tvShows,
+                isSelected:
+                    sidebarState.sidebarOptions == SidebarOptions.tvShows,
                 onTap: () {
                   sidebarStateNotifier.setSidebarOption(SidebarOptions.tvShows);
                 },

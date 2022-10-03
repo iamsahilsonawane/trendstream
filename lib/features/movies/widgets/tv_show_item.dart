@@ -37,7 +37,8 @@ class TvShowTile extends HookConsumerWidget {
           focusColor: Colors.transparent,
           splashColor: Colors.transparent,
           onTap: () {
-            AppRouter.navigateToPage(Routes.detailsView, arguments: show.id);
+            AppRouter.navigateToPage(Routes.tvShowDetailsView,
+                arguments: show.id);
           },
           child: Builder(builder: (context) {
             final bool hasFocus = Focus.of(context).hasPrimaryFocus;

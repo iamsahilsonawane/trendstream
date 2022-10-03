@@ -3,6 +3,7 @@ import 'package:latest_movies/features/movies/models/tv_show/tv_show.dart';
 import 'package:latest_movies/features/movies/repositories/tv_shows_repository.dart';
 
 import '../../../core/models/paginated_response.dart';
+import '../models/tv_show_details/tv_show_details.dart';
 
 final popularTvShowsCountProvider = Provider<AsyncValue<int>>((ref) {
   return ref.watch(paginatedPopularTvShowsProvider(0)).whenData(
@@ -21,4 +22,11 @@ final paginatedPopularTvShowsProvider =
 
 final currentPopularTvShowProvider = Provider<AsyncValue<TvShow>>((ref) {
   throw UnimplementedError();
+});
+
+final tvShowDetailsProvider =
+    FutureProvider.family<TvShowDetails, int>((ref, tvShowId) async {
+  return ref
+      .watch(tvShowsRepositoryProvider)
+      .fetchTvShowDetails(tvShowId: tvShowId);
 });

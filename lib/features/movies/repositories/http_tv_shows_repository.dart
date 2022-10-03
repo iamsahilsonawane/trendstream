@@ -3,6 +3,7 @@ import 'package:latest_movies/core/services/http/http_service.dart';
 import 'package:latest_movies/features/movies/models/movie/movie.dart';
 import 'package:latest_movies/core/models/paginated_response.dart';
 import 'package:latest_movies/features/movies/models/tv_show/tv_show.dart';
+import 'package:latest_movies/features/movies/models/tv_show_details/tv_show_details.dart';
 import 'package:latest_movies/features/movies/repositories/tv_shows_repository.dart';
 
 
@@ -63,16 +64,18 @@ class HttpTvShowsRepository implements TvShowsRepository {
   }
 
   @override
-  Future<TvShow> fetchTvShowDetails(
-      {required int movieId, bool forceRefresh = false}) async {
+  Future<TvShowDetails> fetchTvShowDetails(
+      {required int tvShowId, bool forceRefresh = false}) async {
     final responseData = await httpService.get(
-      '/movie/$movieId',
+      '$path/$tvShowId',
       forceRefresh: forceRefresh,
       queryParameters: {
         'api_key': apiKey,
+        'append_to_response': 'videos',
       },
     );
 
-    return TvShow.fromJson(responseData);
+    return TvShowDetails.fromJson(responseData);
   }
+
 }

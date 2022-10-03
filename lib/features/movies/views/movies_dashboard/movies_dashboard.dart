@@ -43,20 +43,18 @@ class HomeView extends HookConsumerWidget {
           Expanded(
             flex: 10,
             child: DefaultAppPadding(
-              child: Builder(
-                builder: (context) {
-                  switch (sidebarState.sidebarOptions) {
-                    case SidebarOptions.home:
-                      return const MoviesGrid();
-                    case SidebarOptions.tvShows:
-                      return const TvShowsGrid();
-                    case SidebarOptions.search:
-                      return const SearchPage();
-                    default:
-                      return const MoviesGrid();
-                  }
+              child: Builder(builder: (context) {
+                switch (sidebarState.sidebarOptions) {
+                  case SidebarOptions.home:
+                    return const MoviesGrid();
+                  case SidebarOptions.tvShows:
+                    return const TvShowsGrid();
+                  case SidebarOptions.search:
+                    return const SearchPage();
+                  default:
+                    return const MoviesGrid();
                 }
-              ),
+              }),
 
               // IndexedStack(
               //   index: sidebarState.sidebarOptions.index,
