@@ -6,6 +6,7 @@ import 'package:latest_movies/features/movies/models/tv_show/tv_show.dart';
 import 'package:latest_movies/features/movies/models/tv_show_details/tv_show_details.dart';
 import 'package:latest_movies/features/movies/repositories/tv_shows_repository.dart';
 
+import '../models/season_details/season_details.dart';
 
 class HttpTvShowsRepository implements TvShowsRepository {
   final HttpService httpService;
@@ -78,4 +79,20 @@ class HttpTvShowsRepository implements TvShowsRepository {
     return TvShowDetails.fromJson(responseData);
   }
 
+  @override
+  Future<SeasonDetails> fetchTvShowSeasonDetails({
+    required int tvShowId,
+    required int seasonNumber,
+    bool forceRefresh = false,
+  }) async {
+    final responseData = await httpService.get(
+      '$path/$tvShowId/season/$seasonNumber',
+      forceRefresh: forceRefresh,
+      queryParameters: {
+        'api_key': apiKey,
+      },
+    );
+
+    return SeasonDetails.fromJson(responseData);
+  }
 }

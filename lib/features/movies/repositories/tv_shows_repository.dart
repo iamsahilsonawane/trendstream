@@ -1,5 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/services/http/http_service_provider.dart';
+import 'package:latest_movies/features/movies/models/season_details/season_details.dart';
 import 'package:latest_movies/features/movies/models/tv_show/tv_show.dart';
 import 'package:latest_movies/features/movies/repositories/http_tv_shows_repository.dart';
 
@@ -32,6 +33,12 @@ abstract class TvShowsRepository {
 
   Future<TvShowDetails> fetchTvShowDetails({
     required int tvShowId,
+    bool forceRefresh = false,
+  });
+
+  Future<SeasonDetails> fetchTvShowSeasonDetails({
+    required int tvShowId,
+    required int seasonNumber,
     bool forceRefresh = false,
   });
 }

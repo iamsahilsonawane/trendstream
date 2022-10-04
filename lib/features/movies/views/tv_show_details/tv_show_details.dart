@@ -9,8 +9,10 @@ import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/core/shared_widgets/image.dart';
 import 'package:latest_movies/core/utilities/app_utility.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
+import 'package:latest_movies/features/movies/models/season_details_args/season_details_args.dart';
 import 'package:latest_movies/features/movies/models/tv_show_details/season.dart';
 import 'package:latest_movies/features/movies/models/tv_show_details/tv_show_details.dart';
+import 'package:latest_movies/features/movies/widgets/season_episodes_list.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../../core/router/_app_router.dart';
 import '../../../../core/config/config.dart';
@@ -18,6 +20,7 @@ import '../../../../core/router/_routes.dart';
 import '../../../../core/shared_widgets/button.dart';
 import '../../../../core/shared_widgets/default_app_padding.dart';
 import '../../../../core/utilities/debouncer.dart';
+import '../../controllers/tv_show_season_details_provider.dart';
 import '../../controllers/tv_shows_provider.dart';
 
 class TvShowDetailsView extends HookConsumerWidget {
@@ -28,6 +31,7 @@ class TvShowDetailsView extends HookConsumerWidget {
     final showId =
         useMemoized(() => ModalRoute.of(context)!.settings.arguments as int);
     final tvShowDetailsAsync = ref.watch(tvShowDetailsProvider(showId));
+
     final posterContainerHeight = MediaQuery.of(context).size.height * 0.7;
     final selectedSeason = useRef<Season?>(null);
 
@@ -40,7 +44,7 @@ class TvShowDetailsView extends HookConsumerWidget {
                 (s) => s.seasonNumber == 1,
                 orElse: () => show.seasons!.first);
           }
-          return Container(
+          return DecoratedBox(
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
@@ -224,60 +228,15 @@ class TvShowDetailsView extends HookConsumerWidget {
                           ),
                         ),
                         verticalSpaceLarge,
-                        //   ListView.builder(
-                        //     shrinkWrap: true,
-                        //     physics: const NeverScrollableScrollPhysics(),
-                        //     itemCount: 5,
-                        //     itemBuilder: (context, index) => DefaultAppPadding(
-                        //       child: InkWell(
-                        //         child: Row(
-                        //           mainAxisSize: MainAxisSize.min,
-                        //           children: [
-                        //             Image.network(
-                        //               "${Configs.baseImagePath}${show.posterPath}",
-                        //               width: 100,
-                        //               height: 100,
-                        //             ),
-                        //             horizontalSpaceSmall,
-                        //             Column(
-                        //               crossAxisAlignment:
-                        //                   CrossAxisAlignment.start,
-                        //               children: const [
-                        //                 Text(
-                        //                   "Season 1",
-                        //                   style: TextStyle(
-                        //                     fontSize: 16.0,
-                        //                     color: Colors.white,
-                        //                     fontWeight: FontWeight.bold,
-                        //                   ),
-                        //                 ),
-                        //                 verticalSpaceSmall,
-                        //                 Text(
-                        //                   "Episodes 1-10",
-                        //                   style: TextStyle(
-                        //                     fontSize: 14.0,
-                        //                     color: Colors.grey,
-                        //                     fontWeight: FontWeight.w300,
-                        //                   ),
-                        //                 ),
-                        //                 verticalSpaceSmall,
-                        //                 Text(
-                        //                   "The Great War has come, the Wall has fallen and the Night King's army of the dead marches towards Westeros. The end is here, but who will take the Iron Throne?",
-                        //                   maxLines: 3,
-                        //                   overflow: TextOverflow.ellipsis,
-                        //                   style: TextStyle(
-                        //                     fontSize: 14.0,
-                        //                     color: Colors.grey,
-                        //                     fontWeight: FontWeight.w300,
-                        //                   ),
-                        //                 ),
-                        //               ],
-                        //             )
-                        //           ],
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
+                        ProviderScope(overrides: [
+                          currentSeasonDetailsProvider.overrideWithValue(
+                            ref
+                                .watch(seasonDetailsProvider(SeasonDetailsArgs(
+                                  show.id!,
+                                  selectedSeason.value!.seasonNumber!,
+                                ))),
+                          ),
+                        ], child: const SeasonEpisodesList()),
                       ],
                     ),
                   ),
