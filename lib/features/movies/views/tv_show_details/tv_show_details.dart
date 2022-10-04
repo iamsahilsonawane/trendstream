@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -33,7 +34,7 @@ class TvShowDetailsView extends HookConsumerWidget {
     final tvShowDetailsAsync = ref.watch(tvShowDetailsProvider(showId));
 
     final posterContainerHeight = MediaQuery.of(context).size.height * 0.7;
-    final selectedSeason = useRef<Season?>(null);
+    final selectedSeason = useState<Season?>(null);
 
     return Scaffold(
       body: tvShowDetailsAsync.when(
@@ -201,9 +202,9 @@ class TvShowDetailsView extends HookConsumerWidget {
                                           autofocus: true,
                                           text: selectedSeason.value?.name ??
                                               "Season 1",
-                                          onTap: () {
-                                            //todo: open dialog with options
-                                            showDialog(
+                                          onTap: () async {
+                                            final seasonOrNull =
+                                                await showDialog(
                                               context: context,
                                               builder: (context) =>
                                                   SeasonPickerDialog(
@@ -213,6 +214,12 @@ class TvShowDetailsView extends HookConsumerWidget {
                                                         -1,
                                               ),
                                             );
+                                            if (seasonOrNull != null) {
+                                              log("Selected season: ${seasonOrNull.name}");
+
+                                              selectedSeason.value =
+                                                  seasonOrNull;
+                                            }
                                           },
                                           prefix: const Icon(
                                             Icons.movie_creation_rounded,
@@ -230,11 +237,10 @@ class TvShowDetailsView extends HookConsumerWidget {
                         verticalSpaceLarge,
                         ProviderScope(overrides: [
                           currentSeasonDetailsProvider.overrideWithValue(
-                            ref
-                                .watch(seasonDetailsProvider(SeasonDetailsArgs(
-                                  show.id!,
-                                  selectedSeason.value!.seasonNumber!,
-                                ))),
+                            ref.watch(seasonDetailsProvider(SeasonDetailsArgs(
+                              show.id!,
+                              selectedSeason.value!.seasonNumber!,
+                            ))),
                           ),
                         ], child: const SeasonEpisodesList()),
                       ],
@@ -356,7 +362,7 @@ class _SeasonPickerDialogState extends State<SeasonPickerDialog> {
 
                   return InkWell(
                     onTap: () {
-                      AppRouter.navigateToPage(Routes.playerView);
+                      Navigator.pop(context, season);
                     },
                     child: ColoredBox(
                       color: season.id == widget.selectedSeasonId
