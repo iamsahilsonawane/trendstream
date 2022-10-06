@@ -1,0 +1,4 @@
+enum SearchType {
+  movies,
+  tvShows,
+}

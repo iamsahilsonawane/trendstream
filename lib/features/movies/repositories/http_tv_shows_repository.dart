@@ -1,6 +1,5 @@
 import 'package:latest_movies/core/config/config.dart';
 import 'package:latest_movies/core/services/http/http_service.dart';
-import 'package:latest_movies/features/movies/models/movie/movie.dart';
 import 'package:latest_movies/core/models/paginated_response.dart';
 import 'package:latest_movies/features/movies/models/tv_show/tv_show.dart';
 import 'package:latest_movies/features/movies/models/tv_show_details/tv_show_details.dart';
@@ -45,7 +44,7 @@ class HttpTvShowsRepository implements TvShowsRepository {
   Future<PaginatedResponse<TvShow>> searchTvShow(
       {required String query, int page = 1, bool forceRefresh = false}) async {
     final responseData = await httpService.get(
-      '/search/movie',
+      '/search/tv',
       forceRefresh: forceRefresh,
       queryParameters: {
         'query': query,
@@ -58,7 +57,7 @@ class HttpTvShowsRepository implements TvShowsRepository {
       responseData,
       results: List<TvShow>.from(
         responseData['results'].map(
-          (x) => Movie.fromJson(x),
+          (x) => TvShow.fromJson(x),
         ),
       ),
     );
