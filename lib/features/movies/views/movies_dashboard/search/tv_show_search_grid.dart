@@ -29,34 +29,32 @@ class TvShowSearchGrid extends HookConsumerWidget {
       child: searchedShowsCount.map(
         data: (asyncData) {
           return AlignedGridView.count(
-            key: const PageStorageKey<String>(
-                'preserve_search_grid_scroll_and_focus_tvshows'),
-            controller: ScrollController(),
-            itemCount: asyncData.value,
-            crossAxisCount: ResponsiveWidget.isMediumScreen(context)
-                ? 3
-                : ResponsiveWidget.isSmallScreen(context)
-                    ? 2
-                    : 6,
-            mainAxisSpacing: 10.0,
-            crossAxisSpacing: 10.0,
-            itemBuilder: (BuildContext context, int index) {
-              final AsyncValue<TvShow> currentShow = ref
-                  .watch(paginatedSearchTvShowsProvider(
-                      PaginatedSearchProviderArgs(
-                          page: index ~/ 20,
-                          query: ref.watch(searchKeywordProvider))))
-                  .whenData((pageData) => pageData.results[index % 20]);
+              key: const PageStorageKey<String>(
+                  'preserve_search_grid_scroll_and_focus_tvshows'),
+              controller: ScrollController(),
+              itemCount: asyncData.value,
+              crossAxisCount: ResponsiveWidget.isMediumScreen(context)
+                  ? 3
+                  : ResponsiveWidget.isSmallScreen(context)
+                      ? 2
+                      : 6,
+              mainAxisSpacing: 10.0,
+              crossAxisSpacing: 10.0,
+              itemBuilder: (BuildContext context, int index) {
+                final AsyncValue<TvShow> currentShow = ref
+                    .watch(paginatedSearchTvShowsProvider(
+                        PaginatedSearchProviderArgs(
+                            page: index ~/ 20,
+                            query: ref.watch(searchKeywordProvider))))
+                    .whenData((pageData) => pageData.results[index % 20]);
 
-              return ProviderScope(
-                overrides: [
-                  currentPopularTvShowProvider
-                      .overrideWithValue(currentShow)
-                ],
-                child: const TvShowTile(),
-              );
-            }
-          );
+                return ProviderScope(
+                  overrides: [
+                    currentPopularTvShowProvider.overrideWithValue(currentShow)
+                  ],
+                  child: const TvShowTile(),
+                );
+              });
         },
         error: (e) {
           if (e.error is DioError) {

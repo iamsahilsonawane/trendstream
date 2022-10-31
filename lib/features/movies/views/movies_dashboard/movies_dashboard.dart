@@ -8,6 +8,7 @@ import 'package:latest_movies/features/movies/widgets/movies_grid.dart';
 import 'package:latest_movies/features/movies/widgets/tvshows_grid.dart';
 
 import '../../../../core/utilities/design_utility.dart';
+import '../../../tv_guide/views/tv_guide/tv_guide.dart';
 import '../../controllers/side_bar_controller.dart';
 import '../../controllers/update_dowload_providers/update_download_manager_provider.dart';
 import '../../widgets/dashboard_sidebar.dart';
@@ -49,6 +50,8 @@ class HomeView extends HookConsumerWidget {
                     return const MoviesGrid();
                   case SidebarOptions.tvShows:
                     return const TvShowsGrid();
+                  case SidebarOptions.tvGuide:
+                    return const TvGuide();
                   case SidebarOptions.search:
                     return const SearchPage();
                   default:

@@ -2,6 +2,7 @@
 enum SidebarOptions {
   home,
   tvShows,
+  tvGuide,
   search,
   favorites,
   watchlist,

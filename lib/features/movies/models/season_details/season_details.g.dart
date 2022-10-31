@@ -21,11 +21,11 @@ SeasonDetails _$SeasonDetailsFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$SeasonDetailsToJson(SeasonDetails instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'air_date': instance.airDate,
       'episodes': instance.episodes,
       'name': instance.name,
       'overview': instance.overview,
-      'id': instance.id,
       'poster_path': instance.posterPath,
       'season_number': instance.seasonNumber,
     };

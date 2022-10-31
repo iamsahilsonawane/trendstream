@@ -46,6 +46,16 @@ class DashboardSideBar extends HookConsumerWidget {
                 },
               ),
               DrawerItem(
+                title: 'TV Guide',
+                iconData: Icons.live_tv_outlined,
+                selectedIconData: Icons.live_tv,
+                isSelected:
+                    sidebarState.sidebarOptions == SidebarOptions.tvGuide,
+                onTap: () {
+                  sidebarStateNotifier.setSidebarOption(SidebarOptions.tvGuide);
+                },
+              ),
+              DrawerItem(
                 title: 'Search',
                 iconData: Icons.search_outlined,
                 selectedIconData: Icons.search,

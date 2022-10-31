@@ -17,7 +17,8 @@ final currentSeasonDetailsProvider = Provider<AsyncValue<SeasonDetails>>((ref) {
       "currnetSeasonDetailsProvider isn't implemented. Override the value first");
 });
 
-final seasonDetailsProvider = FutureProvider.family<SeasonDetails, SeasonDetailsArgs>((ref, args) async {
+final seasonDetailsProvider =
+    FutureProvider.family<SeasonDetails, SeasonDetailsArgs>((ref, args) async {
   // final args =
   //     ref.watch(currentSeasonArgsProvider); // listen to the current season args
   return ref.watch(tvShowsRepositoryProvider).fetchTvShowSeasonDetails(
