@@ -1,12 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'category.dart';
-import 'description.dart';
 import 'icon.dart';
-import 'rating.dart';
-import 'sub_title.dart';
-import 'title.dart';
 
 part 'program.g.dart';
 
@@ -14,18 +9,18 @@ part 'program.g.dart';
 class Program extends Equatable {
   final String? site;
   final String? channel;
-  final List<Title>? titles;
+  final List<dynamic>? titles;
   @JsonKey(name: 'sub_titles')
-  final List<SubTitle>? subTitles;
-  final List<Description>? descriptions;
+  final List<dynamic>? subTitles;
+  final List<dynamic>? descriptions;
   final Icon? icon;
   final List<dynamic>? episodeNumbers;
   final dynamic date;
   final int? start;
   final int? stop;
   final List<dynamic>? urls;
-  final List<Rating>? ratings;
-  final List<Category>? categories;
+  final List<dynamic>? ratings;
+  final List<dynamic>? categories;
   final List<dynamic>? directors;
   final List<dynamic>? actors;
   final List<dynamic>? writers;
@@ -72,17 +67,17 @@ class Program extends Equatable {
   Program copyWith({
     String? site,
     String? channel,
-    List<Title>? titles,
-    List<SubTitle>? subTitles,
-    List<Description>? descriptions,
+    List<dynamic>? titles,
+    List<dynamic>? subTitles,
+    List<dynamic>? descriptions,
     Icon? icon,
     List<dynamic>? episodeNumbers,
     dynamic date,
     int? start,
     int? stop,
     List<dynamic>? urls,
-    List<Rating>? ratings,
-    List<Category>? categories,
+    List<dynamic>? ratings,
+    List<dynamic>? categories,
     List<dynamic>? directors,
     List<dynamic>? actors,
     List<dynamic>? writers,
