@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:latest_movies/features/tv_guide/models/program_guide/title.dart';
 
 import 'icon.dart';
 
@@ -9,7 +10,7 @@ part 'program.g.dart';
 class Program extends Equatable {
   final String? site;
   final String? channel;
-  final List<dynamic>? titles;
+  final List<ProgramTitle>? titles;
   @JsonKey(name: 'sub_titles')
   final List<dynamic>? subTitles;
   final List<dynamic>? descriptions;
@@ -67,7 +68,7 @@ class Program extends Equatable {
   Program copyWith({
     String? site,
     String? channel,
-    List<dynamic>? titles,
+    List<ProgramTitle>? titles,
     List<dynamic>? subTitles,
     List<dynamic>? descriptions,
     Icon? icon,

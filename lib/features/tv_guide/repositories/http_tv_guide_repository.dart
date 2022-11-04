@@ -12,12 +12,12 @@ class HttpTvGuideRepository implements TvGuideRepository {
   String get apiKey => Configs.apiKey;
 
   @override
-  String get path => "";
+  String get path => "https://iptv-org.github.io/epg/guides";
 
   @override
   Future<ProgramGuide> getProgramGuide({bool forceRefresh = false}) async {
     final responseData = await httpService.get(
-      'https://iptv-org.github.io/epg/guides/us/myafn.dodmedia.osd.mil.epg.json',
+      '$path/us/myafn.dodmedia.osd.mil.epg.json',
       forceRefresh: forceRefresh,
       queryParameters: {},
     );

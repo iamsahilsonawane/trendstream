@@ -9,7 +9,9 @@ part of 'program.dart';
 Program _$ProgramFromJson(Map<String, dynamic> json) => Program(
       site: json['site'] as String?,
       channel: json['channel'] as String?,
-      titles: (json['titles'] as List<dynamic>?),
+      titles: (json['titles'] as List<dynamic>?)
+          ?.map((e) => ProgramTitle.fromJson(e as Map<String, dynamic>))
+          .toList(),
       subTitles: json['sub_titles'] as List<dynamic>?,
       descriptions: json['descriptions'] as List<dynamic>?,
       icon: json['icon'] == null
@@ -21,7 +23,7 @@ Program _$ProgramFromJson(Map<String, dynamic> json) => Program(
       stop: json['stop'] as int?,
       urls: json['urls'] as List<dynamic>?,
       ratings: json['ratings'] as List<dynamic>?,
-      categories: (json['categories'] as List<dynamic>?),
+      categories: json['categories'] as List<dynamic>?,
       directors: json['directors'] as List<dynamic>?,
       actors: json['actors'] as List<dynamic>?,
       writers: json['writers'] as List<dynamic>?,
