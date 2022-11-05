@@ -7,11 +7,14 @@ class AppImage extends StatelessWidget {
     super.key,
     required this.imageUrl,
     this.fit = BoxFit.cover,
+    this.errorWidget,
     // required this.height,
   });
 
   final String imageUrl;
   final BoxFit fit;
+  final Widget Function(BuildContext, String, dynamic)? errorWidget;
+
   // final double height;
 
   @override
@@ -19,7 +22,8 @@ class AppImage extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: imageUrl,
       placeholder: (context, url) => const AppLoader(),
-      errorWidget: (context, url, error) => const Icon(Icons.error),
+      errorWidget:
+          errorWidget ?? (context, url, error) => const Icon(Icons.error),
       fit: fit,
     );
   }

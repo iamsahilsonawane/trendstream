@@ -18,6 +18,7 @@ class HttpTvGuideRepository implements TvGuideRepository {
   Future<ProgramGuide> getProgramGuide({bool forceRefresh = false}) async {
     final responseData = await httpService.get(
       '$path/us/myafn.dodmedia.osd.mil.epg.json',
+      // https://iptv-org.github.io/epg/guides/us/directv.com.epg.json
       forceRefresh: forceRefresh,
       queryParameters: {},
     );
