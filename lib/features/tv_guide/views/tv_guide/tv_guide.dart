@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import "package:flutter/material.dart";
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -167,7 +168,7 @@ class _TvGuideState extends ConsumerState<TvGuide> {
                             children: [
                               Container(
                                 height: 30,
-                                width: 100,
+                                width: 200,
                                 margin: const EdgeInsets.only(right: 3.0),
                                 color: kPrimaryColor,
                                 child: const Center(
@@ -238,6 +239,7 @@ class _TvGuideState extends ConsumerState<TvGuide> {
                                             children: [
                                               const SizedBox(height: 3.0),
                                               _Channel(
+                                                logo: channel.logo,
                                                 channelName: channel.id ??
                                                     "Channel ${index + 1}",
                                               ),
@@ -325,15 +327,19 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
   /// Keeps track of total width, all programs make up
   double totalWidth = 0;
 
-  List<Program> programs = [];
+  List<Program> _programs = [];
 
   @override
   void initState() {
     super.initState();
     // arrangements = _getRandomArrangements();
+    _programs = widget.programs;
+
     _fixTimeGapsIfAvailable();
     debugPrint(
-        "Channel: ${widget.programs.first.channel} | Duplicates Length: ${widget.programs.map((e) => e.titles).toList().duplicates.length}");
+        "Channel: ${_programs.first.channel} | Duplicates Length: ${_programs.map((e) => e.titles).toList().duplicates.length}");
+    log("CH:${_programs.first.channel} ${_programs.map((e) => "${DateTime.fromMillisecondsSinceEpoch(e.start!)} | ${DateTime.fromMillisecondsSinceEpoch(e.stop!)}").toList().join("\n")}");
+    setState(() {});
   }
 
   /// Calculates width for given start and end date (in milliseconds)
@@ -353,20 +359,36 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
   ///
   /// This function makes sure that happens. If not, it will add a break
   void _fixTimeGapsIfAvailable() {
-    for (int i = 0; i < widget.programs.length; i++) {
-      final isLast = i == widget.programs.length - 1;
+    for (int i = 0; i < _programs.length; i++) {
+      final isLast = i == _programs.length - 1;
 
-      _calculateAndSaveWidth(widget.programs[i], shouldFillRest: isLast);
+      // If not start from midnight, then add a break
+      final now = DateTime.now().toUtc();
+      final todayMidnight =
+          DateTime(now.year, now.month, now.day).millisecondsSinceEpoch;
 
+      if (i == 0 && _programs[i].start != todayMidnight) {
+        final breakProgram = Program(
+          start: todayMidnight,
+          stop: _programs[0].start,
+          channel: _programs[i].channel,
+          titles: const [ProgramTitle(value: "Break", lang: "en")],
+        );
+        _programs.insert(0, breakProgram);
+      }
+
+      _calculateAndSaveWidth(_programs[i], shouldFillRest: isLast);
+
+      // If not corresponding, then add a break
       if ((!isLast) &&
-          widget.programs[i].stop != widget.programs[i + 1].start &&
-          (widget.programs[i + 1].start! > widget.programs[i].stop!)) {
-        widget.programs.insert(
+          _programs[i].stop != _programs[i + 1].start &&
+          (_programs[i + 1].start! > _programs[i].stop!)) {
+        _programs.insert(
           i + 1,
           Program(
-            start: widget.programs[i].stop,
-            stop: widget.programs[i + 1].start,
-            channel: widget.programs[i].channel,
+            start: _programs[i].stop,
+            stop: _programs[i + 1].start,
+            channel: _programs[i].channel,
             titles: const [ProgramTitle(value: "Break", lang: "en")],
           ),
         );
@@ -390,6 +412,10 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
       width = _calculateWidthFromStartAndEndTime(program.start!, program.stop!);
     }
 
+    if (width < 0) {
+      debugPrint("Width is negative: $width");
+    }
+
     totalWidth += width;
 
     programWidthMap[program] = width;
@@ -404,17 +430,24 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
         const SizedBox(height: 3.0),
         Row(
           children: List.generate(
-            // 24 < widget.programs.length ? 24 : widget.programs.length,
-            widget.programs.length,
+            // 24 < _programs.length ? 24 : _programs.length,
+            _programs.length,
             (index) => Builder(builder: (context) {
-              final program = widget.programs[index];
+              final program = _programs[index];
               final width = programWidthMap[program];
 
               final isProgramCurrentlyOnGoing =
                   program.start! <= DateTime.now().millisecondsSinceEpoch &&
                       program.stop! >= DateTime.now().millisecondsSinceEpoch;
 
+              if (isProgramCurrentlyOnGoing) {
+                debugPrint(
+                    "Program: ${program.titles!.first.value} | Start: ${DateTime.fromMillisecondsSinceEpoch(program.start!)} | Stop: ${DateTime.fromMillisecondsSinceEpoch(program.stop!)}");
+              }
+
               return _Program(
+                // name:
+                //     "Program: ${program.titles!.first.value} | Start: ${DateTime.fromMillisecondsSinceEpoch(program.start!)} | Stop: ${DateTime.fromMillisecondsSinceEpoch(program.stop!)}",
                 name: program.titles!.first.value!,
                 onTap: () {},
                 onFocusChanged: () {
@@ -532,27 +565,52 @@ class _ProgramState extends State<_Program> {
 }
 
 class _Channel extends StatelessWidget {
-  const _Channel({required this.channelName});
+  const _Channel({required this.channelName, this.logo});
 
   final String channelName;
+  final String? logo;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 3.0),
       child: Container(
-        width: 100,
+        width: 200,
         height: 70,
+        // color: kPrimaryColor,
         color: kPrimaryColor,
-        child: Center(
-          child: Text(
-            channelName,
-            style: const TextStyle(
+        child: Row(
+          children: [
+            Container(
               color: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 6),
+              height: double.infinity,
+              child: Image.network(
+                logo ?? "",
+                errorBuilder: (context, error, stackTrace) => SizedBox(
+                  height: 50,
+                  width: 50,
+                  child:
+                      Icon(Icons.image_not_supported, color: Colors.grey[600]),
+                ),
+                width: 50,
+                height: 50,
+              ),
             ),
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.fade,
-          ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  channelName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.fade,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
