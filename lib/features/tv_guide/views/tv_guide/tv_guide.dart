@@ -1,104 +1,469 @@
-import "package:flutter/material.dart";
-import 'package:latest_movies/core/utilities/design_utility.dart';
+import 'dart:async';
 
-class TvGuide extends StatefulWidget {
+import "package:flutter/material.dart";
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/date_extension.dart';
+import 'package:latest_movies/core/extensions/list_extension.dart';
+import 'package:latest_movies/core/shared_widgets/app_loader.dart';
+import 'package:latest_movies/core/shared_widgets/error_view.dart';
+
+import 'package:latest_movies/core/router/router.dart';
+import '../../../../core/utilities/debouncer.dart';
+import '../../controllers/us_epg_controller.dart';
+import '../../models/program_guide/channel.dart';
+import '../../models/program_guide/program.dart';
+import '../../models/program_guide/title.dart';
+
+const int tvGuideSlotWidth = 200;
+
+String get logChanneld => "AFNFamily.us";
+
+class TvGuide extends StatefulHookConsumerWidget {
   const TvGuide({Key? key}) : super(key: key);
 
   @override
-  State<TvGuide> createState() => _TvGuideState();
+  ConsumerState<TvGuide> createState() => _TvGuideState();
 }
 
-class _TvGuideState extends State<TvGuide> {
-  final ScrollController _scrollController = ScrollController();
+class _TvGuideState extends ConsumerState<TvGuide> {
+  final upperTimeStopsScrollController = ScrollController();
+  final programsScrollController = ScrollController();
+  final verticalScrollController = ScrollController();
 
-  int lastIndex = 0;
+  int currentHour = DateTime.now().hour, currentMinute = DateTime.now().minute;
+  double currentHourPosition = 0, currentMinutePosition = 0;
+  double currentPosition = 0;
+
+  Timer? timer;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 500), () {
+        scrollToCurrentTime();
+        setState(() {});
+        timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+          setState(() {
+            _updatePosition();
+          });
+        });
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer?.cancel();
+  }
+
+  /// Scrolls to the current time
+  void scrollToCurrentTime() {
+    _updatePosition();
+
+    if (programsScrollController.hasClients) {
+      programsScrollController.animateTo(
+        currentHourPosition.toDouble(),
+        duration: const Duration(milliseconds: 50),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  void _updatePosition() {
+    currentHour = DateTime.now().toUtc().hour;
+    currentMinute = DateTime.now().toUtc().minute;
+
+    currentHourPosition = (currentHour * tvGuideSlotWidth).toDouble();
+    currentMinutePosition = (currentMinute / 60) * tvGuideSlotWidth;
+
+    currentPosition = currentHourPosition + currentMinutePosition;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final usEpgGuideAsync = ref.watch(usEpgProvider);
+
     return Scaffold(
       body: FocusTraversalGroup(
-        child: FocusScope(
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            scrollDirection: Axis.horizontal,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: List.generate(
-                    20,
-                    (index) => Container(
-                      width: 200,
-                      height: 30,
-                      color: Colors.grey[800],
-                      child: Center(
-                          child: Text(
-                        "${index.toString().padLeft(2, '0')}:00",
-                        style: const TextStyle(color: Colors.white),
-                      )),
-                    ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextButton.icon(
+                  onPressed: () {
+                    Debouncer(delay: const Duration(milliseconds: 500))
+                        .call(() {
+                      AppRouter.pop();
+                    });
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
                   ),
-                ),
-                verticalSpaceSmall,
-                Row(
-                  children: List.generate(
-                    20,
-                    (index) => Builder(builder: (context) {
-                      return _Channel(
-                        index: index,
-                        onTap: () {},
-                        onFocusChanged: () {
-                          Scrollable.ensureVisible(context,
-                              alignment: 0.5,
-                              duration: const Duration(milliseconds: 400));
-                        },
-                      );
-                    }),
-                  ),
-                ),
-                verticalSpaceSmall,
-                Row(
-                  children: List.generate(
-                    20,
-                    (index) => Builder(builder: (context) {
-                      return _Channel(
-                        index: index,
-                        onTap: () {},
-                        onFocusChanged: () {
-                          Scrollable.ensureVisible(context,
-                              alignment: 0.5,
-                              duration: const Duration(milliseconds: 400));
-                        },
-                      );
-                    }),
-                  ),
-                ),
-              ],
+                  icon: const Icon(Icons.arrow_back),
+                  label: const Text("Back")),
             ),
-          ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: usEpgGuideAsync.when(
+                  data: (epg) {
+                    final channels = epg.channels ?? [];
+                    final programs = epg.programs ?? [];
+
+                    // developer.log(
+                    //     "startstop: ${programs.where((e) => e.channel == logChanneld).map((e) => "${DateTime.fromMillisecondsSinceEpoch(e.start!)}:${DateTime.fromMillisecondsSinceEpoch(e.stop!)}").toList().join("\n")}");
+
+                    final programsToChannels = <String, List<Program>>{};
+
+                    for (final program in programs) {
+                      final channel = channels.firstWhere(
+                        (channel) => channel.id == program.channel,
+                        orElse: () => const Channel(id: "notfound"),
+                      );
+                      if (channel.id == "notfound" || channel.id == null) {
+                        continue;
+                      }
+
+                      if (programsToChannels.containsKey(channel.id)) {
+                        if (DateTime.fromMillisecondsSinceEpoch(program.start!)
+                            .isSameDayAs(DateTime.now())) {
+                          programsToChannels[channel.id]!.add(program);
+                        }
+                      } else {
+                        if (DateTime.fromMillisecondsSinceEpoch(program.start!)
+                            .isSameDayAs(DateTime.now())) {
+                          programsToChannels[channel.id!] = [program];
+                        }
+                      }
+                    }
+                    //just get the start and end dates of the programs
+                    // log("startstop: ${programsToChannels[logChanneld]!.map((e) => "${DateTime.fromMillisecondsSinceEpoch(e.start!)}:${DateTime.fromMillisecondsSinceEpoch(e.stop!)}").toList().join("\n")}");
+
+                    // debugPrint("US EPG | epg recieved: ${epg.toJson()}");
+                    // debugPrint("Programs to Channels: $programsToChannels");
+
+                    return NotificationListener<ScrollNotification>(
+                      onNotification: (ScrollNotification scrollInfo) {
+                        if (upperTimeStopsScrollController
+                                .position.maxScrollExtent <
+                            programsScrollController.offset) {
+                          upperTimeStopsScrollController.jumpTo(
+                              upperTimeStopsScrollController
+                                  .position.maxScrollExtent);
+                        } else {
+                          upperTimeStopsScrollController
+                              .jumpTo(programsScrollController.offset);
+                        }
+                        return true;
+                      },
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                height: 30,
+                                width: 100,
+                                margin: const EdgeInsets.only(right: 3.0),
+                                color: kPrimaryColor,
+                                child: const Center(
+                                    child: Text(
+                                  "Timeframe",
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                              ),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  controller: upperTimeStopsScrollController,
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: List.generate(
+                                      24,
+                                      (index) {
+                                        return Container(
+                                          width: tvGuideSlotWidth.toDouble(),
+                                          height: 30,
+                                          decoration: BoxDecoration(
+                                            border: const Border(
+                                              left: BorderSide(
+                                                color: kBackgroundColor,
+                                                width: 1.5,
+                                              ),
+                                              right: BorderSide(
+                                                color: kBackgroundColor,
+                                                width: 1.5,
+                                              ),
+                                            ),
+                                            color: index == currentHour
+                                                ? kPrimaryColor
+                                                : kPrimaryAccentColor
+                                                    .withOpacity(.2),
+                                          ),
+                                          child: Center(
+                                              child: Text(
+                                            "${index.toString().padLeft(2, '0')}:00",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          )),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              controller: verticalScrollController,
+                              child: Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      ...List.generate(
+                                        channels.length,
+                                        (index) {
+                                          final channel = channels[index];
+
+                                          return Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 3.0),
+                                              _Channel(
+                                                channelName: channel.id ??
+                                                    "Channel ${index + 1}",
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  Expanded(
+                                    child: SingleChildScrollView(
+                                      controller: programsScrollController,
+                                      scrollDirection: Axis.horizontal,
+                                      child: Stack(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              ...List.generate(
+                                                channels.length,
+                                                (i) => _ChannelPrograms(
+                                                  programs: programsToChannels[
+                                                          channels[i].id] ??
+                                                      [],
+                                                  shouldHaveInitialFocus:
+                                                      i == 0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Positioned(
+                                            top: 3,
+                                            left: currentPosition,
+                                            child: Container(
+                                              height: (10 * 70) + (10 * 3.0),
+                                              width: 2,
+                                              color: Colors.red,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  error: (err, st) => const ErrorView(),
+                  loading: () => const AppLoader(),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-class _Channel extends StatefulWidget {
-  const _Channel({
-    Key? key,
-    required this.index,
-    required this.onTap,
-    required this.onFocusChanged,
-  }) : super(key: key);
+class _ChannelPrograms extends StatefulWidget {
+  const _ChannelPrograms(
+      {Key? key, required this.programs, this.shouldHaveInitialFocus = false})
+      : super(key: key);
 
-  final int index;
-  final VoidCallback? onTap;
-  final VoidCallback? onFocusChanged;
+  final List<Program> programs;
+
+  /// Set true for the first row
+  final bool shouldHaveInitialFocus;
 
   @override
-  State<_Channel> createState() => _ChannelState();
+  State<_ChannelPrograms> createState() => __ChannelProgramsState();
 }
 
-class _ChannelState extends State<_Channel> {
+class __ChannelProgramsState extends State<_ChannelPrograms> {
+  /// Keeps track of width for each program
+  ///
+  /// Format: `{program: width}`
+  final programWidthMap = <Program, double>{};
+
+  /// Keeps track of total width, all programs make up
+  double totalWidth = 0;
+
+  List<Program> programs = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // arrangements = _getRandomArrangements();
+    _fixTimeGapsIfAvailable();
+    debugPrint(
+        "Channel: ${widget.programs.first.channel} | Duplicates Length: ${widget.programs.map((e) => e.titles).toList().duplicates.length}");
+  }
+
+  /// Calculates width for given start and end date (in milliseconds)
+  ///
+  /// Returns width in pixels
+  double _calculateWidthFromStartAndEndTime(int start, int end) {
+    final startTime = DateTime.fromMillisecondsSinceEpoch(start);
+    final endTime = DateTime.fromMillisecondsSinceEpoch(end);
+    // debugPrint("Start: $startTime ($start), End: $endTime ($end)");
+    final difference = endTime.difference(startTime).inMinutes / 60;
+    return (difference * tvGuideSlotWidth).toDouble();
+  }
+
+  /// Fixes time gaps if available
+  ///
+  /// For example, if a program starts at 10:00 and ends at 10:30, then the next program should start at 10:30
+  ///
+  /// This function makes sure that happens. If not, it will add a break
+  void _fixTimeGapsIfAvailable() {
+    for (int i = 0; i < widget.programs.length; i++) {
+      final isLast = i == widget.programs.length - 1;
+
+      _calculateAndSaveWidth(widget.programs[i], shouldFillRest: isLast);
+
+      if ((!isLast) &&
+          widget.programs[i].stop != widget.programs[i + 1].start &&
+          (widget.programs[i + 1].start! > widget.programs[i].stop!)) {
+        widget.programs.insert(
+          i + 1,
+          Program(
+            start: widget.programs[i].stop,
+            stop: widget.programs[i + 1].start,
+            channel: widget.programs[i].channel,
+            titles: const [ProgramTitle(value: "Break", lang: "en")],
+          ),
+        );
+      }
+    }
+  }
+
+  /// Gets width for given program and save it to [programWidthMap]
+  ///
+  /// [shouldFillRest] is used to fill the width of the program with the rest of the width available - to cover entirely
+  void _calculateAndSaveWidth(Program program, {required bool shouldFillRest}) {
+    // print(program.channel);
+    double width = 0.0;
+
+    if (shouldFillRest) {
+      final remainingWidth = (tvGuideSlotWidth * 24) -
+          programWidthMap.values.reduce((value, element) => value + element);
+
+      width = remainingWidth;
+    } else {
+      width = _calculateWidthFromStartAndEndTime(program.start!, program.stop!);
+    }
+
+    totalWidth += width;
+
+    programWidthMap[program] = width;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 3.0),
+        Row(
+          children: List.generate(
+            // 24 < widget.programs.length ? 24 : widget.programs.length,
+            widget.programs.length,
+            (index) => Builder(builder: (context) {
+              final program = widget.programs[index];
+              final width = programWidthMap[program];
+
+              final isProgramCurrentlyOnGoing =
+                  program.start! <= DateTime.now().millisecondsSinceEpoch &&
+                      program.stop! >= DateTime.now().millisecondsSinceEpoch;
+
+              return _Program(
+                name: program.titles!.first.value!,
+                onTap: () {},
+                onFocusChanged: () {
+                  Scrollable.ensureVisible(context,
+                      alignment: 0.1,
+                      duration: const Duration(milliseconds: 50));
+                },
+                width: width!,
+                autofocus:
+                    widget.shouldHaveInitialFocus && isProgramCurrentlyOnGoing,
+                programType: isProgramCurrentlyOnGoing
+                    ? ProgramType.onGoing
+                    : program.start! > DateTime.now().millisecondsSinceEpoch
+                        ? ProgramType.upcoming
+                        : ProgramType.past,
+              );
+            }),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+enum ProgramType { onGoing, upcoming, past }
+
+class _Program extends StatefulWidget {
+  const _Program({
+    Key? key,
+    required this.name,
+    required this.onTap,
+    required this.onFocusChanged,
+    required this.width,
+    required this.autofocus,
+    required this.programType,
+  }) : super(key: key);
+
+  final String name;
+  final VoidCallback? onTap;
+  final VoidCallback? onFocusChanged;
+  final double width;
+  final bool autofocus;
+  final ProgramType programType;
+
+  @override
+  State<_Program> createState() => _ProgramState();
+}
+
+class _ProgramState extends State<_Program> {
   bool isFocused = false;
 
   void setIsFocused(bool value) {
@@ -108,33 +473,88 @@ class _ChannelState extends State<_Channel> {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: widget.onTap,
-      focusColor: Colors.white,
-      hoverColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      splashColor: Colors.transparent,
-      autofocus: widget.index == 0,
-      onFocusChange: (value) {
-        setIsFocused(value);
-        widget.onFocusChanged?.call();
-      },
-      child: Builder(builder: (context) {
-        // final isFocused = _focusNode.hasPrimaryFocus;
-        return Container(
-          width: 250,
+    Color color = Colors.grey[800]!;
+    switch (widget.programType) {
+      case ProgramType.onGoing:
+        color = kPrimaryColor;
+        break;
+      case ProgramType.upcoming:
+        color = kPrimaryAccentColor.withOpacity(.2);
+        break;
+      case ProgramType.past:
+        color = kPrimaryAccentColor.withOpacity(.1);
+        break;
+    }
+    return Padding(
+      padding: const EdgeInsets.only(right: 0.0),
+      child: InkWell(
+        onTap: widget.onTap,
+        focusColor: Colors.white,
+        hoverColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        autofocus: widget.autofocus,
+        onFocusChange: (isFocused) {
+          setIsFocused(isFocused);
+          if (isFocused) {
+            widget.onFocusChanged?.call();
+          }
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: isFocused ? Colors.white : color,
+            border: const Border(
+              left: BorderSide(
+                color: kBackgroundColor,
+                width: 1.5,
+              ),
+              right: BorderSide(
+                color: kBackgroundColor,
+                width: 1.5,
+              ),
+            ),
+          ),
+          width: widget.width,
           height: 70,
-          color: isFocused ? Colors.white : Colors.grey[800],
+          padding: const EdgeInsets.all(5),
           child: Center(
             child: Text(
-              "${widget.index.toString().padLeft(2, '0')}:00",
+              widget.name,
               style: TextStyle(
                 color: isFocused ? Colors.grey[800] : Colors.white,
               ),
             ),
           ),
-        );
-      }),
+        ),
+      ),
+    );
+  }
+}
+
+class _Channel extends StatelessWidget {
+  const _Channel({required this.channelName});
+
+  final String channelName;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 3.0),
+      child: Container(
+        width: 100,
+        height: 70,
+        color: kPrimaryColor,
+        child: Center(
+          child: Text(
+            channelName,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.fade,
+          ),
+        ),
+      ),
     );
   }
 }
