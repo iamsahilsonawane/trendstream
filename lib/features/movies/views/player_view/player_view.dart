@@ -16,7 +16,8 @@ class _PlayerViewState extends State<PlayerView> {
   void initState() {
     super.initState();
     _videoPlayerController = VlcPlayerController.network(
-      'https://media.w3.org/2010/05/sintel/trailer.mp4',
+      'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+      // 'https://media.w3.org/2010/05/sintel/trailer.mp4',
       hwAcc: HwAcc.full,
       autoPlay: true,
       options: VlcPlayerOptions(

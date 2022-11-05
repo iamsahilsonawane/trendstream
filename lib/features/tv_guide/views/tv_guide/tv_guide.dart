@@ -449,7 +449,9 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
                 // name:
                 //     "Program: ${program.titles!.first.value} | Start: ${DateTime.fromMillisecondsSinceEpoch(program.start!)} | Stop: ${DateTime.fromMillisecondsSinceEpoch(program.stop!)}",
                 name: program.titles!.first.value!,
-                onTap: () {},
+                onTap: () {
+                  AppRouter.navigateToPage(Routes.playerView);
+                },
                 onFocusChanged: () {
                   Scrollable.ensureVisible(context,
                       alignment: 0.1,
