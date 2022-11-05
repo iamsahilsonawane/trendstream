@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/features/movies/controllers/side_bar_controller.dart';
 
 import '../enums/sidebar_options.dart';
@@ -30,7 +31,8 @@ class DashboardSideBar extends HookConsumerWidget {
                 title: 'Movies',
                 iconData: Icons.home_outlined,
                 selectedIconData: Icons.home,
-                isSelected: sidebarState.sidebarOptions == SidebarOptions.home,
+                isSelected:
+                    sidebarState.sidebarOptions == SidebarOptions.home,
                 onTap: () {
                   sidebarStateNotifier.setSidebarOption(SidebarOptions.home);
                 },
@@ -42,7 +44,8 @@ class DashboardSideBar extends HookConsumerWidget {
                 isSelected:
                     sidebarState.sidebarOptions == SidebarOptions.tvShows,
                 onTap: () {
-                  sidebarStateNotifier.setSidebarOption(SidebarOptions.tvShows);
+                  sidebarStateNotifier
+                      .setSidebarOption(SidebarOptions.tvShows);
                 },
               ),
               DrawerItem(
@@ -52,7 +55,9 @@ class DashboardSideBar extends HookConsumerWidget {
                 isSelected:
                     sidebarState.sidebarOptions == SidebarOptions.tvGuide,
                 onTap: () {
-                  sidebarStateNotifier.setSidebarOption(SidebarOptions.tvGuide);
+                  // sidebarStateNotifier
+                  //     .setSidebarOption(SidebarOptions.tvGuide);
+                  AppRouter.navigateToPage(Routes.tvGuide);
                 },
               ),
               DrawerItem(
@@ -62,7 +67,8 @@ class DashboardSideBar extends HookConsumerWidget {
                 isSelected:
                     sidebarState.sidebarOptions == SidebarOptions.search,
                 onTap: () {
-                  sidebarStateNotifier.setSidebarOption(SidebarOptions.search);
+                  sidebarStateNotifier
+                      .setSidebarOption(SidebarOptions.search);
                 },
               ),
               DrawerItem(

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/shared_widgets/app_loader.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/core/shared_widgets/image.dart';
@@ -10,9 +11,7 @@ import 'package:latest_movies/core/utilities/app_utility.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/movie_videos_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../../../core/router/_app_router.dart';
 import '../../../../core/config/config.dart';
-import '../../../../core/router/_routes.dart';
 import '../../../../core/shared_widgets/button.dart';
 import '../../../../core/utilities/debouncer.dart';
 import '../../controllers/movie_details_provider.dart';
@@ -56,7 +55,7 @@ class MovieDetailsView extends HookConsumerWidget {
                           });
                         },
                         style: TextButton.styleFrom(
-                          primary: Colors.white,
+                          foregroundColor: Colors.white,
                         ),
                         icon: const Icon(Icons.arrow_back),
                         label: const Text("Back")),

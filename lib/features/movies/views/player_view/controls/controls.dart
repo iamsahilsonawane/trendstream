@@ -7,7 +7,7 @@ import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:focus_notifier/focus_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
-import '../../../../../../core/router/_app_router.dart';
+import 'package:latest_movies/core/router/router.dart';
 
 import 'controls_notifier.dart';
 

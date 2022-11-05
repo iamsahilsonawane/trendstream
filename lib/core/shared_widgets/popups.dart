@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/constants.dart';
-import '../../../core/router/_app_router.dart';
+import 'package:latest_movies/core/router/router.dart';
 import '../../features/auth/controllers/auth_controller.dart';
 import '../utilities/app_utility.dart';
 import '../utilities/design_utility.dart';

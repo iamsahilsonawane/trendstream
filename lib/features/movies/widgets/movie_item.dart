@@ -1,14 +1,13 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/features/movies/controllers/current_popular_movies_provider.dart';
 
 import '../../../../core/utilities/design_utility.dart';
 import "package:flutter/material.dart";
 
 import '../../../core/config/config.dart';
-import '../../../core/router/_app_router.dart';
-import '../../../core/router/_routes.dart';
 import '../../../core/shared_widgets/app_loader.dart';
 import '../../../core/shared_widgets/error_view.dart';
 import '../../../core/shared_widgets/image.dart';

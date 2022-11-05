@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:latest_movies/core/router/_app_router.dart';
+import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/shared_widgets/button.dart';
 import 'package:latest_movies/core/shared_widgets/text_field.dart';
 import 'package:latest_movies/core/utilities/app_utility.dart';
-import '../../../../core/router/_routes.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/shared_widgets/popups.dart';
