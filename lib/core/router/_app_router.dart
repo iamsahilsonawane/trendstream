@@ -81,6 +81,12 @@ class AppRouter {
           settings: settings,
           fullscreenDialog: false,
         );
+      case Routes.livePlayerView:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => const LivePlayerView(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
       default:
         return null;
     }
