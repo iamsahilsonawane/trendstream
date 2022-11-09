@@ -393,13 +393,13 @@ class CurrentProgramInfo extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // const PreviewPlayer(),
-                      const AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: SizedBox.expand(
-                          child: ColoredBox(color: Colors.black),
-                        ),
-                      ),
+                      const PreviewPlayer(),
+                      // const AspectRatio(
+                      //   aspectRatio: 16 / 9,
+                      //   child: SizedBox.expand(
+                      //     child: ColoredBox(color: Colors.black),
+                      //   ),
+                      // ),
                       Container(
                         color: kPrimaryColor,
                         padding: const EdgeInsets.all(5),
@@ -452,13 +452,14 @@ class _PreviewPlayerState extends State<PreviewPlayer> {
         ]),
       ),
     );
-    _videoPlayerController.setVolume(0);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _videoPlayerController.setVolume(0);
+    });
   }
 
   @override
   void dispose() async {
     super.dispose();
-    await _videoPlayerController.stopRendererScanning();
     await _videoPlayerController.dispose();
   }
 
