@@ -78,8 +78,8 @@ class _TvGuideState extends ConsumerState<TvGuide> {
   }
 
   void _updatePosition() {
-    currentHour = DateTime.now().toUtc().hour;
-    currentMinute = DateTime.now().toUtc().minute;
+    currentHour = DateTime.now().toLocal().hour;
+    currentMinute = DateTime.now().toLocal().minute;
 
     currentHourPosition = (currentHour * tvGuideSlotWidth).toDouble();
     currentMinutePosition = (currentMinute / 60) * tvGuideSlotWidth;
@@ -111,12 +111,12 @@ class _TvGuideState extends ConsumerState<TvGuide> {
                 }
 
                 if (programsToChannels.containsKey(channel.id)) {
-                  if (DateTime.fromMillisecondsSinceEpoch(program.start!)
+                  if (DateTime.fromMillisecondsSinceEpoch(program.start!).toLocal()
                       .isSameDayAs(DateTime.now())) {
                     programsToChannels[channel.id]!.add(program);
                   }
                 } else {
-                  if (DateTime.fromMillisecondsSinceEpoch(program.start!)
+                  if (DateTime.fromMillisecondsSinceEpoch(program.start!).toLocal()
                       .isSameDayAs(DateTime.now())) {
                     programsToChannels[channel.id!] = [program];
                   }
@@ -515,7 +515,7 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
       _fixTimeGapsIfAvailable();
       // debugPrint(
       //     "Channel: ${_programs.first.channel} | Duplicates Length: ${_programs.map((e) => e.titles).toList().duplicates.length}");
-      log("CH:${_programs.first.channel} ${_programs.map((e) => "${DateTime.fromMillisecondsSinceEpoch(e.start!)} | ${DateTime.fromMillisecondsSinceEpoch(e.stop!)}").toList().join("\n")}");
+      log("CH:${_programs.first.channel} ${_programs.map((e) => "${DateTime.fromMillisecondsSinceEpoch(e.start!).toLocal()} | ${DateTime.fromMillisecondsSinceEpoch(e.stop!).toLocal()}").toList().join("\n")}");
     }
     setState(() {});
   }
@@ -524,8 +524,8 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
   ///
   /// Returns width in pixels
   double _calculateWidthFromStartAndEndTime(int start, int end) {
-    final startTime = DateTime.fromMillisecondsSinceEpoch(start);
-    final endTime = DateTime.fromMillisecondsSinceEpoch(end);
+    final startTime = DateTime.fromMillisecondsSinceEpoch(start).toLocal();
+    final endTime = DateTime.fromMillisecondsSinceEpoch(end).toLocal();
     // debugPrint("Start: $startTime ($start), End: $endTime ($end)");
     final difference = endTime.difference(startTime).inMinutes / 60;
     return (difference * tvGuideSlotWidth).toDouble();
@@ -541,9 +541,9 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
       final isLast = i == _programs.length - 1;
 
       // If not start from midnight, then add a break
-      final now = DateTime.now().toUtc();
+      final now = DateTime.now();
       final todayMidnight =
-          DateTime(now.year, now.month, now.day).millisecondsSinceEpoch;
+          DateTime(now.year, now.month, now.day).toLocal().millisecondsSinceEpoch;
 
       if (i == 0 && _programs[i].start != todayMidnight) {
         final breakProgram = Program(
@@ -615,8 +615,8 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
               final width = programWidthMap[program];
 
               final isProgramCurrentlyOnGoing =
-                  program.start! <= DateTime.now().millisecondsSinceEpoch &&
-                      program.stop! >= DateTime.now().millisecondsSinceEpoch;
+                  program.start! <= DateTime.now().toLocal().millisecondsSinceEpoch &&
+                      program.stop! >= DateTime.now().toLocal().millisecondsSinceEpoch;
 
               if (isProgramCurrentlyOnGoing) {
                 // debugPrint(
@@ -641,7 +641,7 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
                     widget.shouldHaveInitialFocus && isProgramCurrentlyOnGoing,
                 programType: isProgramCurrentlyOnGoing
                     ? ProgramType.onGoing
-                    : program.start! > DateTime.now().millisecondsSinceEpoch
+                    : program.start! > DateTime.now().toLocal().millisecondsSinceEpoch
                         ? ProgramType.upcoming
                         : ProgramType.past,
               );
