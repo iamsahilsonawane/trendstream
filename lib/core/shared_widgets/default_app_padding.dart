@@ -30,16 +30,18 @@ class DefaultAppPadding extends StatelessWidget {
   final bool onlyHorizontal;
   final EdgeInsets? padding;
 
+  static const double defaultPadding = 24.0;
+
   @override
   Widget build(BuildContext context) {
     EdgeInsets cusPadding = padding ?? EdgeInsets.zero;
     if (padding == null) {
       if (onlyHorizontal) {
-        cusPadding = const EdgeInsets.symmetric(horizontal: 24);
+        cusPadding = const EdgeInsets.symmetric(horizontal: defaultPadding);
       } else if (onlyVertical) {
-        cusPadding = const EdgeInsets.symmetric(vertical: 24);
+        cusPadding = const EdgeInsets.symmetric(vertical: defaultPadding);
       } else {
-        cusPadding = const EdgeInsets.all(24);
+        cusPadding = const EdgeInsets.all(defaultPadding);
       }
     }
     return Padding(
