@@ -111,12 +111,14 @@ class _TvGuideState extends ConsumerState<TvGuide> {
                 }
 
                 if (programsToChannels.containsKey(channel.id)) {
-                  if (DateTime.fromMillisecondsSinceEpoch(program.start!).toLocal()
+                  if (DateTime.fromMillisecondsSinceEpoch(program.start!)
+                      .toLocal()
                       .isSameDayAs(DateTime.now())) {
                     programsToChannels[channel.id]!.add(program);
                   }
                 } else {
-                  if (DateTime.fromMillisecondsSinceEpoch(program.start!).toLocal()
+                  if (DateTime.fromMillisecondsSinceEpoch(program.start!)
+                      .toLocal()
                       .isSameDayAs(DateTime.now())) {
                     programsToChannels[channel.id!] = [program];
                   }
@@ -542,8 +544,9 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
 
       // If not start from midnight, then add a break
       final now = DateTime.now();
-      final todayMidnight =
-          DateTime(now.year, now.month, now.day).toLocal().millisecondsSinceEpoch;
+      final todayMidnight = DateTime(now.year, now.month, now.day)
+          .toLocal()
+          .millisecondsSinceEpoch;
 
       if (i == 0 && _programs[i].start != todayMidnight) {
         final breakProgram = Program(
@@ -614,9 +617,10 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
               final program = _programs[index];
               final width = programWidthMap[program];
 
-              final isProgramCurrentlyOnGoing =
-                  program.start! <= DateTime.now().toLocal().millisecondsSinceEpoch &&
-                      program.stop! >= DateTime.now().toLocal().millisecondsSinceEpoch;
+              final isProgramCurrentlyOnGoing = program.start! <=
+                      DateTime.now().toLocal().millisecondsSinceEpoch &&
+                  program.stop! >=
+                      DateTime.now().toLocal().millisecondsSinceEpoch;
 
               if (isProgramCurrentlyOnGoing) {
                 // debugPrint(
@@ -641,7 +645,8 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
                     widget.shouldHaveInitialFocus && isProgramCurrentlyOnGoing,
                 programType: isProgramCurrentlyOnGoing
                     ? ProgramType.onGoing
-                    : program.start! > DateTime.now().toLocal().millisecondsSinceEpoch
+                    : program.start! >
+                            DateTime.now().toLocal().millisecondsSinceEpoch
                         ? ProgramType.upcoming
                         : ProgramType.past,
               );
