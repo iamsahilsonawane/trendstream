@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 
 import "package:flutter/material.dart";
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/extensions/date_extension.dart';
-import 'package:latest_movies/core/extensions/list_extension.dart';
 import 'package:latest_movies/core/shared_widgets/app_loader.dart';
 import 'package:latest_movies/core/shared_widgets/default_app_padding.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
@@ -90,16 +90,10 @@ class _TvGuideState extends ConsumerState<TvGuide> {
   @override
   Widget build(BuildContext context) {
     final usEpgGuideAsync = ref.watch(usEpgProvider);
-    final currentFocusedProgram = ref.watch(currentFocusedProgramProvider);
 
     return Scaffold(
       body: FocusTraversalGroup(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: DefaultAppPadding.defaultPadding,
-            left: DefaultAppPadding.defaultPadding,
-            right: DefaultAppPadding.defaultPadding,
-          ),
+        child: DefaultAppPadding.horizontal(
           child: usEpgGuideAsync.when(
             data: (epg) {
               final channels = epg.channels ?? [];
@@ -135,88 +129,20 @@ class _TvGuideState extends ConsumerState<TvGuide> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  verticalSpaceSmall,
                   //program image, title, description and tags
-                  if (currentFocusedProgram != null)
-                    Row(
-                      children: [
-                        Container(
-                          height: 100,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: const AppImage(
-                            imageUrl:
-                                r"https://m.media-amazon.com/images/M/MV5BYTRiNDQwYzAtMzVlZS00NTI5LWJjYjUtMzkwNTUzMWMxZTllXkEyXkFqcGdeQXVyNDIzMzcwNjc@._V1_.jpg",
-                            fit: BoxFit.fitHeight,
-                          ),
-                        ),
-                        horizontalSpaceMedium,
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                currentFocusedProgram.titles!.first.value!,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline6!
-                                    .copyWith(
-                                      color: Colors.white,
-                                    ),
-                              ),
-                              verticalSpaceSmall,
-                              Text(
-                                (currentFocusedProgram
-                                            .descriptions?.isNotEmpty ??
-                                        false)
-                                    ? currentFocusedProgram
-                                        .descriptions!.first['value']
-                                    : "No description",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyText2!
-                                    .copyWith(
-                                      color: Colors.white,
-                                    ),
-                                maxLines: 3,
-                                overflow: TextOverflow.fade,
-                              ),
-                              verticalSpaceSmall,
-                              Wrap(
-                                spacing: 10,
-                                runSpacing: 10,
-                                children: List.generate(
-                                    currentFocusedProgram.categories?.length ??
-                                        0, (i) {
-                                  final cat =
-                                      currentFocusedProgram.categories![i];
-                                  return Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 2, horizontal: 6),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5),
-                                      color: kPrimaryAccentColor,
-                                    ),
-                                    child: Text(
-                                      cat['value'] ?? "N/A",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText2!
-                                          .copyWith(
-                                            color: Colors.white,
-                                            fontSize: 10,
-                                          ),
-                                    ),
-                                  );
-                                }),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  verticalSpaceMedium,
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final currentFocusedProgram =
+                          ref.watch(currentFocusedProgramProvider);
+                      if (currentFocusedProgram != null) {
+                        return CurrentProgramInfo(
+                            currentFocusedProgram: currentFocusedProgram);
+                      }
+                      return const SizedBox.shrink();
+                    },
+                  ),
+                  verticalSpaceSmall,
                   Expanded(
                     child: NotificationListener<ScrollNotification>(
                       onNotification: (ScrollNotification scrollInfo) {
@@ -381,6 +307,175 @@ class _TvGuideState extends ConsumerState<TvGuide> {
   }
 }
 
+class CurrentProgramInfo extends StatelessWidget {
+  const CurrentProgramInfo({
+    Key? key,
+    required this.currentFocusedProgram,
+  }) : super(key: key);
+
+  final Program currentFocusedProgram;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Row(
+            children: [
+              Container(
+                height: 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: const AppImage(
+                  imageUrl:
+                      r"https://m.media-amazon.com/images/M/MV5BYTRiNDQwYzAtMzVlZS00NTI5LWJjYjUtMzkwNTUzMWMxZTllXkEyXkFqcGdeQXVyNDIzMzcwNjc@._V1_.jpg",
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
+              horizontalSpaceMedium,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      currentFocusedProgram.titles!.first.value!,
+                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                            color: Colors.white,
+                          ),
+                    ),
+                    verticalSpaceSmall,
+                    Text(
+                      (currentFocusedProgram.descriptions?.isNotEmpty ?? false)
+                          ? currentFocusedProgram.descriptions!.first['value']
+                          : "No description",
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                            color: Colors.white,
+                          ),
+                      maxLines: 3,
+                      overflow: TextOverflow.fade,
+                    ),
+                    verticalSpaceSmall,
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: List.generate(
+                          currentFocusedProgram.categories?.length ?? 0, (i) {
+                        final cat = currentFocusedProgram.categories![i];
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 2, horizontal: 6),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: kPrimaryAccentColor,
+                          ),
+                          child: Text(
+                            cat['value'] ?? "N/A",
+                            style:
+                                Theme.of(context).textTheme.bodyText2!.copyWith(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                    ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: SizedBox(
+                  width: 160,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // const PreviewPlayer(),
+                      const AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: SizedBox.expand(
+                          child: ColoredBox(color: Colors.black),
+                        ),
+                      ),
+                      Container(
+                        color: kPrimaryColor,
+                        padding: const EdgeInsets.all(5),
+                        child: const Text("Preview"),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class PreviewPlayer extends StatefulWidget {
+  const PreviewPlayer({super.key});
+
+  @override
+  State<PreviewPlayer> createState() => _PreviewPlayerState();
+}
+
+class _PreviewPlayerState extends State<PreviewPlayer> {
+  late VlcPlayerController _videoPlayerController;
+
+  @override
+  void initState() {
+    super.initState();
+    _videoPlayerController = VlcPlayerController.network(
+      'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+      // 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+      hwAcc: HwAcc.full,
+      autoPlay: true,
+      options: VlcPlayerOptions(
+        advanced: VlcAdvancedOptions([
+          VlcAdvancedOptions.networkCaching(2000),
+        ]),
+        subtitle: VlcSubtitleOptions([
+          VlcSubtitleOptions.boldStyle(true),
+          VlcSubtitleOptions.fontSize(30),
+          VlcSubtitleOptions.color(VlcSubtitleColor.white),
+        ]),
+        http: VlcHttpOptions([
+          VlcHttpOptions.httpReconnect(true),
+        ]),
+        rtp: VlcRtpOptions([
+          VlcRtpOptions.rtpOverRtsp(true),
+        ]),
+      ),
+    );
+    _videoPlayerController.setVolume(0);
+  }
+
+  @override
+  void dispose() async {
+    super.dispose();
+    await _videoPlayerController.stopRendererScanning();
+    await _videoPlayerController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black,
+        border: Border.all(color: kPrimaryColor, width: 3),
+      ),
+      child: VlcPlayer(
+        controller: _videoPlayerController,
+        aspectRatio: 16 / 9,
+        placeholder: const Center(child: CircularProgressIndicator()),
+      ),
+    );
+  }
+}
+
 class _ChannelPrograms extends StatefulWidget {
   const _ChannelPrograms(
       {Key? key,
@@ -418,8 +513,8 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
 
     if (_programs.isNotEmpty) {
       _fixTimeGapsIfAvailable();
-      debugPrint(
-          "Channel: ${_programs.first.channel} | Duplicates Length: ${_programs.map((e) => e.titles).toList().duplicates.length}");
+      // debugPrint(
+      //     "Channel: ${_programs.first.channel} | Duplicates Length: ${_programs.map((e) => e.titles).toList().duplicates.length}");
       log("CH:${_programs.first.channel} ${_programs.map((e) => "${DateTime.fromMillisecondsSinceEpoch(e.start!)} | ${DateTime.fromMillisecondsSinceEpoch(e.stop!)}").toList().join("\n")}");
     }
     setState(() {});
@@ -496,7 +591,7 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
     }
 
     if (width < 0) {
-      debugPrint("Width is negative: $width");
+      // debugPrint("Width is negative: $width");
     }
 
     totalWidth += width;
@@ -524,8 +619,8 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
                       program.stop! >= DateTime.now().millisecondsSinceEpoch;
 
               if (isProgramCurrentlyOnGoing) {
-                debugPrint(
-                    "Program: ${program.titles!.first.value} | Start: ${DateTime.fromMillisecondsSinceEpoch(program.start!)} | Stop: ${DateTime.fromMillisecondsSinceEpoch(program.stop!)}");
+                // debugPrint(
+                //     "Program: ${program.titles!.first.value} | Start: ${DateTime.fromMillisecondsSinceEpoch(program.start!)} | Stop: ${DateTime.fromMillisecondsSinceEpoch(program.stop!)}");
               }
 
               return _Program(
