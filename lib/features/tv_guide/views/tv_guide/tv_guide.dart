@@ -13,7 +13,6 @@ import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import '../../../../core/shared_widgets/image.dart';
-import '../../../../core/utilities/debouncer.dart';
 import '../../controllers/current_focused_program_controller.dart';
 import '../../controllers/us_epg_controller.dart';
 import '../../models/program_guide/channel.dart';
@@ -95,311 +94,287 @@ class _TvGuideState extends ConsumerState<TvGuide> {
 
     return Scaffold(
       body: FocusTraversalGroup(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            DefaultAppPadding.horizontal(
-              child: TextButton.icon(
-                  onPressed: () {
-                    Debouncer(delay: const Duration(milliseconds: 500))
-                        .call(() {
-                      AppRouter.pop();
-                    });
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                  ),
-                  icon: const Icon(Icons.arrow_back),
-                  label: const Text("Back")),
-            ),
-            verticalSpaceMedium,
-            Expanded(
-              child: DefaultAppPadding.horizontal(
-                child: usEpgGuideAsync.when(
-                  data: (epg) {
-                    final channels = epg.channels ?? [];
-                    final programs = epg.programs ?? [];
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: DefaultAppPadding.defaultPadding,
+            left: DefaultAppPadding.defaultPadding,
+            right: DefaultAppPadding.defaultPadding,
+          ),
+          child: usEpgGuideAsync.when(
+            data: (epg) {
+              final channels = epg.channels ?? [];
+              final programs = epg.programs ?? [];
 
-                    final programsToChannels = <String, List<Program>>{};
+              final programsToChannels = <String, List<Program>>{};
 
-                    for (final program in programs) {
-                      final channel = channels.firstWhere(
-                        (channel) => channel.id == program.channel,
-                        orElse: () => const Channel(id: "notfound"),
-                      );
-                      if (channel.id == "notfound" || channel.id == null) {
-                        continue;
-                      }
+              for (final program in programs) {
+                final channel = channels.firstWhere(
+                  (channel) => channel.id == program.channel,
+                  orElse: () => const Channel(id: "notfound"),
+                );
+                if (channel.id == "notfound" || channel.id == null) {
+                  continue;
+                }
 
-                      if (programsToChannels.containsKey(channel.id)) {
-                        if (DateTime.fromMillisecondsSinceEpoch(program.start!)
-                            .isSameDayAs(DateTime.now())) {
-                          programsToChannels[channel.id]!.add(program);
-                        }
-                      } else {
-                        if (DateTime.fromMillisecondsSinceEpoch(program.start!)
-                            .isSameDayAs(DateTime.now())) {
-                          programsToChannels[channel.id!] = [program];
-                        }
-                      }
-                    }
+                if (programsToChannels.containsKey(channel.id)) {
+                  if (DateTime.fromMillisecondsSinceEpoch(program.start!)
+                      .isSameDayAs(DateTime.now())) {
+                    programsToChannels[channel.id]!.add(program);
+                  }
+                } else {
+                  if (DateTime.fromMillisecondsSinceEpoch(program.start!)
+                      .isSameDayAs(DateTime.now())) {
+                    programsToChannels[channel.id!] = [program];
+                  }
+                }
+              }
 
-                    // debugPrint("US EPG | epg recieved: ${epg.toJson()}");
-                    // debugPrint("Programs to Channels: $programsToChannels");
+              // debugPrint("US EPG | epg recieved: ${epg.toJson()}");
+              // debugPrint("Programs to Channels: $programsToChannels");
 
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //program image, title, description and tags
+                  if (currentFocusedProgram != null)
+                    Row(
                       children: [
-                        //program image, title, description and tags
-                        if (currentFocusedProgram != null)
-                          Row(
+                        Container(
+                          height: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          clipBehavior: Clip.antiAlias,
+                          child: const AppImage(
+                            imageUrl:
+                                r"https://m.media-amazon.com/images/M/MV5BYTRiNDQwYzAtMzVlZS00NTI5LWJjYjUtMzkwNTUzMWMxZTllXkEyXkFqcGdeQXVyNDIzMzcwNjc@._V1_.jpg",
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                        horizontalSpaceMedium,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                clipBehavior: Clip.antiAlias,
-                                child: const AppImage(
-                                  imageUrl:
-                                      r"https://m.media-amazon.com/images/M/MV5BYTRiNDQwYzAtMzVlZS00NTI5LWJjYjUtMzkwNTUzMWMxZTllXkEyXkFqcGdeQXVyNDIzMzcwNjc@._V1_.jpg",
-                                  fit: BoxFit.fitHeight,
-                                ),
-                              ),
-                              horizontalSpaceMedium,
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      currentFocusedProgram
-                                          .titles!.first.value!,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .headline6!
-                                          .copyWith(
-                                            color: Colors.white,
-                                          ),
+                              Text(
+                                currentFocusedProgram.titles!.first.value!,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline6!
+                                    .copyWith(
+                                      color: Colors.white,
                                     ),
-                                    verticalSpaceSmall,
-                                    Text(
-                                      (currentFocusedProgram
-                                                  .descriptions?.isNotEmpty ??
-                                              false)
-                                          ? currentFocusedProgram
-                                              .descriptions!.first['value']
-                                          : "No description",
+                              ),
+                              verticalSpaceSmall,
+                              Text(
+                                (currentFocusedProgram
+                                            .descriptions?.isNotEmpty ??
+                                        false)
+                                    ? currentFocusedProgram
+                                        .descriptions!.first['value']
+                                    : "No description",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2!
+                                    .copyWith(
+                                      color: Colors.white,
+                                    ),
+                                maxLines: 3,
+                                overflow: TextOverflow.fade,
+                              ),
+                              verticalSpaceSmall,
+                              Wrap(
+                                spacing: 10,
+                                runSpacing: 10,
+                                children: List.generate(
+                                    currentFocusedProgram.categories?.length ??
+                                        0, (i) {
+                                  final cat =
+                                      currentFocusedProgram.categories![i];
+                                  return Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 2, horizontal: 6),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: kPrimaryAccentColor,
+                                    ),
+                                    child: Text(
+                                      cat['value'] ?? "N/A",
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyText2!
                                           .copyWith(
                                             color: Colors.white,
+                                            fontSize: 10,
                                           ),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.fade,
                                     ),
-                                    verticalSpaceSmall,
-                                    Wrap(
-                                      spacing: 10,
-                                      runSpacing: 10,
-                                      children: List.generate(currentFocusedProgram.categories?.length ?? 0, (i) {
-                                        final cat = currentFocusedProgram.categories![i];
+                                  );
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  verticalSpaceMedium,
+                  Expanded(
+                    child: NotificationListener<ScrollNotification>(
+                      onNotification: (ScrollNotification scrollInfo) {
+                        if (upperTimeStopsScrollController
+                                .position.maxScrollExtent <
+                            programsScrollController.offset) {
+                          upperTimeStopsScrollController.jumpTo(
+                              upperTimeStopsScrollController
+                                  .position.maxScrollExtent);
+                        } else {
+                          upperTimeStopsScrollController
+                              .jumpTo(programsScrollController.offset);
+                        }
+                        return true;
+                      },
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                height: 30,
+                                width: 200,
+                                margin: const EdgeInsets.only(right: 3.0),
+                                color: kPrimaryColor,
+                                child: const Center(
+                                    child: Text(
+                                  "Timeframe",
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                              ),
+                              Expanded(
+                                child: SingleChildScrollView(
+                                  controller: upperTimeStopsScrollController,
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                    children: List.generate(
+                                      24,
+                                      (index) {
                                         return Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 2, horizontal: 6),
+                                          width: tvGuideSlotWidth.toDouble(),
+                                          height: 30,
                                           decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                            color: kPrimaryAccentColor,
+                                            border: const Border(
+                                              left: BorderSide(
+                                                color: kBackgroundColor,
+                                                width: 1.5,
+                                              ),
+                                              right: BorderSide(
+                                                color: kBackgroundColor,
+                                                width: 1.5,
+                                              ),
+                                            ),
+                                            color: index == currentHour
+                                                ? kPrimaryColor
+                                                : kPrimaryAccentColor
+                                                    .withOpacity(.2),
                                           ),
-                                          child: Text(
-                                            cat['value'] ?? "N/A",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText2!
-                                                .copyWith(
-                                                  color: Colors.white,
-                                                  fontSize: 10,
-                                                ),
-                                          ),
+                                          child: Center(
+                                              child: Text(
+                                            "${index.toString().padLeft(2, '0')}:00",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          )),
                                         );
-                                      }),
+                                      },
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                        verticalSpaceMedium,
-                        Expanded(
-                          child: NotificationListener<ScrollNotification>(
-                            onNotification: (ScrollNotification scrollInfo) {
-                              if (upperTimeStopsScrollController
-                                      .position.maxScrollExtent <
-                                  programsScrollController.offset) {
-                                upperTimeStopsScrollController.jumpTo(
-                                    upperTimeStopsScrollController
-                                        .position.maxScrollExtent);
-                              } else {
-                                upperTimeStopsScrollController
-                                    .jumpTo(programsScrollController.offset);
-                              }
-                              return true;
-                            },
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      height: 30,
-                                      width: 200,
-                                      margin: const EdgeInsets.only(right: 3.0),
-                                      color: kPrimaryColor,
-                                      child: const Center(
-                                          child: Text(
-                                        "Timeframe",
-                                        style: TextStyle(color: Colors.white),
-                                      )),
-                                    ),
-                                    Expanded(
-                                      child: SingleChildScrollView(
-                                        controller:
-                                            upperTimeStopsScrollController,
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          children: List.generate(
-                                            24,
-                                            (index) {
-                                              return Container(
-                                                width:
-                                                    tvGuideSlotWidth.toDouble(),
-                                                height: 30,
-                                                decoration: BoxDecoration(
-                                                  border: const Border(
-                                                    left: BorderSide(
-                                                      color: kBackgroundColor,
-                                                      width: 1.5,
-                                                    ),
-                                                    right: BorderSide(
-                                                      color: kBackgroundColor,
-                                                      width: 1.5,
-                                                    ),
-                                                  ),
-                                                  color: index == currentHour
-                                                      ? kPrimaryColor
-                                                      : kPrimaryAccentColor
-                                                          .withOpacity(.2),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              controller: verticalScrollController,
+                              child: Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      ...List.generate(
+                                        channels.length,
+                                        (index) {
+                                          final channel = channels[index];
+
+                                          return Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const SizedBox(height: 3.0),
+                                              _Channel(
+                                                logo: channel.logo,
+                                                channelName: channel.id ??
+                                                    "Channel ${index + 1}",
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  Expanded(
+                                    child: SingleChildScrollView(
+                                      controller: programsScrollController,
+                                      scrollDirection: Axis.horizontal,
+                                      child: Stack(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              ...List.generate(
+                                                channels.length,
+                                                (i) => _ChannelPrograms(
+                                                  programs: programsToChannels[
+                                                          channels[i].id] ??
+                                                      [],
+                                                  shouldHaveInitialFocus:
+                                                      i == 0,
+                                                  onProgramFocused: (program) {
+                                                    ref
+                                                        .read(
+                                                            currentFocusedProgramProvider
+                                                                .state)
+                                                        .state = program;
+                                                  },
                                                 ),
-                                                child: Center(
-                                                    child: Text(
-                                                  "${index.toString().padLeft(2, '0')}:00",
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                )),
-                                              );
-                                            },
+                                              ),
+                                            ],
                                           ),
-                                        ),
+                                          Positioned(
+                                            top: 3,
+                                            left: currentPosition,
+                                            child: Container(
+                                              height: (10 * 70) + (10 * 3.0),
+                                              width: 2,
+                                              color: Colors.red,
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                                Expanded(
-                                  child: SingleChildScrollView(
-                                    controller: verticalScrollController,
-                                    child: Row(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            ...List.generate(
-                                              channels.length,
-                                              (index) {
-                                                final channel = channels[index];
-
-                                                return Column(
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(height: 3.0),
-                                                    _Channel(
-                                                      logo: channel.logo,
-                                                      channelName: channel.id ??
-                                                          "Channel ${index + 1}",
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                        Expanded(
-                                          child: SingleChildScrollView(
-                                            controller:
-                                                programsScrollController,
-                                            scrollDirection: Axis.horizontal,
-                                            child: Stack(
-                                              children: [
-                                                Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    ...List.generate(
-                                                      channels.length,
-                                                      (i) => _ChannelPrograms(
-                                                        programs:
-                                                            programsToChannels[
-                                                                    channels[i]
-                                                                        .id] ??
-                                                                [],
-                                                        shouldHaveInitialFocus:
-                                                            i == 0,
-                                                        onProgramFocused:
-                                                            (program) {
-                                                          ref
-                                                              .read(
-                                                                  currentFocusedProgramProvider
-                                                                      .state)
-                                                              .state = program;
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Positioned(
-                                                  top: 3,
-                                                  left: currentPosition,
-                                                  child: Container(
-                                                    height:
-                                                        (10 * 70) + (10 * 3.0),
-                                                    width: 2,
-                                                    color: Colors.red,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    );
-                  },
-                  error: (err, st) => const ErrorView(),
-                  loading: () => const AppLoader(),
-                ),
-              ),
-            ),
-          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+            error: (err, st) => const ErrorView(),
+            loading: () => const AppLoader(),
+          ),
         ),
       ),
     );
