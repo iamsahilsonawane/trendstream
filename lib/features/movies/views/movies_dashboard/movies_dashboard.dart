@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/shared_widgets/button.dart';
 import 'package:latest_movies/core/shared_widgets/default_app_padding.dart';
+import 'package:latest_movies/core/shared_widgets/loading_overlay.dart';
 import 'package:latest_movies/features/movies/enums/sidebar_options.dart';
 import 'package:latest_movies/features/movies/views/movies_dashboard/search/search_page.dart';
 import 'package:latest_movies/features/movies/widgets/movies_grid.dart';
@@ -19,9 +21,15 @@ class HomeView extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sidebarState = ref.watch(sidebarStateProvider);
+    final showUpdatePrompt = useState(false);
 
     useEffect(() {
-      ref.read(updateDownloadManagerProvider).checkAndDownloadUpdate(context);
+      // ref.read(updateDownloadManagerProvider).checkAndDownloadUpdate(context, askForUpdate: true);
+      Future.microtask(() async {
+        final result =
+            await ref.read(updateDownloadManagerProvider).checkForUpdate();
+        showUpdatePrompt.value = result.updateAvailable;
+      });
       return null;
     }, []);
 
@@ -29,10 +37,29 @@ class HomeView extends HookConsumerWidget {
       appBar: AppBar(
         centerTitle: false,
         title: Row(
-          children: const [
-            FlutterLogo(),
+          children: [
+            const FlutterLogo(),
             horizontalSpaceSmall,
-            Text("Latest Movies")
+            const Text("Latest Movies"),
+            const Spacer(),
+            Visibility(
+              visible: showUpdatePrompt.value,
+              child: Row(children: [
+                const Text(
+                  "New Update Available",
+                  style: TextStyle(fontSize: 12),
+                ),
+                horizontalSpaceSmall,
+                AppButton(
+                  text: "Download",
+                  onTap: () {
+                    ref
+                        .read(updateDownloadManagerProvider)
+                        .downloadUpdate(LoadingOverlay.of(context));
+                  },
+                )
+              ]),
+            )
           ],
         ),
       ),
