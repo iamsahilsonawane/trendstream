@@ -636,9 +636,9 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
                   AppRouter.navigateToPage(Routes.livePlayerView);
                 },
                 onFocusChanged: () {
-                  Scrollable.ensureVisible(context,
-                      alignment: 0.1,
-                      duration: const Duration(milliseconds: 50));
+                  // Scrollable.ensureVisible(context,
+                  //     alignment: 0.1,
+                  //     duration: const Duration(milliseconds: 50));
                   widget.onProgramFocused(program);
                 },
                 width: width!,
@@ -735,12 +735,13 @@ class _ProgramState extends State<_Program> {
             ),
           ),
           width: widget.width,
-          height: 70,
+          height: 40,
           padding: const EdgeInsets.all(5),
           child: Center(
             child: Text(
               widget.name,
               style: TextStyle(
+                fontSize: 12,
                 color: isFocused ? Colors.grey[800] : Colors.white,
               ),
             ),
@@ -763,7 +764,7 @@ class _Channel extends StatelessWidget {
       padding: const EdgeInsets.only(right: 3.0),
       child: Container(
         width: 200,
-        height: 70,
+        height: 40,
         // color: kPrimaryColor,
         color: kPrimaryColor,
         child: Row(
@@ -790,6 +791,7 @@ class _Channel extends StatelessWidget {
                 child: Text(
                   channelName,
                   style: const TextStyle(
+                    fontSize: 12,
                     color: Colors.white,
                   ),
                   textAlign: TextAlign.center,
