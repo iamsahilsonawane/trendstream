@@ -10,6 +10,11 @@ final playerControlsNotifierProvider = ChangeNotifierProvider.autoDispose
   return PlayerControlsNotifier(vlcPlayerController: controller);
 });
 
+enum ControlsOverlayVisibility {
+  visible,
+  hidden,
+}
+
 class PlayerControlsNotifier extends ChangeNotifier {
   PlayerControlsNotifier({Key? key, required this.vlcPlayerController}) {
     init.call();
@@ -28,6 +33,7 @@ class PlayerControlsNotifier extends ChangeNotifier {
   void dispose() {
     vlcPlayerController.removeListener(_updatesListener);
     _hideTimer?.cancel();
+    _controlsVisibilityController.close();
     super.dispose();
   }
 
@@ -42,6 +48,9 @@ class PlayerControlsNotifier extends ChangeNotifier {
   set hideStuff(bool newVal) {
     if (newVal == _hideStuff) return;
     _hideStuff = newVal;
+    _controlsVisibilityController.add(_hideStuff
+        ? ControlsOverlayVisibility.hidden
+        : ControlsOverlayVisibility.visible);
     notifyListeners();
   }
 
@@ -69,6 +78,11 @@ class PlayerControlsNotifier extends ChangeNotifier {
   int selectedSubtitleId = -1;
 
   // ---- Getters & Setters END ----
+
+  final StreamController<ControlsOverlayVisibility>
+      _controlsVisibilityController = StreamController.broadcast();
+  Stream<ControlsOverlayVisibility> get controlsVisibilityUpdates =>
+      _controlsVisibilityController.stream;
 
   // ---- Helper Methods ----
 

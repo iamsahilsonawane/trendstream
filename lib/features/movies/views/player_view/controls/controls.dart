@@ -44,6 +44,8 @@ class PlayerControls extends HookConsumerWidget {
     final sliderFocusNode =
         useFocusNode(canRequestFocus: true, skipTraversal: false);
 
+    final playPauseFocusNode = useFocusNode();
+
     final sliderControllerFocusNode =
         useFocusNode(canRequestFocus: true, skipTraversal: true);
 
@@ -77,8 +79,15 @@ class PlayerControls extends HookConsumerWidget {
       });
       sliderFocusNode.addListener(() {
         if (sliderFocusNode.hasFocus) {
-          controlsModel.hideStuff = false;
+          // controlsModel.hideStuff = false;
         } else {}
+      });
+      controlsModel.controlsVisibilityUpdates.listen((event) {
+        if (event == ControlsOverlayVisibility.hidden) {
+          if (playPauseFocusNode.canRequestFocus) {
+            playPauseFocusNode.requestFocus();
+          }
+        }
       });
       return () {
         sliderFocusNode.dispose();
@@ -157,8 +166,9 @@ class PlayerControls extends HookConsumerWidget {
                                   icon: const Icon(Icons.fast_rewind),
                                 ),
                               ),
-                              FocusNotifier(
+                              FocusNotifier.customFocusNode(
                                 key: const Key("playPause"),
+                                focusNode: playPauseFocusNode,
                                 builder: (context, node) =>
                                     buildPlaybackControl(
                                         controlsModel.playingState,
