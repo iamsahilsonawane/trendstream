@@ -6,7 +6,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:focus_notifier/focus_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/core/router/router.dart';
 
 import 'controls_notifier.dart';
@@ -279,11 +278,18 @@ class PlayerControls extends HookConsumerWidget {
                                 ),
                               ),
                               // horizontalSpaceSmall,
-                              Text(
-                                controlsModel.duration,
-                                style: const TextStyle(color: Colors.white),
+                              ValueListenableBuilder(
+                                valueListenable:
+                                    controlsModel.vlcPlayerController,
+                                builder: (context, VlcPlayerValue controller,
+                                    child) {
+                                  return Text(
+                                    "${controlsModel.formatDurationToString(
+                                        controller.position)} / ${controlsModel.duration}",
+                                    style: const TextStyle(color: Colors.white),
+                                  );
+                                },
                               ),
-                              horizontalSpaceMedium,
                             ],
                           ),
                           Row(

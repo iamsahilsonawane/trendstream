@@ -120,7 +120,7 @@ class PlayerControlsNotifier extends ChangeNotifier {
     //not using setter for all as it would call notifyListeners() each time
     _playingState = vlcPlayerController.value.playingState;
     _playbackPosition = vlcPlayerController.value.position;
-    duration = _formatDurationToString(vlcPlayerController.value.duration);
+    duration = formatDurationToString(vlcPlayerController.value.duration);
     log("Playing State: ${describeEnum(_playingState)}");
     if (playingState == PlayingState.ended) {
       log("Video has been ended / stopped. Cancelling timer");
@@ -139,7 +139,7 @@ class PlayerControlsNotifier extends ChangeNotifier {
   }
 
   ///Formats duration for the player
-  _formatDurationToString(Duration oDuration) {
+  formatDurationToString(Duration oDuration) {
     if (oDuration.inHours == 0) {
       var strDuration = oDuration.toString().split('.')[0];
       return "${strDuration.split(':')[1]}:${strDuration.split(':')[2]}";
