@@ -1,3 +1,4 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -45,9 +46,9 @@ class HomeView extends HookConsumerWidget {
             Visibility(
               visible: showUpdatePrompt.value,
               child: Row(children: [
-                const Text(
-                  "New Update Available",
-                  style: TextStyle(fontSize: 12),
+                Text(
+                  "New Update Available v1.0.0 #${FirebaseRemoteConfig.instance.getInt('latest_build_number')}",
+                  style: const TextStyle(fontSize: 12),
                 ),
                 horizontalSpaceSmall,
                 AppButton(

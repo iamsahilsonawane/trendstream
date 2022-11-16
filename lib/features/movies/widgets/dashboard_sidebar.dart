@@ -1,8 +1,11 @@
 import "package:flutter/material.dart";
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/router/router.dart';
+import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/side_bar_controller.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../enums/sidebar_options.dart';
 
@@ -13,6 +16,8 @@ class DashboardSideBar extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final sidebarState = ref.watch(sidebarStateProvider);
     final sidebarStateNotifier = ref.watch(sidebarStateProvider.notifier);
+
+    final platformInfo = useMemoized(() => PackageInfo.fromPlatform());
 
     return SizedBox(
       height: double.infinity,
@@ -31,8 +36,7 @@ class DashboardSideBar extends HookConsumerWidget {
                 title: 'Movies',
                 iconData: Icons.home_outlined,
                 selectedIconData: Icons.home,
-                isSelected:
-                    sidebarState.sidebarOptions == SidebarOptions.home,
+                isSelected: sidebarState.sidebarOptions == SidebarOptions.home,
                 onTap: () {
                   sidebarStateNotifier.setSidebarOption(SidebarOptions.home);
                 },
@@ -44,8 +48,7 @@ class DashboardSideBar extends HookConsumerWidget {
                 isSelected:
                     sidebarState.sidebarOptions == SidebarOptions.tvShows,
                 onTap: () {
-                  sidebarStateNotifier
-                      .setSidebarOption(SidebarOptions.tvShows);
+                  sidebarStateNotifier.setSidebarOption(SidebarOptions.tvShows);
                 },
               ),
               DrawerItem(
@@ -67,8 +70,7 @@ class DashboardSideBar extends HookConsumerWidget {
                 isSelected:
                     sidebarState.sidebarOptions == SidebarOptions.search,
                 onTap: () {
-                  sidebarStateNotifier
-                      .setSidebarOption(SidebarOptions.search);
+                  sidebarStateNotifier.setSidebarOption(SidebarOptions.search);
                 },
               ),
               DrawerItem(
@@ -86,6 +88,22 @@ class DashboardSideBar extends HookConsumerWidget {
                 isSelected:
                     sidebarState.sidebarOptions == SidebarOptions.watchlist,
                 onTap: () {},
+              ),
+              verticalSpaceRegular,
+              FutureBuilder(
+                future: platformInfo,
+                builder: (context, AsyncSnapshot<PackageInfo> snapshot) {
+                  if (snapshot.hasData) {
+                    return DrawerItem(
+                      title: 'App Version: v1.0.0 #${snapshot.data?.buildNumber}',
+                      iconData: Icons.info,
+                      selectedIconData: Icons.info,
+                      isSelected: false,
+                      onTap: null,
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
               //logout button
               // Consumer(
