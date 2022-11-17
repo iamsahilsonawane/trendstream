@@ -56,10 +56,6 @@ class PlayerControls extends HookConsumerWidget {
     final upDebouncer = useMemoized(() => Debouncer(milliseconds: 50));
     final downDebouncer = useMemoized(() => Debouncer(milliseconds: 50));
 
-    //counters to fix slider issue (passing down the focus from slider on up and down dpad buttons)
-    final upCounter = useRef(0);
-    final downCounter = useRef(0);
-
     final isSubtitlesAdded = useRef(false);
 
     useEffect(() {
@@ -221,30 +217,18 @@ class PlayerControls extends HookConsumerWidget {
                                           }
                                         } else if (e.physicalKey ==
                                             PhysicalKeyboardKey.arrowUp) {
-                                          if (sliderFocusNode.hasPrimaryFocus) {
-                                            upDebouncer.run(() {
-                                              if (upCounter.value < 3) {
-                                                upCounter.value++;
-                                              }
-                                              if (upCounter.value == 3) {
-                                                focusScopeNode.previousFocus();
-                                                upCounter.value = 0;
-                                              }
-                                            });
-                                          }
+                                          // if (sliderFocusNode.hasPrimaryFocus) {
+                                          //   upDebouncer.run(() {
+                                          //     focusScopeNode.previousFocus();
+                                          //   });
+                                          // }
                                         } else if (e.physicalKey ==
                                             PhysicalKeyboardKey.arrowDown) {
-                                          if (sliderFocusNode.hasPrimaryFocus) {
-                                            downDebouncer.run(() {
-                                              if (downCounter.value < 3) {
-                                                downCounter.value++;
-                                              }
-                                              if (downCounter.value == 3) {
-                                                focusScopeNode.nextFocus();
-                                                downCounter.value = 0;
-                                              }
-                                            });
-                                          }
+                                          // if (sliderFocusNode.hasPrimaryFocus) {
+                                          //   downDebouncer.run(() {
+                                          //     focusScopeNode.nextFocus();
+                                          //   });
+                                          // }
 
                                           // Play/pause video on select press while slider is focused
                                           if (e.physicalKey ==
@@ -259,19 +243,24 @@ class PlayerControls extends HookConsumerWidget {
                                           }
                                         }
                                       },
-                                      child: Slider(
-                                        autofocus: true,
-                                        focusNode: sliderFocusNode,
-                                        activeColor: Colors.redAccent,
-                                        inactiveColor: Colors.white70,
-                                        value: controlsModel
-                                            .playbackPosition.inSeconds
-                                            .toDouble(),
-                                        min: 0.0,
-                                        max: vlcPlayerController
-                                            .value.duration.inSeconds
-                                            .toDouble(),
-                                        onChanged: (_) {},
+                                      child: MediaQuery(
+                                        data: MediaQuery.of(context).copyWith(
+                                            navigationMode:
+                                                NavigationMode.directional),
+                                        child: Slider(
+                                          autofocus: true,
+                                          focusNode: sliderFocusNode,
+                                          activeColor: Colors.redAccent,
+                                          inactiveColor: Colors.white70,
+                                          value: controlsModel
+                                              .playbackPosition.inSeconds
+                                              .toDouble(),
+                                          min: 0.0,
+                                          max: vlcPlayerController
+                                              .value.duration.inSeconds
+                                              .toDouble(),
+                                          onChanged: (_) {},
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -284,8 +273,7 @@ class PlayerControls extends HookConsumerWidget {
                                 builder: (context, VlcPlayerValue controller,
                                     child) {
                                   return Text(
-                                    "${controlsModel.formatDurationToString(
-                                        controller.position)} / ${controlsModel.duration}",
+                                    "${controlsModel.formatDurationToString(controller.position)} / ${controlsModel.duration}",
                                     style: const TextStyle(color: Colors.white),
                                   );
                                 },
