@@ -18,6 +18,7 @@ import '../../controllers/us_epg_controller.dart';
 import '../../models/program_guide/channel.dart';
 import '../../models/program_guide/program.dart';
 import '../../models/program_guide/title.dart';
+import 'dart:convert';
 
 const int tvGuideSlotWidth = 200;
 
@@ -393,13 +394,13 @@ class CurrentProgramInfo extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const PreviewPlayer(),
-                      // const AspectRatio(
-                      //   aspectRatio: 16 / 9,
-                      //   child: SizedBox.expand(
-                      //     child: ColoredBox(color: Colors.black),
-                      //   ),
-                      // ),
+                      // const PreviewPlayer(),
+                      const AspectRatio(
+                        aspectRatio: 16 / 9,
+                        child: SizedBox.expand(
+                          child: ColoredBox(color: Colors.black),
+                        ),
+                      ),
                       Container(
                         color: kPrimaryColor,
                         padding: const EdgeInsets.all(5),
