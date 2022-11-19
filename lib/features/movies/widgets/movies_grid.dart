@@ -21,9 +21,10 @@ class MoviesGrid extends HookConsumerWidget {
     return popularMoviesCount.map(
       data: (asyncData) {
         return AlignedGridView.count(
-          key: GlobalKey(debugLabel: "dashboardGrid"),
+          key: const PageStorageKey<String>(
+              'preserve_movies_grid_scroll_and_focus'),
           controller: ScrollController(),
-          itemCount: 30,
+          itemCount: asyncData.value,
           crossAxisCount: ResponsiveWidget.isMediumScreen(context)
               ? 4
               : ResponsiveWidget.isSmallScreen(context)
