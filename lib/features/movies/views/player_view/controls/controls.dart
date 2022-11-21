@@ -23,8 +23,8 @@ class Debouncer {
   run(VoidCallback action) {
     if (_timer?.isActive ?? false) {
       log("Cancelling the timer");
+      _timer?.cancel();
     }
-    _timer?.cancel();
     _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 }
@@ -49,12 +49,6 @@ class PlayerControls extends HookConsumerWidget {
         useFocusNode(canRequestFocus: true, skipTraversal: true);
 
     final focusScopeNode = useFocusScopeNode();
-
-    //debouncers - (used to prevent multiple clicks issue) sometimes one click on the dpad registers multiple clicks
-    final sliderChangeDebouncer =
-        useMemoized(() => Debouncer(milliseconds: 50));
-    final upDebouncer = useMemoized(() => Debouncer(milliseconds: 50));
-    final downDebouncer = useMemoized(() => Debouncer(milliseconds: 50));
 
     final isSubtitlesAdded = useRef(false);
 
@@ -94,23 +88,19 @@ class PlayerControls extends HookConsumerWidget {
       opacity: controlsModel.hideStuff ? 0.0 : 1.0,
       duration: const Duration(milliseconds: 300),
       child: MouseRegion(
-        onHover: (_) {
-          // controlsModel.onHover();
-        },
         child: Scaffold(
           backgroundColor: Colors.black.withOpacity(0.5),
           body: RawKeyboardListener(
             focusNode: FocusNode(canRequestFocus: false),
             onKey: (event) {
-              if (event.logicalKey == LogicalKeyboardKey.select &&
+              if (event.isKeyPressed(LogicalKeyboardKey.select) &&
                   sliderFocusNode.hasPrimaryFocus) {
                 if (controlsModel.playingState == PlayingState.playing) {
-                  vlcPlayerController.pause();
+                  controlsModel.pause();
                 } else {
-                  vlcPlayerController.play();
+                  controlsModel.play();
                 }
               }
-
               controlsModel
                   .onHover(); //restart the timer if any item is focused
             },
@@ -199,54 +189,25 @@ class PlayerControls extends HookConsumerWidget {
                                     child: RawKeyboardListener(
                                       focusNode: sliderControllerFocusNode,
                                       onKey: (e) {
-                                        if (e.physicalKey ==
-                                            PhysicalKeyboardKey.arrowRight) {
+                                        if (e.isKeyPressed(
+                                            LogicalKeyboardKey.arrowRight)) {
                                           if (sliderFocusNode.hasPrimaryFocus) {
-                                            sliderChangeDebouncer.run(() {
-                                              controlsModel.seekForward(
-                                                  seconds: 5);
-                                            });
+                                            controlsModel.seekForward(
+                                                seconds: 5);
                                           }
-                                        } else if (e.physicalKey ==
-                                            PhysicalKeyboardKey.arrowLeft) {
+                                        } else if (e.isKeyPressed(
+                                            LogicalKeyboardKey.arrowLeft)) {
                                           if (sliderFocusNode.hasPrimaryFocus) {
-                                            upDebouncer.run(() {
-                                              controlsModel.seekBackward(
-                                                  seconds: 5);
-                                            });
-                                          }
-                                        } else if (e.physicalKey ==
-                                            PhysicalKeyboardKey.arrowUp) {
-                                          // if (sliderFocusNode.hasPrimaryFocus) {
-                                          //   upDebouncer.run(() {
-                                          //     focusScopeNode.previousFocus();
-                                          //   });
-                                          // }
-                                        } else if (e.physicalKey ==
-                                            PhysicalKeyboardKey.arrowDown) {
-                                          // if (sliderFocusNode.hasPrimaryFocus) {
-                                          //   downDebouncer.run(() {
-                                          //     focusScopeNode.nextFocus();
-                                          //   });
-                                          // }
-
-                                          // Play/pause video on select press while slider is focused
-                                          if (e.physicalKey ==
-                                                  PhysicalKeyboardKey.select &&
-                                              sliderFocusNode.hasPrimaryFocus) {
-                                            if (controlsModel.playingState ==
-                                                PlayingState.playing) {
-                                              vlcPlayerController.pause();
-                                            } else {
-                                              vlcPlayerController.play();
-                                            }
+                                            controlsModel.seekBackward(
+                                                seconds: 5);
                                           }
                                         }
                                       },
                                       child: MediaQuery(
                                         data: MediaQuery.of(context).copyWith(
-                                            navigationMode:
-                                                NavigationMode.directional),
+                                          navigationMode:
+                                              NavigationMode.directional,
+                                        ),
                                         child: Slider(
                                           autofocus: true,
                                           focusNode: sliderFocusNode,
