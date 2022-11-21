@@ -114,13 +114,13 @@ class _TvGuideState extends ConsumerState<TvGuide> {
                 if (programsToChannels.containsKey(channel.id)) {
                   if (DateTime.fromMillisecondsSinceEpoch(program.start!)
                       .toLocal()
-                      .isSameDayAs(DateTime.now())) {
+                      .isSameDayAs(DateTime.now().toLocal())) {
                     programsToChannels[channel.id]!.add(program);
                   }
                 } else {
                   if (DateTime.fromMillisecondsSinceEpoch(program.start!)
                       .toLocal()
-                      .isSameDayAs(DateTime.now())) {
+                      .isSameDayAs(DateTime.now().toLocal())) {
                     programsToChannels[channel.id!] = [program];
                   }
                 }
@@ -587,8 +587,10 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
     double width = 0.0;
 
     if (shouldFillRest) {
-      final remainingWidth = (tvGuideSlotWidth * 24) -
-          programWidthMap.values.reduce((value, element) => value + element);
+      final double combinedWidth = programWidthMap.isNotEmpty
+          ? programWidthMap.values.reduce((value, element) => value + element)
+          : 0;
+      final remainingWidth = (tvGuideSlotWidth * 24) - combinedWidth;
 
       width = remainingWidth;
     } else {
