@@ -5,7 +5,9 @@ import 'package:latest_movies/core/shared_widgets/button.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 
 class DownloadUpdateDialog extends HookWidget {
-  const DownloadUpdateDialog({super.key});
+  const DownloadUpdateDialog({super.key, required this.newUpdateVersion});
+
+  final String newUpdateVersion;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +30,8 @@ class DownloadUpdateDialog extends HookWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
-                "There's an update available, do you want to update to latest version?"),
+            Text(
+                "There's an update available ($newUpdateVersion), do you want to update to latest version?"),
             verticalSpaceRegular,
             AppButton(
               text: "Yes, update",

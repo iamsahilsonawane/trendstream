@@ -25,12 +25,14 @@ class HomeView extends HookConsumerWidget {
     final showUpdatePrompt = useState(false);
 
     useEffect(() {
-      // ref.read(updateDownloadManagerProvider).checkAndDownloadUpdate(context, askForUpdate: true);
-      Future.microtask(() async {
-        final result =
-            await ref.read(updateDownloadManagerProvider).checkForUpdate();
-        showUpdatePrompt.value = result.updateAvailable;
-      });
+      ref
+          .read(updateDownloadManagerProvider)
+          .checkAndDownloadUpdate(context, askForUpdate: true);
+      // Future.microtask(() async {
+      //   final result =
+      //       await ref.read(updateDownloadManagerProvider).checkForUpdate();
+      //   showUpdatePrompt.value = result.updateAvailable;
+      // });
       return null;
     }, []);
 
@@ -47,7 +49,7 @@ class HomeView extends HookConsumerWidget {
               visible: showUpdatePrompt.value,
               child: Row(children: [
                 Text(
-                  "New Update Available v1.0.0 #${FirebaseRemoteConfig.instance.getInt('latest_build_number')}",
+                  "New Update Available v${FirebaseRemoteConfig.instance.getString('latest_version_code')} #${FirebaseRemoteConfig.instance.getInt('latest_build_number')}",
                   style: const TextStyle(fontSize: 12),
                 ),
                 horizontalSpaceSmall,

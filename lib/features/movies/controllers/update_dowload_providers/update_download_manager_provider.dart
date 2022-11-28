@@ -59,8 +59,8 @@ class UpdateDownloadManager {
   /// Downloads the update
   ///
   /// If [downloadUrl] is null, it will fetch the download url from remote config
-  Future<void> downloadUpdate(
-      LoadingOverlay loadingOverlay, {String? downloadUrl}) async {
+  Future<void> downloadUpdate(LoadingOverlay loadingOverlay,
+      {String? downloadUrl}) async {
     final downloadUrl = remoteConfig.getString('download_url');
     debugPrint("Downloading from: $downloadUrl");
     try {
@@ -106,7 +106,10 @@ class UpdateDownloadManager {
     if (askForUpdate) {
       final shouldUpdate = await showDialog(
         context: context,
-        builder: (context) => const DownloadUpdateDialog(),
+        builder: (context) => DownloadUpdateDialog(
+          newUpdateVersion:
+              "v${FirebaseRemoteConfig.instance.getString('latest_version_code')} #${FirebaseRemoteConfig.instance.getInt('latest_build_number')}",
+        ),
       );
 
       if (shouldUpdate == false || shouldUpdate == null) {

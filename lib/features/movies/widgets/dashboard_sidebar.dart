@@ -95,7 +95,8 @@ class DashboardSideBar extends HookConsumerWidget {
                 builder: (context, AsyncSnapshot<PackageInfo> snapshot) {
                   if (snapshot.hasData) {
                     return DrawerItem(
-                      title: 'App Version: v1.0.0 #${snapshot.data?.buildNumber}',
+                      title:
+                          'App Version: v${snapshot.data?.version} #${snapshot.data?.buildNumber}',
                       iconData: Icons.info,
                       selectedIconData: Icons.info,
                       isSelected: false,
