@@ -22,7 +22,7 @@ class TvShowsGrid extends HookConsumerWidget {
           key: const PageStorageKey<String>(
               'preserve_tv_shows_grid_scroll_and_focus'),
           controller: ScrollController(),
-          itemCount: 30,
+          itemCount: asyncData.value,
           crossAxisCount: ResponsiveWidget.isMediumScreen(context)
               ? 4
               : ResponsiveWidget.isSmallScreen(context)
