@@ -18,7 +18,6 @@ import '../../controllers/us_epg_controller.dart';
 import '../../models/program_guide/channel.dart';
 import '../../models/program_guide/program.dart';
 import '../../models/program_guide/title.dart';
-import 'dart:convert';
 
 const int tvGuideSlotWidth = 200;
 
@@ -344,7 +343,7 @@ class CurrentProgramInfo extends StatelessWidget {
                   children: [
                     Text(
                       currentFocusedProgram.titles!.first.value!,
-                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                      style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             color: Colors.white,
                           ),
                     ),
@@ -353,7 +352,7 @@ class CurrentProgramInfo extends StatelessWidget {
                       (currentFocusedProgram.descriptions?.isNotEmpty ?? false)
                           ? currentFocusedProgram.descriptions!.first['value']
                           : "No description",
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: Colors.white,
                           ),
                       maxLines: 3,
@@ -375,11 +374,13 @@ class CurrentProgramInfo extends StatelessWidget {
                           ),
                           child: Text(
                             cat['value'] ?? "N/A",
-                            style:
-                                Theme.of(context).textTheme.bodyText2!.copyWith(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                    ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                ),
                           ),
                         );
                       }),
