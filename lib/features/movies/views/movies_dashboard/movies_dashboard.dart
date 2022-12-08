@@ -23,18 +23,28 @@ class HomeView extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final sidebarState = ref.watch(sidebarStateProvider);
     final showUpdatePrompt = useState(false);
+    final isMounted = useIsMounted();
+    final shouldReAskForUpdate = useState(false);
 
     useEffect(() {
-      ref
-          .read(updateDownloadManagerProvider)
-          .checkAndDownloadUpdate(context, askForUpdate: true);
-      // Future.microtask(() async {
-      //   final result =
-      //       await ref.read(updateDownloadManagerProvider).checkForUpdate();
-      //   showUpdatePrompt.value = result.updateAvailable;
-      // });
+      Future.microtask(() async {
+        shouldReAskForUpdate.value = await ref
+            .read(updateDownloadManagerProvider)
+            .checkAndDownloadUpdate(context,
+                askForUpdate: true, isMounted: isMounted);
+        //   final result =
+        //       await ref.read(updateDownloadManagerProvider).checkForUpdate();
+        //   showUpdatePrompt.value = result.updateAvailable;
+      });
       return null;
     }, []);
+
+    useOnAppLifecycleStateChange((_, state) {
+      if (state == AppLifecycleState.resumed && shouldReAskForUpdate.value) {
+        ref.read(updateDownloadManagerProvider).checkAndDownloadUpdate(context,
+            askForUpdate: true, isMounted: isMounted);
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(

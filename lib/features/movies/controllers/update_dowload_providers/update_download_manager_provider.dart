@@ -1,5 +1,7 @@
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/shared_widgets/loading_overlay.dart';
 import 'package:latest_movies/features/movies/controllers/update_dowload_providers/update_download_info_provider.dart';
@@ -30,6 +32,7 @@ class UpdateDownloadManager {
   UpdateDownloadManager(this.ref);
 
   final remoteConfig = FirebaseRemoteConfig.instance;
+  final platform = const MethodChannel('com.example.latest_movies/channel');
 
   Future<UpdateCheckResult> checkForUpdate() async {
     // Get latest build number and url from remote config
@@ -92,18 +95,19 @@ class UpdateDownloadManager {
   }
 
   /// If [askForUpdate] is true, it will show a dialog asking the user if they want to download the update.
-  Future<void> checkAndDownloadUpdate(BuildContext context,
-      {required bool askForUpdate}) async {
+  Future<bool> checkAndDownloadUpdate(BuildContext context,
+      {required bool askForUpdate, required bool Function() isMounted}) async {
     final loadingOverlay = LoadingOverlay.of(context);
 
     final result = await checkForUpdate();
 
     if (!result.updateAvailable) {
       debugPrint("No Update Available");
-      return;
+      return false;
     }
 
-    if (askForUpdate) {
+    if (askForUpdate && isMounted()) {
+      // ignore: use_build_context_synchronously
       final shouldUpdate = await showDialog(
         context: context,
         builder: (context) => DownloadUpdateDialog(
@@ -113,10 +117,39 @@ class UpdateDownloadManager {
       );
 
       if (shouldUpdate == false || shouldUpdate == null) {
-        return;
+        return true;
+      }
+
+      bool hasPermissions = false;
+
+      hasPermissions = await hasInstallFromSourcePermission();
+
+      if (!hasPermissions) {
+        const AndroidIntent intent = AndroidIntent(
+          action: 'android.settings.MANAGE_UNKNOWN_APP_SOURCES',
+          data: 'package:com.example.latest_movies',
+        );
+        await intent.launch();
+      }
+      if (hasPermissions) {
+        await downloadUpdate(loadingOverlay, downloadUrl: result.downloadUrl);
+        return false;
       }
     }
+    return true;
+  }
 
-    await downloadUpdate(loadingOverlay, downloadUrl: result.downloadUrl);
+  Future<bool> hasInstallFromSourcePermission() async {
+    bool hasPermissions = false;
+    try {
+      hasPermissions =
+          await platform.invokeMethod("checkForRequestPackageInstalls");
+      debugPrint(
+          "has checkForRequestPackageInstalls permission: $hasPermissions");
+    } on PlatformException catch (e) {
+      debugPrint("PlatformException: $e");
+    }
+
+    return hasPermissions;
   }
 }
