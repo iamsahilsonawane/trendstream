@@ -21,7 +21,6 @@ class TvShowsGrid extends HookConsumerWidget {
         return AlignedGridView.count(
           key: const PageStorageKey<String>(
               'preserve_tv_shows_grid_scroll_and_focus'),
-          controller: ScrollController(),
           itemCount: asyncData.value,
           crossAxisCount: ResponsiveWidget.isMediumScreen(context)
               ? 4

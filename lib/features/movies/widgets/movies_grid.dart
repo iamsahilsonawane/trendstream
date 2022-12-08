@@ -16,14 +16,13 @@ class MoviesGrid extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final popularMoviesCount = ref.watch(popularPeopleCountProvider);
+    final popularMoviesCount = ref.watch(popularMoviesCountProvider);
 
     return popularMoviesCount.map(
       data: (asyncData) {
         return AlignedGridView.count(
           key: const PageStorageKey<String>(
               'preserve_movies_grid_scroll_and_focus'),
-          controller: ScrollController(),
           itemCount: asyncData.value,
           crossAxisCount: ResponsiveWidget.isMediumScreen(context)
               ? 4
@@ -33,14 +32,14 @@ class MoviesGrid extends HookConsumerWidget {
           mainAxisSpacing: 10.0,
           crossAxisSpacing: 10.0,
           itemBuilder: (BuildContext context, int index) {
-            final AsyncValue<Movie> currentPopularPersonFromIndex = ref
+            final AsyncValue<Movie> currentPopularMovieFromIndex = ref
                 .watch(paginatedPopularMoviesProvider(index ~/ 20))
                 .whenData((pageData) => pageData.results[index % 20]);
 
             return ProviderScope(
               overrides: [
                 currentPopularMovieProvider
-                    .overrideWithValue(currentPopularPersonFromIndex)
+                    .overrideWithValue(currentPopularMovieFromIndex)
               ],
               child: MovieTile(autofocus: index == 0),
             );
