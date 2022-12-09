@@ -11,7 +11,13 @@ class ProgramGuide extends Equatable {
   final List<Channel>? channels;
   final List<Program>? programs;
 
-  const ProgramGuide({this.channels, this.programs});
+  ///each channel(channel id here) > list of programs in that channel
+  final Map<String, List<Program>>? programsToChannels;
+  const ProgramGuide({
+    this.channels,
+    this.programs,
+    this.programsToChannels,
+  });
 
   factory ProgramGuide.fromJson(Map<String, dynamic> json) {
     return _$ProgramGuideFromJson(json);

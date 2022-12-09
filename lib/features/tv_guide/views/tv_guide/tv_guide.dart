@@ -1,21 +1,19 @@
 import 'dart:async';
-import 'dart:developer';
 
 import "package:flutter/material.dart";
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
-import 'package:latest_movies/core/extensions/date_extension.dart';
 import 'package:latest_movies/core/shared_widgets/app_loader.dart';
 import 'package:latest_movies/core/shared_widgets/default_app_padding.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
 
 import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
+import 'package:latest_movies/features/tv_guide/models/program_guide/program_guide.dart';
 import '../../../../core/shared_widgets/image.dart';
 import '../../controllers/current_focused_program_controller.dart';
 import '../../controllers/us_epg_controller.dart';
-import '../../models/program_guide/channel.dart';
 import '../../models/program_guide/program.dart';
 import '../../models/program_guide/title.dart';
 
@@ -48,7 +46,6 @@ class _TvGuideState extends ConsumerState<TvGuide> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(milliseconds: 500), () {
         scrollToCurrentTime();
-        setState(() {});
         timer = Timer.periodic(const Duration(minutes: 1), (timer) {
           setState(() {
             _updatePosition();
@@ -75,6 +72,7 @@ class _TvGuideState extends ConsumerState<TvGuide> {
         curve: Curves.easeInOut,
       );
     }
+    setState(() {});
   }
 
   void _updatePosition() {
@@ -90,6 +88,13 @@ class _TvGuideState extends ConsumerState<TvGuide> {
   @override
   Widget build(BuildContext context) {
     final usEpgGuideAsync = ref.watch(usEpgProvider);
+    ref.listen<AsyncValue<ProgramGuide>>(usEpgProvider, (previous, next) {
+      if (next is AsyncData<ProgramGuide>) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          scrollToCurrentTime();
+        });
+      }
+    });
 
     return Scaffold(
       body: FocusTraversalGroup(
@@ -97,36 +102,7 @@ class _TvGuideState extends ConsumerState<TvGuide> {
           child: usEpgGuideAsync.when(
             data: (epg) {
               final channels = epg.channels ?? [];
-              final programs = epg.programs ?? [];
-
-              final programsToChannels = <String, List<Program>>{};
-
-              for (final program in programs) {
-                final channel = channels.firstWhere(
-                  (channel) => channel.id == program.channel,
-                  orElse: () => const Channel(id: "notfound"),
-                );
-                if (channel.id == "notfound" || channel.id == null) {
-                  continue;
-                }
-
-                if (programsToChannels.containsKey(channel.id)) {
-                  if (DateTime.fromMillisecondsSinceEpoch(program.start!)
-                      .toLocal()
-                      .isSameDayAs(DateTime.now().toLocal())) {
-                    programsToChannels[channel.id]!.add(program);
-                  }
-                } else {
-                  if (DateTime.fromMillisecondsSinceEpoch(program.start!)
-                      .toLocal()
-                      .isSameDayAs(DateTime.now().toLocal())) {
-                    programsToChannels[channel.id!] = [program];
-                  }
-                }
-              }
-
-              // debugPrint("US EPG | epg recieved: ${epg.toJson()}");
-              // debugPrint("Programs to Channels: $programsToChannels");
+              final programsToChannels = epg.programsToChannels ?? {};
 
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -520,7 +496,7 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
       _fixTimeGapsIfAvailable();
       // debugPrint(
       //     "Channel: ${_programs.first.channel} | Duplicates Length: ${_programs.map((e) => e.titles).toList().duplicates.length}");
-      log("CH:${_programs.first.channel} ${_programs.map((e) => "${DateTime.fromMillisecondsSinceEpoch(e.start!).toLocal()} | ${DateTime.fromMillisecondsSinceEpoch(e.stop!).toLocal()}").toList().join("\n")}");
+      // log("CH:${_programs.first.channel} ${_programs.map((e) => "${DateTime.fromMillisecondsSinceEpoch(e.start!).toLocal()} | ${DateTime.fromMillisecondsSinceEpoch(e.stop!).toLocal()}").toList().join("\n")}");
     }
     setState(() {});
   }
@@ -556,7 +532,7 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
           start: todayMidnight,
           stop: _programs[0].start,
           channel: _programs[i].channel,
-          titles: const [ProgramTitle(value: "Break", lang: "en")],
+          titles: const [ProgramTitle(value: "Not Data Found", lang: "en")],
         );
         _programs.insert(0, breakProgram);
       }
@@ -573,7 +549,7 @@ class __ChannelProgramsState extends State<_ChannelPrograms> {
             start: _programs[i].stop,
             stop: _programs[i + 1].start,
             channel: _programs[i].channel,
-            titles: const [ProgramTitle(value: "Break", lang: "en")],
+            titles: const [ProgramTitle(value: "Not Data Found", lang: "en")],
           ),
         );
       }
