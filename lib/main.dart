@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/router/router.dart';
+import 'package:latest_movies/core/services/shared_preferences_service.dart';
 import 'package:latest_movies/features/movies/views/movies_dashboard/movies_dashboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 
@@ -18,7 +20,18 @@ void main() async {
   // Pass all uncaught errors from the framework to Crashlytics.
   // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
-  runApp(const ProviderScope(child: MyApp()));
+  final prefs = await SharedPreferences.getInstance();
+
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesServiceProvider.overrideWithValue(
+          SharedPreferencesService(prefs),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -8,6 +8,10 @@ class AppTextField extends StatelessWidget {
     this.hintText,
     this.isPassword = false,
     this.validator,
+    this.focusNode,
+    this.onFieldSubmitted,
+    this.onSaved,
+    this.onEditingComplete,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -15,6 +19,10 @@ class AppTextField extends StatelessWidget {
   final String? hintText;
   final bool isPassword;
   final String? Function(String?)? validator;
+  final FocusNode? focusNode;
+  final Function(String)? onFieldSubmitted;
+  final Function(String?)? onSaved;
+  final VoidCallback? onEditingComplete;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +31,10 @@ class AppTextField extends StatelessWidget {
       controller: controller,
       obscureText: isPassword,
       validator: validator,
+      focusNode: focusNode,
+      onFieldSubmitted: onFieldSubmitted,
+      onSaved: onSaved,
+      onEditingComplete: onEditingComplete,
       decoration: InputDecoration(
         hintText: hintText,
         border: InputBorder.none,

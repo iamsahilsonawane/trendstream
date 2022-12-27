@@ -3,8 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/services/shared_preferences_service.dart';
+import 'package:latest_movies/core/utilities/app_utility.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/side_bar_controller.dart';
+import 'package:latest_movies/features/movies/widgets/enter_passcode_dialog.dart';
+import 'package:latest_movies/features/movies/widgets/set_passcode_dialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/router/router.dart';
@@ -84,8 +88,42 @@ class DashboardSideBar extends HookConsumerWidget {
                 iconData: Icons.eighteen_up_rating_outlined,
                 selectedIconData: Icons.eighteen_up_rating,
                 isSelected: sidebarState.sidebarOptions == SidebarOptions.adult,
-                onTap: () {
-                  sidebarStateNotifier.setSidebarOption(SidebarOptions.adult);
+                onTap: () async {
+                  final bool isPasscodeSet = ref
+                          .read(sharedPreferencesServiceProvider)
+                          .sharedPreferences
+                          .getBool(SharedPreferencesService.isPasscodeSet) ??
+                      false;
+
+                  if (isPasscodeSet) {
+                    bool? shouldNavigate = await showDialog(
+                      context: context,
+                      builder: (context) => const EnterPasscodeDialog(),
+                    );
+                    shouldNavigate ??= false;
+                    if (shouldNavigate) {
+                      sidebarStateNotifier
+                          .setSidebarOption(SidebarOptions.adult);
+                    } else {
+                      AppUtils.showSnackBar(
+                        AppRouter.navigatorKey.currentContext,
+                        message: 'Incorrect passcode',
+                        color: Colors.white,
+                        icon: const Icon(Icons.error_outline,
+                            color: Colors.black),
+                      );
+                    }
+                  } else {
+                    bool? shouldNavigate = await showDialog(
+                      context: context,
+                      builder: (context) => const SetPasscodeDialog(),
+                    );
+                    shouldNavigate ??= false;
+                    if (shouldNavigate) {
+                      sidebarStateNotifier
+                          .setSidebarOption(SidebarOptions.adult);
+                    }
+                  }
                 },
               ),
               DrawerItem(
@@ -113,6 +151,24 @@ class DashboardSideBar extends HookConsumerWidget {
                 isSelected:
                     sidebarState.sidebarOptions == SidebarOptions.watchlist,
                 onTap: () {},
+              ),
+              DrawerItem(
+                title: 'Reset',
+                iconData: Icons.refresh,
+                selectedIconData: Icons.refresh,
+                isSelected: false,
+                onTap: () async {
+                  Future.wait([
+                    ref
+                        .read(sharedPreferencesServiceProvider)
+                        .sharedPreferences
+                        .remove(SharedPreferencesService.isPasscodeSet),
+                    ref
+                        .read(sharedPreferencesServiceProvider)
+                        .sharedPreferences
+                        .remove(SharedPreferencesService.adultContentPasscode),
+                  ]);
+                },
               ),
               verticalSpaceRegular,
               FutureBuilder(

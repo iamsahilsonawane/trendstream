@@ -9,6 +9,8 @@ class SharedPreferencesService {
   final SharedPreferences sharedPreferences;
 
   static const isLoggedInKey = 'isLoggedIn';
+  static const isPasscodeSet = 'isPasscodeSet';
+  static const adultContentPasscode = 'adultContentPasscode';
 
   //Utilities
   Future<void> setIsLoggedIn() async {
