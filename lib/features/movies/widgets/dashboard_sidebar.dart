@@ -7,6 +7,7 @@ import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/side_bar_controller.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../../core/router/router.dart';
 import '../enums/sidebar_options.dart';
 
 class DashboardSideBar extends HookConsumerWidget {
@@ -64,6 +65,27 @@ class DashboardSideBar extends HookConsumerWidget {
                   const platform =
                       MethodChannel('com.example.latest_movies/channel');
                   await platform.invokeMethod("navigateToGuide");
+                },
+              ),
+              DrawerItem(
+                title: 'TV Guide (legacy)',
+                iconData: Icons.live_tv_outlined,
+                selectedIconData: Icons.live_tv,
+                isSelected:
+                    sidebarState.sidebarOptions == SidebarOptions.tvGuideLegacy,
+                onTap: () {
+                  // sidebarStateNotifier
+                  //     .setSidebarOption(SidebarOptions.tvGuideLegacy);
+                  AppRouter.navigateToPage(Routes.tvGuide);
+                },
+              ),
+              DrawerItem(
+                title: 'Adult',
+                iconData: Icons.eighteen_up_rating_outlined,
+                selectedIconData: Icons.eighteen_up_rating,
+                isSelected: sidebarState.sidebarOptions == SidebarOptions.adult,
+                onTap: () {
+                  sidebarStateNotifier.setSidebarOption(SidebarOptions.adult);
                 },
               ),
               DrawerItem(
