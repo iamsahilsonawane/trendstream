@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
-import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/side_bar_controller.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -57,10 +57,13 @@ class DashboardSideBar extends HookConsumerWidget {
                 selectedIconData: Icons.live_tv,
                 isSelected:
                     sidebarState.sidebarOptions == SidebarOptions.tvGuide,
-                onTap: () {
+                onTap: () async {
                   // sidebarStateNotifier
                   //     .setSidebarOption(SidebarOptions.tvGuide);
-                  AppRouter.navigateToPage(Routes.tvGuide);
+                  // AppRouter.navigateToPage(Routes.tvGuide);
+                  const platform =
+                      MethodChannel('com.example.latest_movies/channel');
+                  await platform.invokeMethod("navigateToGuide");
                 },
               ),
               DrawerItem(

@@ -1,5 +1,6 @@
 package com.example.latest_movies
 
+import android.content.Intent
 import io.flutter.embedding.android.FlutterActivity
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
@@ -18,8 +19,11 @@ class MainActivity : FlutterActivity() {
             if (call.method == "checkForRequestPackageInstalls") {
                 val hasPermission = getPermissionStatus()
                 result.success(hasPermission)
-
-            } else {
+            } else  if (call.method == "navigateToGuide") {
+                val intent = Intent(this, GuideActivity::class.java)
+                startActivity(intent)
+                result.success(null)
+            }  else {
                 result.notImplemented()
             }
         }

@@ -35,6 +35,10 @@ class HomeView extends HookConsumerWidget {
         //   final result =
         //       await ref.read(updateDownloadManagerProvider).checkForUpdate();
         //   showUpdatePrompt.value = result.updateAvailable;
+        // Future.delayed(const Duration(seconds: 5), () async {
+        //   const platform = MethodChannel('com.example.latest_movies/channel');
+        //   await platform.invokeMethod("navigateToGuide");
+        // });
       });
       return null;
     }, []);
