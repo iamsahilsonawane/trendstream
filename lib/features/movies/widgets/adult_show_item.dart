@@ -5,6 +5,7 @@ import 'package:latest_movies/features/movies/controllers/current_adult_show_con
 import '../../../../core/utilities/design_utility.dart';
 import "package:flutter/material.dart";
 
+import '../../../core/router/router.dart';
 import '../../../core/shared_widgets/app_loader.dart';
 import '../../../core/shared_widgets/error_view.dart';
 import '../../../core/shared_widgets/image.dart';
@@ -31,7 +32,7 @@ class AdultShowItem extends HookConsumerWidget {
           focusColor: Colors.transparent,
           splashColor: Colors.transparent,
           onTap: () {
-            //TODO: navigate to player view
+            AppRouter.navigateToPage(Routes.playerView);
           },
           child: Builder(builder: (context) {
             final bool hasFocus = Focus.of(context).hasPrimaryFocus;
