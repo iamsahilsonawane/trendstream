@@ -89,6 +89,9 @@ class DashboardSideBar extends HookConsumerWidget {
                 selectedIconData: Icons.eighteen_up_rating,
                 isSelected: sidebarState.sidebarOptions == SidebarOptions.adult,
                 onTap: () async {
+                  if (sidebarState.sidebarOptions == SidebarOptions.adult) {
+                    return;
+                  }
                   final bool isPasscodeSet = ref
                           .read(sharedPreferencesServiceProvider)
                           .sharedPreferences

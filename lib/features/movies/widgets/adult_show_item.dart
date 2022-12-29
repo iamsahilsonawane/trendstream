@@ -76,23 +76,17 @@ class AdultShowItem extends HookConsumerWidget {
                         color: hasFocus ? Colors.white : Colors.grey[700],
                         fontWeight:
                             hasFocus ? FontWeight.w700 : FontWeight.w600),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 5),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.visibility,
-                          size: 18, color: Colors.grey),
-                      horizontalSpaceSmall,
-                      Text(
-                        "22k views",
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: hasFocus ? Colors.white : Colors.grey[700],
-                            fontWeight:
-                                hasFocus ? FontWeight.w700 : FontWeight.w600),
-                      ),
-                    ],
+                  Text(
+                    "By Aditya Gaikwad",
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: hasFocus ? Colors.grey[500] : Colors.grey[700],
+                        fontWeight:
+                            hasFocus ? FontWeight.w600 : FontWeight.w500),
                   ),
                 ],
               ),
