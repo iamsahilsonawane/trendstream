@@ -72,7 +72,7 @@ class DashboardSideBar extends HookConsumerWidget {
                 },
               ),
               DrawerItem(
-                title: 'TV Guide (legacy)',
+                title: 'TV Guide (L)',
                 iconData: Icons.live_tv_outlined,
                 selectedIconData: Icons.live_tv,
                 isSelected:
