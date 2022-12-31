@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AppTextField extends StatelessWidget {
   const AppTextField({
@@ -12,6 +13,9 @@ class AppTextField extends StatelessWidget {
     this.onFieldSubmitted,
     this.onSaved,
     this.onEditingComplete,
+    this.readOnly = false,
+    this.keyboardType,
+    this.inputFormatters,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -23,11 +27,17 @@ class AppTextField extends StatelessWidget {
   final Function(String)? onFieldSubmitted;
   final Function(String?)? onSaved;
   final VoidCallback? onEditingComplete;
+  final bool readOnly;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       autofocus: false,
+      keyboardType: keyboardType,
+      readOnly: readOnly,
+      inputFormatters: inputFormatters,
       controller: controller,
       obscureText: isPassword,
       validator: validator,
