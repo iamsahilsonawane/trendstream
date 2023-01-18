@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/services/shared_preferences_service.dart';
-import 'package:latest_movies/core/utilities/app_utility.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/side_bar_controller.dart';
 import 'package:latest_movies/features/movies/widgets/enter_passcode_dialog.dart';
@@ -108,13 +107,13 @@ class DashboardSideBar extends HookConsumerWidget {
                       sidebarStateNotifier
                           .setSidebarOption(SidebarOptions.adult);
                     } else {
-                      AppUtils.showSnackBar(
-                        AppRouter.navigatorKey.currentContext,
-                        message: 'Incorrect passcode',
-                        color: Colors.white,
-                        icon: const Icon(Icons.error_outline,
-                            color: Colors.black),
-                      );
+                      // AppUtils.showSnackBar(
+                      //   AppRouter.navigatorKey.currentContext,
+                      //   message: 'Incorrect passcode',
+                      //   color: Colors.white,
+                      //   icon: const Icon(Icons.error_outline,
+                      //       color: Colors.black),
+                      // );
                     }
                   } else {
                     bool? shouldNavigate = await showDialog(
