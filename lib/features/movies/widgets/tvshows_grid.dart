@@ -29,6 +29,7 @@ class TvShowsGrid extends HookConsumerWidget {
                   : 6,
           mainAxisSpacing: 10.0,
           crossAxisSpacing: 10.0,
+          cacheExtent: 100,
           itemBuilder: (BuildContext context, int index) {
             final AsyncValue<TvShow> currentPopularTvShowFromIndex = ref
                 .watch(paginatedPopularTvShowsProvider(index ~/ 20))

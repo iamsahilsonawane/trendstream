@@ -31,6 +31,7 @@ class MoviesGrid extends HookConsumerWidget {
                   : 6,
           mainAxisSpacing: 10.0,
           crossAxisSpacing: 10.0,
+          cacheExtent: 100,
           itemBuilder: (BuildContext context, int index) {
             final AsyncValue<Movie> currentPopularMovieFromIndex = ref
                 .watch(paginatedPopularMoviesProvider(index ~/ 20))
