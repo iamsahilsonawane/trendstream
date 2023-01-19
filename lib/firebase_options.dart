@@ -63,7 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '448821587678',
     projectId: 'latest-movies-cff93',
     storageBucket: 'latest-movies-cff93.appspot.com',
-    iosClientId: '448821587678-ol9cnroumon3kd9f9atebbe1e4rf7f3v.apps.googleusercontent.com',
+    iosClientId:
+        '448821587678-ol9cnroumon3kd9f9atebbe1e4rf7f3v.apps.googleusercontent.com',
     iosBundleId: 'com.example.latestMovies',
   );
 }
