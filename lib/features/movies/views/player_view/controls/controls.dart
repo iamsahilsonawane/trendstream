@@ -331,14 +331,12 @@ class PlayerControls extends HookConsumerWidget {
 
   void _getSubtitleTracks(BuildContext context, bool isSubtitlesAdded,
       {required PlayerControlsNotifier playerController}) async {
-    if (!vlcPlayerController.value.isPlaying) return;
-
     var subtitleTracks = await vlcPlayerController.getSpuTracks();
     log("Found Subtitle Tracks: ${subtitleTracks.length}");
 
     if (subtitleTracks.isNotEmpty) {
       var selectedSubId = await showDialog(
-        context: context,
+        context: AppRouter.navigatorKey.currentContext!,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text('Select Subtitle'),
