@@ -14,18 +14,7 @@ class SetPasscodeDialog extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final focusNode = useFocusNode();
-    final btnFocusNode = useFocusNode();
     final passcodeCtrl = useTextEditingController();
-
-    useEffect(() {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        Future.delayed(const Duration(milliseconds: 1000), () {
-          focusNode.requestFocus();
-        });
-      });
-      return null;
-    }, []);
 
     return Dialog(
       backgroundColor: kBackgroundColor,

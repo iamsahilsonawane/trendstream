@@ -83,7 +83,7 @@ class _EnterPasscodeDialogState extends ConsumerState<EnterPasscodeDialog> {
                     inactiveFillColor: Colors.transparent,
                     inactiveColor: kPrimaryColor,
                     selectedFillColor: kPrimaryColor.withOpacity(.2),
-                    disabledColor: kPrimaryColor,
+                    disabledColor: kPrimaryColor.withOpacity(.45),
                   ),
                   cursorColor: Colors.white,
                   backgroundColor: Colors.transparent,

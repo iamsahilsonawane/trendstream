@@ -45,7 +45,7 @@ class KeyboardKeyButtonState extends State<KeyboardKeyButton> {
               ? BorderSide(color: widget.borderColor!)
               : BorderSide.none),
       elevation: 0,
-      focusColor: widget.focusColor ?? widget.focusColor,
+      focusColor: widget.focusColor,
       focusNode: _node,
       padding: EdgeInsets.zero,
       onPressed: () {
