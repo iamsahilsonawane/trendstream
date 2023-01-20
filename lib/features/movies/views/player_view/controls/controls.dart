@@ -30,10 +30,14 @@ class Debouncer {
 }
 
 class PlayerControls extends HookConsumerWidget {
-  const PlayerControls({Key? key, required this.vlcPlayerController})
-      : super(key: key);
+  const PlayerControls({
+    Key? key,
+    required this.vlcPlayerController,
+    required this.onControllerChanged,
+  }) : super(key: key);
 
   final VlcPlayerController vlcPlayerController;
+  final ValueChanged<VlcPlayerController> onControllerChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -257,6 +261,30 @@ class PlayerControls extends HookConsumerWidget {
                                 color: Colors.white,
                                 onPressed: () => _getAudioTracks(context,
                                     playerController: controlsModel),
+                              ),
+                              IconButton(
+                                tooltip: 'Subtitle Options',
+                                icon: const Icon(Icons.settings),
+                                color: Colors.white,
+                                onPressed: () {
+                                  vlcPlayerController.options?.subtitle?.options
+                                      .removeWhere((element) =>
+                                          element.contains(
+                                              "--freetype-fontsize=") ||
+                                          element
+                                              .contains("--freetype-color="));
+
+                                  vlcPlayerController.options?.subtitle?.options
+                                      .addAll(
+                                    [
+                                      VlcSubtitleOptions.fontSize(50),
+                                      VlcSubtitleOptions.color(
+                                          VlcSubtitleColor.purple),
+                                    ],
+                                  );
+
+                                  onControllerChanged.call(vlcPlayerController);
+                                },
                               ),
                               Row(
                                 children: [
