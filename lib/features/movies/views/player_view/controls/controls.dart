@@ -6,7 +6,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:focus_notifier/focus_notifier.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/router/router.dart';
+import 'package:latest_movies/core/shared_widgets/button.dart';
+import 'package:latest_movies/core/utilities/design_utility.dart';
 
 import 'controls_notifier.dart';
 
@@ -266,7 +269,16 @@ class PlayerControls extends HookConsumerWidget {
                                 tooltip: 'Subtitle Options',
                                 icon: const Icon(Icons.settings),
                                 color: Colors.white,
-                                onPressed: () {
+                                onPressed: () async {
+                                  controlsModel.stopTimer();
+                                  controlsModel.pause();
+                                  controlsModel.forceStopped = true;
+
+                                  final result = await _setCaptionStyle();
+
+                                  controlsModel.forceStopped = false;
+                                  if (result == null) return;
+
                                   vlcPlayerController.options?.subtitle?.options
                                       .removeWhere((element) =>
                                           element.contains(
@@ -277,9 +289,12 @@ class PlayerControls extends HookConsumerWidget {
                                   vlcPlayerController.options?.subtitle?.options
                                       .addAll(
                                     [
-                                      VlcSubtitleOptions.fontSize(50),
-                                      VlcSubtitleOptions.color(
-                                          VlcSubtitleColor.purple),
+                                      if (result.containsKey("fontSize"))
+                                        VlcSubtitleOptions.fontSize(
+                                            result["fontSize"]),
+                                      if (result.containsKey("fontColor"))
+                                        VlcSubtitleOptions.color(
+                                            result["fontColor"]),
                                     ],
                                   );
 
@@ -355,6 +370,153 @@ class PlayerControls extends HookConsumerWidget {
         await controlsModel.setPlaybackSpeed(selectedSpeedIndex);
       }
     }
+  }
+
+  Color decimalToColor(int decimal) {
+    int r = (decimal >> 16) & 0xff;
+    int g = (decimal >> 8) & 0xff;
+    int b = (decimal) & 0xff;
+    return Color.fromARGB(255, r, g, b);
+  }
+
+  int colorToDecimal(Color color) {
+    int r = color.red;
+    int g = color.green;
+    int b = color.blue;
+    return (r << 16) | (g << 8) | b;
+  }
+
+  Future<Map<String, dynamic>?> _setCaptionStyle() async {
+    var subtitleTracks = await vlcPlayerController.getSpuTracks();
+    log("Found Subtitle Tracks: ${subtitleTracks.length}");
+
+    final List<Color> colors = [
+      VlcSubtitleColor.black,
+      VlcSubtitleColor.blue,
+      VlcSubtitleColor.green,
+      VlcSubtitleColor.red,
+      VlcSubtitleColor.white,
+      VlcSubtitleColor.yellow,
+    ].map((e) => decimalToColor(e.value)).toList();
+
+    int? selectedSize;
+    Color? selectedColor;
+
+    if (subtitleTracks.isNotEmpty) {
+      var shouldUpdate = await showDialog(
+        context: AppRouter.navigatorKey.currentContext!,
+        builder: (BuildContext context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: kBackgroundColor,
+              title: const Text('Subtitle Style'),
+              content: SizedBox(
+                width: 400,
+                height: 160,
+                child: FocusScope(
+                  autofocus: true,
+                  child: FocusTraversalGroup(
+                    policy: OrderedTraversalPolicy(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            const Text("Font Size:",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16)),
+                            horizontalSpaceRegular,
+                            Expanded(
+                              child: FocusTraversalGroup(
+                                child: Row(
+                                  children: List.generate(
+                                    5,
+                                    (index) => Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: _CCFontSize(
+                                        fontSize: 20 + (index * 2),
+                                        autofocus: index == 0,
+                                        isSelected:
+                                            selectedSize == 20 + (index * 2),
+                                        onTap: () {
+                                          setState(() {
+                                            selectedSize = 20 + (index * 2);
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        verticalSpaceRegular,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.baseline,
+                          textBaseline: TextBaseline.alphabetic,
+                          children: [
+                            const Text("Font Color:",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16)),
+                            horizontalSpaceRegular,
+                            Expanded(
+                              child: FocusTraversalGroup(
+                                child: Row(
+                                  children: List.generate(
+                                    colors.length,
+                                    (index) => Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: _CCFontColor(
+                                        color: colors[index],
+                                        isSelected:
+                                            selectedColor == colors[index],
+                                        onTap: () {
+                                          setState(() {
+                                            selectedColor = colors[index];
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        verticalSpaceRegular,
+                        AppButton(
+                          onTap: selectedColor == null && selectedSize == null
+                              ? null
+                              : () {
+                                  Navigator.pop(context, true);
+                                },
+                          text: "Apply Changes",
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          });
+        },
+      );
+
+      if (shouldUpdate ?? false) {
+        return {
+          if (selectedSize != null) "fontSize": selectedSize,
+          if (selectedColor != null)
+            "fontColor": VlcSubtitleColor(colorToDecimal(selectedColor!)),
+        };
+      }
+    }
+
+    return null;
   }
 
   void _getSubtitleTracks(BuildContext context, bool isSubtitlesAdded,
@@ -500,5 +662,119 @@ class PlayerControls extends HookConsumerWidget {
           color: Colors.white,
         );
     }
+  }
+}
+
+class _CCFontSize extends StatelessWidget {
+  const _CCFontSize({
+    Key? key,
+    required this.fontSize,
+    required this.onTap,
+    this.autofocus = false,
+    this.isSelected = false,
+  }) : super(key: key);
+
+  final double fontSize;
+  final VoidCallback onTap;
+  final bool isSelected;
+  final bool autofocus;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      autofocus: autofocus,
+      splashColor: Colors.transparent,
+      child: Builder(
+        builder: (context) {
+          final isFocused = Focus.of(context).hasPrimaryFocus;
+          return Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              // color: Colors.yellow,
+              color: kBackgroundColor,
+              borderRadius: BorderRadius.circular(4),
+              border: isFocused
+                  ? Border.all(
+                      color: Colors.grey,
+                      width: 2,
+                    )
+                  : isSelected
+                      ? Border.all(
+                          color: kPrimaryAccentColor,
+                          width: 2,
+                        )
+                      : null,
+            ),
+            child: Text(
+              "aA",
+              style: TextStyle(
+                fontSize: fontSize,
+                color: isFocused
+                    ? Colors.white
+                    : isSelected
+                        ? kPrimaryAccentColor
+                        : Colors.grey,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _CCFontColor extends StatelessWidget {
+  const _CCFontColor({
+    Key? key,
+    required this.color,
+    required this.onTap,
+    this.isSelected = false,
+  }) : super(key: key);
+
+  final Color color;
+  final VoidCallback onTap;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    Color textColor =
+        color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+
+    return InkWell(
+      onTap: onTap,
+      splashColor: Colors.transparent,
+      child: Builder(
+        builder: (context) {
+          final isFocused = Focus.of(context).hasPrimaryFocus;
+          return Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              // color: Colors.yellow,
+              color: kBackgroundColor,
+              borderRadius: BorderRadius.circular(4),
+              border: isFocused
+                  ? Border.all(
+                      color: Colors.grey,
+                      width: 2,
+                    )
+                  : isSelected
+                      ? Border.all(
+                          color: kPrimaryAccentColor,
+                          width: 2,
+                        )
+                      : null,
+            ),
+            child: Text(
+              "aA",
+              style: TextStyle(
+                fontSize: 16,
+                color: color,
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }

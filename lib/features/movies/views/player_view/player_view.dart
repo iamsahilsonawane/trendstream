@@ -105,7 +105,7 @@ class _PlayerViewState extends State<PlayerView> {
                 );
 
                 _videoPlayerController.addOnInitListener(() {
-                  Future.delayed(const Duration(milliseconds: 500), () {
+                  Future.delayed(const Duration(seconds: 1), () {
                     _videoPlayerController.seekTo(ct);
                   });
                 });
