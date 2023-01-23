@@ -70,6 +70,15 @@ class PlayerControlsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _forceStopped = false;
+
+  bool get forceStopped => _forceStopped;
+
+  set forceStopped(bool newVal) {
+    if (newVal == _forceStopped) return;
+    _forceStopped = newVal;
+  }
+
   List<double> playbackSpeeds = [0.5, 1.0, 2.0];
   int playbackSpeedIndex = 0;
   double get currentPlaybackSpeed => playbackSpeeds[playbackSpeedIndex];
@@ -151,6 +160,9 @@ class PlayerControlsNotifier extends ChangeNotifier {
   void onHover() {
     if (vlcPlayerController.value.playingState != PlayingState.stopped &&
         vlcPlayerController.value.playingState != PlayingState.ended) {
+      if (forceStopped) {
+        return;
+      }
       _cancelAndRestartTimer();
     }
   }

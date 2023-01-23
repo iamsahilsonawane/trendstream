@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'package:uuid/uuid.dart';
 
 import 'controls/controls.dart';
 
@@ -12,9 +13,16 @@ class PlayerView extends StatefulWidget {
 
 class _PlayerViewState extends State<PlayerView> {
   late VlcPlayerController _videoPlayerController;
+  final uuid = const Uuid();
+
+  String? key;
+
   @override
   void initState() {
     super.initState();
+
+    key = uuid.v4();
+
     _videoPlayerController = VlcPlayerController.network(
       // 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
       'https://media.w3.org/2010/05/sintel/trailer.mp4',
@@ -45,8 +53,10 @@ class _PlayerViewState extends State<PlayerView> {
   @override
   void dispose() async {
     super.dispose();
-    await _videoPlayerController.stopRendererScanning();
-    await _videoPlayerController.dispose();
+    if (_videoPlayerController.value.isInitialized) {
+      await _videoPlayerController.stopRendererScanning();
+      await _videoPlayerController.dispose();
+    }
   }
 
   @override
@@ -59,6 +69,7 @@ class _PlayerViewState extends State<PlayerView> {
             child: Align(
               alignment: Alignment.center,
               child: VlcPlayer(
+                key: ValueKey(key),
                 controller: _videoPlayerController,
                 aspectRatio: 16 / 9,
                 placeholder: const Center(child: CircularProgressIndicator()),
@@ -67,7 +78,43 @@ class _PlayerViewState extends State<PlayerView> {
             ),
           ),
           Positioned.fill(
-            child: PlayerControls(vlcPlayerController: _videoPlayerController),
+            child: PlayerControls(
+              key: ValueKey(key),
+              vlcPlayerController: _videoPlayerController,
+              onControllerChanged: (VlcPlayerController currentCtrl) async {
+                await _videoPlayerController.dispose();
+                final ct = currentCtrl.value.position;
+
+                _videoPlayerController = VlcPlayerController.network(
+                  'https://media.w3.org/2010/05/sintel/trailer.mp4',
+                  hwAcc: HwAcc.full,
+                  autoPlay: true,
+                  autoInitialize: true,
+                  options: VlcPlayerOptions(
+                    advanced: VlcAdvancedOptions([
+                      VlcAdvancedOptions.networkCaching(2000),
+                    ]),
+                    subtitle: currentCtrl.options?.subtitle,
+                    http: VlcHttpOptions([
+                      VlcHttpOptions.httpReconnect(true),
+                    ]),
+                    rtp: VlcRtpOptions([
+                      VlcRtpOptions.rtpOverRtsp(true),
+                    ]),
+                  ),
+                );
+
+                _videoPlayerController.addOnInitListener(() {
+                  Future.delayed(const Duration(seconds: 1), () {
+                    _videoPlayerController.seekTo(ct);
+                  });
+                });
+
+                setState(() {
+                  key = uuid.v4();
+                });
+              },
+            ),
           ),
         ],
       ),
