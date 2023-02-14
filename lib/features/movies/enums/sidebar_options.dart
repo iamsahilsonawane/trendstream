@@ -6,6 +6,7 @@ enum SidebarOptions {
   tvGuideLegacy,
   adult,
   search,
+  sports,
   favorites,
   watchlist,
 }

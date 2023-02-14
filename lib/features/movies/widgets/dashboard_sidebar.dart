@@ -139,6 +139,16 @@ class DashboardSideBar extends HookConsumerWidget {
                 },
               ),
               DrawerItem(
+                title: 'Sports',
+                iconData: Icons.sports_basketball_outlined,
+                selectedIconData: Icons.sports_basketball,
+                isSelected:
+                    sidebarState.sidebarOptions == SidebarOptions.sports,
+                onTap: () {
+                  sidebarStateNotifier.setSidebarOption(SidebarOptions.sports);
+                },
+              ),
+              DrawerItem(
                 title: 'Favorites',
                 iconData: Icons.favorite_border,
                 selectedIconData: Icons.favorite,
