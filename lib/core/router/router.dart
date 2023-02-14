@@ -9,5 +9,7 @@ import '../../features/movies/views/movie_details/movie_details.dart';
 import '../../features/movies/views/player_view/player_view.dart';
 import 'dart:developer';
 
+import '../../features/movies/views/player_view/youtube_player_view.dart';
+
 part '_app_router.dart';
 part '_routes.dart';

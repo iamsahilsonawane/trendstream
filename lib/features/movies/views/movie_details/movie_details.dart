@@ -239,12 +239,17 @@ class MovieDetailsView extends HookConsumerWidget {
                                                       element.site == "YouTube",
                                                 );
 
-                                                if (!await launchUrl(Uri.parse(
-                                                    "https://youtube.com/watch?v=${firstTrailer.key}"))) {
-                                                  AppUtils.showSnackBar(context,
-                                                      message:
-                                                          "This TV does not support opening URLs");
-                                                }
+                                                // if (!await launchUrl(Uri.parse(
+                                                //     "https://youtube.com/watch?v=${firstTrailer.key}"))) {
+                                                //   AppUtils.showSnackBar(context,
+                                                //       message:
+                                                //           "This TV does not support opening URLs");
+                                                // }
+
+                                                AppRouter.navigateToPage(
+                                                    Routes.youtubePlayerView,
+                                                    arguments:
+                                                        firstTrailer.key);
                                               },
                                       );
                                     },

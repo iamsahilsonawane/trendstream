@@ -87,6 +87,12 @@ class AppRouter {
           settings: settings,
           fullscreenDialog: false,
         );
+      case Routes.youtubePlayerView:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => const YoutubePlayerView(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
       default:
         return null;
     }
