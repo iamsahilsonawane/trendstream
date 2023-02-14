@@ -10,4 +10,6 @@ class Routes {
   static const String tvGuide = "/tv-guide";
 
   static const String livePlayerView = "/live-player-view";
+
+  static const String youtubePlayerView = "/youtube-player-view";
 }
