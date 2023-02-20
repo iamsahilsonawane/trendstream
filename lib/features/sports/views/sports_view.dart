@@ -8,6 +8,8 @@ import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/sports/widgtes/sports_program_channel_tile.dart';
 import 'package:latest_movies/features/sports/widgtes/sports_program_list_tile.dart';
 
+import '../../../core/router/router.dart';
+
 class SportsPage extends StatelessWidget {
   const SportsPage({super.key});
 
@@ -49,7 +51,9 @@ class SportsPage extends StatelessWidget {
                 title:
                     "07:00 p.m. - lunes ${index + 1} - NBA Regular Season - Orlando Magic vs Chicago Bulls",
                 icon: Icons.sports_football,
-                onTap: () {},
+                onTap: () {
+                  AppRouter.navigateToPage(Routes.playerView);
+                },
               );
             },
             separatorBuilder: (contetxt, _) => const Divider(height: 0),
