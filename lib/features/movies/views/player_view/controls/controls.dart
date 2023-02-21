@@ -11,6 +11,7 @@ import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/shared_widgets/button.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 
+import '../../../models/player/subtitle_color.dart';
 import 'controls_notifier.dart';
 
 import 'dart:async';
@@ -280,11 +281,13 @@ class PlayerControls extends HookConsumerWidget {
                                   if (result == null) return;
 
                                   vlcPlayerController.options?.subtitle?.options
-                                      .removeWhere((element) =>
-                                          element.contains(
-                                              "--freetype-fontsize=") ||
-                                          element
-                                              .contains("--freetype-color="));
+                                      .removeWhere(
+                                    (opt) =>
+                                        opt.contains("--freetype-fontsize=") ||
+                                        opt.contains("--freetype-color=") ||
+                                        opt.contains(
+                                            "--freetype-background-color="),
+                                  );
 
                                   vlcPlayerController.options?.subtitle?.options
                                       .addAll(
@@ -295,6 +298,16 @@ class PlayerControls extends HookConsumerWidget {
                                       if (result.containsKey("fontColor"))
                                         VlcSubtitleOptions.color(
                                             result["fontColor"]),
+                                      if (result.containsKey("backgroundColor"))
+                                        VlcSubtitleOptions.backgroundColor(
+                                            result["backgroundColor"]),
+                                      if (result.containsKey("backgroundColor"))
+                                        VlcSubtitleOptions.backgroundOpacity(
+                                            255),
+                                      if (result.containsKey("backgroundColor"))
+                                        VlcSubtitleOptions.shadowOpacity(0),
+                                      if (result.containsKey("backgroundColor"))
+                                        VlcSubtitleOptions.boldStyle(false),
                                     ],
                                   );
 
@@ -390,17 +403,23 @@ class PlayerControls extends HookConsumerWidget {
     var subtitleTracks = await vlcPlayerController.getSpuTracks();
     log("Found Subtitle Tracks: ${subtitleTracks.length}");
 
-    final List<Color> colors = [
-      VlcSubtitleColor.black,
-      VlcSubtitleColor.blue,
-      VlcSubtitleColor.green,
-      VlcSubtitleColor.red,
-      VlcSubtitleColor.white,
-      VlcSubtitleColor.yellow,
-    ].map((e) => decimalToColor(e.value)).toList();
+    final List<SubtitleColor> colors = [
+      [VlcSubtitleColor.black, null],
+      [VlcSubtitleColor.blue, null],
+      [VlcSubtitleColor.green, null],
+      [VlcSubtitleColor.red, null],
+      [VlcSubtitleColor.white, null],
+      [VlcSubtitleColor.yellow, null],
+      [VlcSubtitleColor.black, VlcSubtitleColor.white],
+    ].map((e) {
+      return SubtitleColor(
+        color: decimalToColor(e[0]!.value),
+        backgroundColor: e[1] != null ? decimalToColor(e[1]!.value) : null,
+      );
+    }).toList();
 
     int? selectedSize;
-    Color? selectedColor;
+    SubtitleColor? selectedColor;
 
     if (subtitleTracks.isNotEmpty) {
       var shouldUpdate = await showDialog(
@@ -472,7 +491,9 @@ class PlayerControls extends HookConsumerWidget {
                                       padding:
                                           const EdgeInsets.only(right: 8.0),
                                       child: _CCFontColor(
-                                        color: colors[index],
+                                        color: colors[index].color,
+                                        backgroundColor:
+                                            colors[index].backgroundColor,
                                         isSelected:
                                             selectedColor == colors[index],
                                         onTap: () {
@@ -511,7 +532,10 @@ class PlayerControls extends HookConsumerWidget {
         return {
           if (selectedSize != null) "fontSize": selectedSize,
           if (selectedColor != null)
-            "fontColor": VlcSubtitleColor(colorToDecimal(selectedColor!)),
+            "fontColor": VlcSubtitleColor(colorToDecimal(selectedColor!.color)),
+          if (selectedColor?.backgroundColor != null)
+            "backgroundColor": VlcSubtitleColor(
+                colorToDecimal(selectedColor!.backgroundColor!)),
         };
       }
     }
@@ -575,45 +599,47 @@ class PlayerControls extends HookConsumerWidget {
     var audioTracks = await vlcPlayerController.getAudioTracks();
 
     if (audioTracks.isNotEmpty) {
-      var selectedAudioTrackId = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Select Audio'),
-            content: SizedBox(
-              width: double.maxFinite,
-              height: 250,
-              child: ListView.builder(
-                itemCount: audioTracks.keys.length + 1,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      index < audioTracks.keys.length
-                          ? audioTracks.values.elementAt(index).toString()
-                          : 'Disable',
-                    ),
-                    selected: index < audioTracks.keys.length
-                        ? playerController.selectedAudioTrackId ==
-                            audioTracks.keys.elementAt(index)
-                        : playerController.selectedAudioTrackId == -1,
-                    onTap: () {
-                      Navigator.pop(
-                        context,
+      if (context.mounted) {
+        var selectedAudioTrackId = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Select Audio'),
+              content: SizedBox(
+                width: double.maxFinite,
+                height: 250,
+                child: ListView.builder(
+                  itemCount: audioTracks.keys.length + 1,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
                         index < audioTracks.keys.length
-                            ? audioTracks.keys.elementAt(index)
-                            : -1,
-                      );
-                    },
-                  );
-                },
+                            ? audioTracks.values.elementAt(index).toString()
+                            : 'Disable',
+                      ),
+                      selected: index < audioTracks.keys.length
+                          ? playerController.selectedAudioTrackId ==
+                              audioTracks.keys.elementAt(index)
+                          : playerController.selectedAudioTrackId == -1,
+                      onTap: () {
+                        Navigator.pop(
+                          context,
+                          index < audioTracks.keys.length
+                              ? audioTracks.keys.elementAt(index)
+                              : -1,
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-          );
-        },
-      );
-      if (selectedAudioTrackId != null) {
-        playerController.selectedAudioTrackId = selectedAudioTrackId;
-        await vlcPlayerController.setAudioTrack(selectedAudioTrackId);
+            );
+          },
+        );
+        if (selectedAudioTrackId != null) {
+          playerController.selectedAudioTrackId = selectedAudioTrackId;
+          await vlcPlayerController.setAudioTrack(selectedAudioTrackId);
+        }
       }
     }
   }
@@ -728,19 +754,18 @@ class _CCFontColor extends StatelessWidget {
   const _CCFontColor({
     Key? key,
     required this.color,
+    required this.backgroundColor,
     required this.onTap,
     this.isSelected = false,
   }) : super(key: key);
 
   final Color color;
+  final Color? backgroundColor;
   final VoidCallback onTap;
   final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
-    Color textColor =
-        color.computeLuminance() > 0.5 ? Colors.black : Colors.white;
-
     return InkWell(
       onTap: onTap,
       splashColor: Colors.transparent,
@@ -751,7 +776,7 @@ class _CCFontColor extends StatelessWidget {
             padding: const EdgeInsets.all(4),
             decoration: BoxDecoration(
               // color: Colors.yellow,
-              color: kBackgroundColor,
+              color: backgroundColor ?? kBackgroundColor,
               borderRadius: BorderRadius.circular(4),
               border: isFocused
                   ? Border.all(

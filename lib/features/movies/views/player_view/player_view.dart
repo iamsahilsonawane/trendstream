@@ -34,10 +34,7 @@ class _PlayerViewState extends State<PlayerView> {
         ]),
         subtitle: VlcSubtitleOptions([
           VlcSubtitleOptions.boldStyle(true),
-          VlcSubtitleOptions.fontSize(30),
-          // VlcSubtitleOptions.outlineColor(VlcSubtitleColor.white),
-          // VlcSubtitleOptions.outlineThickness(VlcSubtitleThickness.normal),
-          // works only on externally added subtitles
+          VlcSubtitleOptions.fontSize(24),
           VlcSubtitleOptions.color(VlcSubtitleColor.white),
         ]),
         http: VlcHttpOptions([
