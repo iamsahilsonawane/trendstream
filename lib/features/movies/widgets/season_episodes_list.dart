@@ -63,18 +63,18 @@ class EpisodeTile extends HookWidget {
               ? kPrimaryAccentColor.withOpacity(.1)
               : Colors.transparent,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Image.network(
                   "${Configs.baseImagePath}${episode.stillPath}",
-                  width: 100,
-                  height: 100,
+                  width: 140,
+                  height: 140,
                   errorBuilder: (context, error, stackTrace) {
                     return const SizedBox(
-                      width: 100,
-                      height: 100,
+                      width: 140,
+                      height: 140,
                       child: Center(
                         child: Icon(Icons.hide_image),
                       ),
@@ -94,15 +94,15 @@ class EpisodeTile extends HookWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      // verticalSpaceSmall,
-                      // const Text(
-                      //  ,
-                      //   style: TextStyle(
-                      //     fontSize: 14.0,
-                      //     color: Colors.grey,
-                      //     fontWeight: FontWeight.w300,
-                      //   ),
-                      // ),
+                      verticalSpaceSmall,
+                      const Text(
+                        "1hr 2m",
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
                       if (episode.overview != null) ...[
                         verticalSpaceSmall,
                         Text(
