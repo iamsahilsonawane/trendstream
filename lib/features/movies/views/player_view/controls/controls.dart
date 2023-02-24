@@ -280,13 +280,23 @@ class PlayerControls extends HookConsumerWidget {
                                   controlsModel.forceStopped = false;
                                   if (result == null) return;
 
+                                  //only remove the subtitle options where the value is not null in result
                                   vlcPlayerController.options?.subtitle?.options
                                       .removeWhere(
-                                    (opt) =>
-                                        opt.contains("--freetype-fontsize=") ||
-                                        opt.contains("--freetype-color=") ||
-                                        opt.contains(
-                                            "--freetype-background-color="),
+                                    (opt) {
+                                      if (opt
+                                          .contains("--freetype-fontsize=")) {
+                                        return result.containsKey("fontSize");
+                                      } else if (opt
+                                          .contains("--freetype-color=")) {
+                                        return result.containsKey("fontColor");
+                                      } else if (opt.contains(
+                                          "--freetype-background-color=")) {
+                                        return result
+                                            .containsKey("backgroundColor");
+                                      }
+                                      return false;
+                                    },
                                   );
 
                                   vlcPlayerController.options?.subtitle?.options
@@ -432,7 +442,7 @@ class PlayerControls extends HookConsumerWidget {
               title: const Text('Subtitle Style'),
               content: SizedBox(
                 width: 400,
-                height: 160,
+                height: 170,
                 child: FocusScope(
                   autofocus: true,
                   child: FocusTraversalGroup(
@@ -453,21 +463,23 @@ class PlayerControls extends HookConsumerWidget {
                                 child: Row(
                                   children: List.generate(
                                     5,
-                                    (index) => Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 8.0),
-                                      child: _CCFontSize(
-                                        fontSize: 20 + (index * 2),
-                                        autofocus: index == 0,
-                                        isSelected:
-                                            selectedSize == 20 + (index * 2),
-                                        onTap: () {
-                                          setState(() {
-                                            selectedSize = 20 + (index * 2);
-                                          });
-                                        },
-                                      ),
-                                    ),
+                                    (index) {
+                                      final cSize = 20 + (index * 4);
+                                      return Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: _CCFontSize(
+                                          fontSize: cSize.toDouble(),
+                                          autofocus: index == 0,
+                                          isSelected: selectedSize == cSize,
+                                          onTap: () {
+                                            setState(() {
+                                              selectedSize = cSize;
+                                            });
+                                          },
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
