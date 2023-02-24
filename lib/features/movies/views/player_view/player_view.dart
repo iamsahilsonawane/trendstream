@@ -33,9 +33,12 @@ class _PlayerViewState extends State<PlayerView> {
           VlcAdvancedOptions.networkCaching(2000),
         ]),
         subtitle: VlcSubtitleOptions([
-          VlcSubtitleOptions.boldStyle(true),
+          VlcSubtitleOptions.boldStyle(false),
           VlcSubtitleOptions.fontSize(24),
           VlcSubtitleOptions.color(VlcSubtitleColor.white),
+          VlcSubtitleOptions.backgroundColor(VlcSubtitleColor.black),
+          VlcSubtitleOptions.backgroundOpacity(1),
+          VlcSubtitleOptions.shadowOpacity(0),
         ]),
         http: VlcHttpOptions([
           VlcHttpOptions.httpReconnect(true),

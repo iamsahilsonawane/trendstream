@@ -64,7 +64,7 @@ class PlayerControls extends HookConsumerWidget {
       subtitlesInitListener() async {
         await vlcPlayerController.addSubtitleFromNetwork(
             "https://gist.githubusercontent.com/iamsahilsonawane/7ea2c530d96dd4837f27527a6f31aed9/raw/9959e9e37d72195e642130bd0dcc6b8d81420ae5/test.srt");
-        // await vlcPlayerController.setSpuTrack(0);
+        await vlcPlayerController.setSpuTrack(0);
       }
 
       vlcPlayerController.addOnInitListener(subtitlesInitListener);
@@ -411,6 +411,7 @@ class PlayerControls extends HookConsumerWidget {
       [VlcSubtitleColor.white, null],
       [VlcSubtitleColor.yellow, null],
       [VlcSubtitleColor.black, VlcSubtitleColor.white],
+      [VlcSubtitleColor.white, VlcSubtitleColor.black],
     ].map((e) {
       return SubtitleColor(
         color: decimalToColor(e[0]!.value),
