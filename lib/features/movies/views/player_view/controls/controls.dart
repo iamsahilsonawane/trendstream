@@ -561,6 +561,9 @@ class PlayerControls extends HookConsumerWidget {
     var subtitleTracks = await vlcPlayerController.getSpuTracks();
     log("Found Subtitle Tracks: ${subtitleTracks.length}");
 
+    var currentTrack = await vlcPlayerController.getSpuTrack();
+    log("Current Track: $currentTrack");
+
     if (subtitleTracks.isNotEmpty) {
       var selectedSubId = await showDialog(
         context: AppRouter.navigatorKey.currentContext!,
@@ -580,9 +583,8 @@ class PlayerControls extends HookConsumerWidget {
                           : 'Disable',
                     ),
                     selected: index < subtitleTracks.keys.length
-                        ? playerController.selectedSubtitleId ==
-                            subtitleTracks.keys.elementAt(index)
-                        : playerController.selectedSubtitleId == -1,
+                        ? currentTrack == subtitleTracks.keys.elementAt(index)
+                        : currentTrack == -1,
                     onTap: () {
                       Navigator.pop(
                         context,
@@ -599,7 +601,6 @@ class PlayerControls extends HookConsumerWidget {
         },
       );
       if (selectedSubId != null) {
-        playerController.selectedSubtitleId = selectedSubId;
         await vlcPlayerController.setSpuTrack(selectedSubId);
       }
     }
