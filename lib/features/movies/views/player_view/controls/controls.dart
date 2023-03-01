@@ -464,12 +464,13 @@ class PlayerControls extends HookConsumerWidget {
                                   children: List.generate(
                                     5,
                                     (index) {
-                                      final cSize = 20 + (index * 4);
+                                      final cSize = 32 + (index * 4);
+                                      final cShowcaseSize = 20 + (index * 4);
                                       return Padding(
                                         padding:
                                             const EdgeInsets.only(right: 8.0),
                                         child: _CCFontSize(
-                                          fontSize: cSize.toDouble(),
+                                          fontSize: cShowcaseSize.toDouble(),
                                           autofocus: index == 0,
                                           isSelected: selectedSize == cSize,
                                           onTap: () {
