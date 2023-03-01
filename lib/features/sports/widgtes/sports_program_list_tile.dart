@@ -9,11 +9,13 @@ class SportsProgramListTile extends StatelessWidget {
     required this.title,
     required this.onTap,
     required this.icon,
+    this.autofocus = false,
   });
 
   final String title;
   final VoidCallback onTap;
   final IconData icon;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class SportsProgramListTile extends StatelessWidget {
       hoverColor: Colors.transparent,
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
+      autofocus: autofocus,
       child: Builder(builder: (context) {
         final isFocused = Focus.of(context).hasPrimaryFocus;
         return Container(

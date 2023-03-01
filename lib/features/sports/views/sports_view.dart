@@ -31,10 +31,8 @@ class SportsPage extends StatelessWidget {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return SportsProgramChannelTile(
-                      title: "NBA Regular Season",
-                      onTap: () {},
-                    );
+                    return const SportsProgramChannelTile(
+                        title: "NBA Regular Season");
                   },
                   separatorBuilder: (context, _) => horizontalSpaceSmall,
                   itemCount: 20,
@@ -52,6 +50,7 @@ class SportsPage extends StatelessWidget {
                 title:
                     "07:00 p.m. - lunes ${index + 1} - NBA Regular Season - Orlando Magic vs Chicago Bulls",
                 icon: Icons.sports_football,
+                autofocus: index == 0,
                 onTap: () {
                   AppRouter.navigateToPage(Routes.playerView);
                 },
