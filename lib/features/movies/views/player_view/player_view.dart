@@ -34,7 +34,7 @@ class _PlayerViewState extends State<PlayerView> {
         ]),
         subtitle: VlcSubtitleOptions([
           VlcSubtitleOptions.boldStyle(false),
-          VlcSubtitleOptions.fontSize(24),
+          VlcSubtitleOptions.fontSize(48),
           VlcSubtitleOptions.color(VlcSubtitleColor.white),
           VlcSubtitleOptions.backgroundColor(VlcSubtitleColor.black),
           VlcSubtitleOptions.backgroundOpacity(1),

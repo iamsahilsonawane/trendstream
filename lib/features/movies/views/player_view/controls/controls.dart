@@ -414,13 +414,8 @@ class PlayerControls extends HookConsumerWidget {
     log("Found Subtitle Tracks: ${subtitleTracks.length}");
 
     final List<SubtitleColor> colors = [
-      [VlcSubtitleColor.black, null],
-      [VlcSubtitleColor.blue, null],
-      [VlcSubtitleColor.green, null],
-      [VlcSubtitleColor.red, null],
       [VlcSubtitleColor.white, null],
       [VlcSubtitleColor.yellow, null],
-      [VlcSubtitleColor.black, VlcSubtitleColor.white],
       [VlcSubtitleColor.white, VlcSubtitleColor.black],
     ].map((e) {
       return SubtitleColor(
@@ -462,9 +457,9 @@ class PlayerControls extends HookConsumerWidget {
                               child: FocusTraversalGroup(
                                 child: Row(
                                   children: List.generate(
-                                    5,
+                                    3,
                                     (index) {
-                                      final cSize = 32 + (index * 4);
+                                      final cSize = 44 + (index * 4);
                                       final cShowcaseSize = 20 + (index * 4);
                                       return Padding(
                                         padding:
