@@ -79,8 +79,8 @@ class PlayerControlsNotifier extends ChangeNotifier {
     _forceStopped = newVal;
   }
 
-  List<double> playbackSpeeds = [0.5, 1.0, 2.0];
-  int playbackSpeedIndex = 0;
+  List<double> playbackSpeeds = [0.5, 1, 1.5];
+  int playbackSpeedIndex = 1;
   double get currentPlaybackSpeed => playbackSpeeds[playbackSpeedIndex];
 
   int selectedAudioTrackId = 1;
