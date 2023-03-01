@@ -29,78 +29,91 @@ class TvShowTile extends HookConsumerWidget {
     return tvShowAsync.map(
       data: (asyncData) {
         final show = asyncData.value;
-        return InkWell(
-          autofocus: autofocus,
-          hoverColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          focusColor: Colors.transparent,
-          splashColor: Colors.transparent,
-          onTap: () {
-            AppRouter.navigateToPage(Routes.tvShowDetailsView,
-                arguments: show.id);
-          },
-          child: Builder(builder: (context) {
-            final bool hasFocus = Focus.of(context).hasPrimaryFocus;
-            return Container(
-              padding: const EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 250,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.black.withOpacity(.4),
-                            blurRadius: 5,
-                            spreadRadius: 1,
-                            offset: const Offset(0, 1)),
-                      ],
-                      border: hasFocus
-                          ? Border.all(
-                              width: 4,
-                              color: kPrimaryAccentColor,
-                            )
-                          : null,
-                    ),
-                    child: AppImage(
-                      imageUrl: "${Configs.baseImagePath}${show.posterPath}",
-                    ),
-                  ),
-                  verticalSpaceRegular,
-                  Text(
-                    validString(show.firstAirDate != null &&
-                            show.firstAirDate!.isNotEmpty
-                        ? DateFormat("dd MMM yyyy").format(
-                            DateFormat("yyyy-MM-dd").parse(show.firstAirDate!))
-                        : null),
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: hasFocus ? Colors.white : Colors.grey[700],
-                        fontWeight:
-                            hasFocus ? FontWeight.w700 : FontWeight.w600),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    "⭐️ ${validString(show.voteAverage.toString())}",
-                    style: TextStyle(
-                        fontSize: 14,
-                        color: hasFocus ? Colors.white : Colors.grey[700],
-                        fontWeight:
-                            hasFocus ? FontWeight.w700 : FontWeight.w600),
-                  ),
-                ],
-              ),
-            );
-          }),
-        );
+        return RawTvShowItem(autofocus: autofocus, show: show);
       },
       error: (e) => const ErrorView(),
       loading: (_) => const AppLoader(),
+    );
+  }
+}
+
+class RawTvShowItem extends StatelessWidget {
+  const RawTvShowItem({
+    super.key,
+    required this.autofocus,
+    required this.show,
+  });
+
+  final bool autofocus;
+  final TvShow show;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      autofocus: autofocus,
+      hoverColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      focusColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      onTap: () {
+        AppRouter.navigateToPage(Routes.tvShowDetailsView, arguments: show.id);
+      },
+      child: Builder(builder: (context) {
+        final bool hasFocus = Focus.of(context).hasPrimaryFocus;
+        return Container(
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5.0),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                height: 250,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withOpacity(.4),
+                        blurRadius: 5,
+                        spreadRadius: 1,
+                        offset: const Offset(0, 1)),
+                  ],
+                  border: hasFocus
+                      ? Border.all(
+                          width: 4,
+                          color: kPrimaryAccentColor,
+                        )
+                      : null,
+                ),
+                child: AppImage(
+                  imageUrl: "${Configs.baseImagePath}${show.posterPath}",
+                ),
+              ),
+              verticalSpaceRegular,
+              Text(
+                validString(
+                    show.firstAirDate != null && show.firstAirDate!.isNotEmpty
+                        ? DateFormat("dd MMM yyyy").format(
+                            DateFormat("yyyy-MM-dd").parse(show.firstAirDate!))
+                        : null),
+                style: TextStyle(
+                    fontSize: 14,
+                    color: hasFocus ? Colors.white : Colors.grey[700],
+                    fontWeight: hasFocus ? FontWeight.w700 : FontWeight.w600),
+              ),
+              const SizedBox(height: 5),
+              Text(
+                "⭐️ ${validString(show.voteAverage.toString())}",
+                style: TextStyle(
+                    fontSize: 14,
+                    color: hasFocus ? Colors.white : Colors.grey[700],
+                    fontWeight: hasFocus ? FontWeight.w700 : FontWeight.w600),
+              ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }

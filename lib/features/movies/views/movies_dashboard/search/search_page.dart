@@ -4,6 +4,7 @@ import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/constants.dart';
 import 'package:latest_movies/features/movies/views/movies_dashboard/search/tv_show_search_grid.dart';
+import 'package:latest_movies/features/movies/widgets/multi_programs_search_grid.dart';
 import 'package:latest_movies/features/movies/widgets/search_grid.dart';
 
 import '../../../../../core/shared_widgets/app_keyboard/app_keyboard.dart';
@@ -21,23 +22,21 @@ class SearchPage extends HookConsumerWidget {
 
     return FocusTraversalGroup(
       child: Row(
-        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
             flex: 2,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Switch(value: false, onChanged: (newValue) {}),
-                // CupertinoSwitch(value: false, onChanged: (newValue) {}),
                 Expanded(
                   child: AppOnScreenKeyboard(
-                      onValueChanged: (value) {
-                        ref
-                            .read(searchKeywordProvider.notifier)
-                            .setKeyword(value);
-                      },
-                      focusColor: kPrimaryColor),
+                    onValueChanged: (value) {
+                      ref
+                          .read(searchKeywordProvider.notifier)
+                          .setKeyword(value);
+                    },
+                    focusColor: kPrimaryColor,
+                  ),
                 ),
               ],
             ),
@@ -63,7 +62,7 @@ class SearchPage extends HookConsumerWidget {
                             horizontalSpaceSmall,
                             Text(
                               keyword.isEmpty
-                                  ? "Search for movies..."
+                                  ? "Search for movies or tv shows..."
                                   : keyword,
                               style: TextStyle(
                                   fontSize: 18,
@@ -76,10 +75,6 @@ class SearchPage extends HookConsumerWidget {
                       ),
                     ),
                     horizontalSpaceSmall,
-                    // AppButton(
-                    //     text: "Movies",
-                    //     prefix: const Icon(Icons.filter_list),
-                    //     onTap: () {}),
                     Flexible(
                       flex: 2,
                       child: Container(
@@ -97,6 +92,10 @@ class SearchPage extends HookConsumerWidget {
                               style: const TextStyle(color: Colors.white),
                               value: getSearchTypeString(searchType),
                               items: const [
+                                DropdownMenuItem(
+                                  value: SearchTypeConstants.all,
+                                  child: Text("All"),
+                                ),
                                 DropdownMenuItem(
                                   value: SearchTypeConstants.movie,
                                   child: Text("Movies"),
@@ -122,9 +121,21 @@ class SearchPage extends HookConsumerWidget {
                 verticalSpaceRegular,
                 Expanded(
                   child: FocusTraversalGroup(
-                    child: searchType == SearchType.movies
-                        ? const MovieSearchGrid()
-                        : const TvShowSearchGrid(),
+                    child: Builder(builder: (context) {
+                      Widget child;
+                      switch (searchType) {
+                        case SearchType.all:
+                          child = const MultiProgramsSearchGrid();
+                          break;
+                        case SearchType.movies:
+                          child = const MovieSearchGrid();
+                          break;
+                        case SearchType.tvShows:
+                          child = const TvShowSearchGrid();
+                          break;
+                      }
+                      return child;
+                    }),
                   ),
                 ),
               ],
