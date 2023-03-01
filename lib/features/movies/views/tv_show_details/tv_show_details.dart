@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
@@ -22,6 +23,8 @@ import '../../../../core/shared_widgets/default_app_padding.dart';
 import '../../../../core/utilities/debouncer.dart';
 import '../../controllers/tv_show_season_details_provider.dart';
 import '../../controllers/tv_shows_provider.dart';
+import '../../models/season_details/episode.dart';
+import '../../repositories/tv_shows_repository.dart';
 
 class TvShowDetailsView extends HookConsumerWidget {
   const TvShowDetailsView({super.key});
@@ -211,13 +214,19 @@ class TvShowDetailsView extends HookConsumerWidget {
                                                 selectedSeasonId:
                                                     selectedSeason.value?.id ??
                                                         -1,
+                                                tvShowId: show.id!,
                                               ),
                                             );
                                             if (seasonOrNull != null) {
+                                              switch (
+                                                  seasonOrNull.runtimeType) {
+                                                case Season:
+                                                  selectedSeason.value =
+                                                      seasonOrNull;
+                                                  break;
+                                                default:
+                                              }
                                               log("Selected season: ${seasonOrNull.name}");
-
-                                              selectedSeason.value =
-                                                  seasonOrNull;
                                             }
                                           },
                                           prefix: const Icon(
@@ -294,7 +303,7 @@ class TvShowDetailsView extends HookConsumerWidget {
 
                       if (!await launchUrl(Uri.parse(
                           "https://youtube.com/watch?v=${firstTrailer.key}"))) {
-                        AppUtils.showSnackBar(context,
+                        AppUtils.showSnackBar(null,
                             message: "This TV does not support opening URLs");
                       }
                     },
@@ -310,10 +319,12 @@ class SeasonPickerDialog extends StatefulWidget {
   const SeasonPickerDialog({
     Key? key,
     required this.seasons,
+    required this.tvShowId,
     required this.selectedSeasonId,
   }) : super(key: key);
 
   final List<Season> seasons;
+  final int tvShowId;
   final int selectedSeasonId;
 
   @override
@@ -326,9 +337,7 @@ class _SeasonPickerDialogState extends State<SeasonPickerDialog> {
     return Dialog(
       backgroundColor: kBackgroundColor,
       child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.4,
-        // constraints:
-        //     BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.6),
+        width: MediaQuery.of(context).size.width * 0.6,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -360,8 +369,26 @@ class _SeasonPickerDialogState extends State<SeasonPickerDialog> {
                   final season = widget.seasons[index];
 
                   return InkWell(
-                    onTap: () {
-                      Navigator.pop(context, season);
+                    onTap: () async {
+                      final navigator = Navigator.of(context);
+                      final result = await showDialog(
+                        context: context,
+                        builder: (context) => EpisodePickerDialog(
+                          selectedSeason: season,
+                          tvShowId: widget.tvShowId,
+                        ),
+                      );
+                      if (result == null) return;
+                      switch (result.runtimeType) {
+                        case bool:
+                          navigator.pop(season);
+                          break;
+                        case Episode:
+                          navigator.pop(result);
+                          break;
+                        default:
+                          break;
+                      }
                     },
                     child: ColoredBox(
                       color: season.id == widget.selectedSeasonId
@@ -414,7 +441,10 @@ class _SeasonPickerDialogState extends State<SeasonPickerDialog> {
                                   ],
                                 ],
                               ),
-                            )
+                            ),
+                            horizontalSpaceSmall,
+                            const Icon(Icons.keyboard_arrow_right),
+                            horizontalSpaceSmall,
                           ],
                         ),
                       ),
@@ -424,6 +454,141 @@ class _SeasonPickerDialogState extends State<SeasonPickerDialog> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class EpisodePickerDialog extends HookConsumerWidget {
+  final int tvShowId;
+  final Season selectedSeason;
+
+  const EpisodePickerDialog(
+      {Key? key, required this.selectedSeason, required this.tvShowId})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final seasonDetailsAsync = ref.watch(seasonDetailsProvider(
+        SeasonDetailsArgs(tvShowId, selectedSeason.seasonNumber!)));
+
+    return Dialog(
+      backgroundColor: kBackgroundColor,
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.6,
+        child: seasonDetailsAsync.when(
+          data: (data) {
+            final episodes = data.episodes;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DefaultAppPadding(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${selectedSeason.name} - Episodes",
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      AppButton(
+                        text: "Back",
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                      )
+                    ],
+                  ),
+                ),
+                Center(
+                  child: AppButton(
+                    text: "Select this season",
+                    prefix: const Icon(Icons.arrow_forward),
+                    onTap: () {
+                      Navigator.pop(context, true);
+                    },
+                  ),
+                ),
+                verticalSpaceSmall,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: episodes?.length ?? 0,
+                    itemBuilder: (context, index) {
+                      final episode = episodes![index];
+
+                      return InkWell(
+                        onTap: () {
+                          // Do something with the selected episode
+                          Navigator.pop(context, episode);
+                        },
+                        child: ColoredBox(
+                          color: Colors.transparent,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Image.network(
+                                  "${Configs.baseImagePath}${episode.stillPath}",
+                                  width: 100,
+                                  errorBuilder: (context, error, stack) {
+                                    return const SizedBox(
+                                      width: 100,
+                                      height: 100,
+                                      child: Center(
+                                        child: Icon(Icons.hide_image),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                horizontalSpaceRegular,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        validString(episode.name),
+                                        style: const TextStyle(
+                                          fontSize: 16.0,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      if (episode.overview?.isNotEmpty ??
+                                          false) ...[
+                                        verticalSpaceSmall,
+                                        Text(
+                                          validString(episode.overview),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 14.0,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
+          error: (err, st) => const ErrorView(),
+          loading: () => const AppLoader(),
         ),
       ),
     );
