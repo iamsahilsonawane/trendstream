@@ -31,8 +31,10 @@ class SportsPage extends StatelessWidget {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return const SportsProgramChannelTile(
-                        title: "NBA Regular Season");
+                    return SportsProgramChannelTile(
+                      title: "NBA Regular Season",
+                      onTap: () {},
+                    );
                   },
                   separatorBuilder: (context, _) => horizontalSpaceSmall,
                   itemCount: 20,
