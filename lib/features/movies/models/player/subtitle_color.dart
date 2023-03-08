@@ -1,9 +1,12 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 
-class SubtitleColor {
+class SubtitleColor extends Equatable {
   final Color color;
   final Color? backgroundColor;
 
-  SubtitleColor({required this.color, this.backgroundColor});
+  const SubtitleColor({required this.color, this.backgroundColor});
+
+  @override
+  List<Object?> get props => [color, backgroundColor];
 }

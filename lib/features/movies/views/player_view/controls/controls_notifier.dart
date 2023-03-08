@@ -2,11 +2,16 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/features/movies/models/player/subtitle_color.dart';
 
-final playerControlsNotifierProvider = ChangeNotifierProvider.autoDispose
-    .family<PlayerControlsNotifier, VlcPlayerController>((ref, controller) {
+import '../../../../../core/utilities/app_utility.dart';
+
+final playerControlsNotifierProvider =
+    ChangeNotifierProvider.family<PlayerControlsNotifier, VlcPlayerController>(
+        (ref, controller) {
   return PlayerControlsNotifier(vlcPlayerController: controller);
 });
 
@@ -24,6 +29,46 @@ class PlayerControlsNotifier extends ChangeNotifier {
   Future<void> init() async {
     playingState = vlcPlayerController.value.playingState;
     vlcPlayerController.addListener(_updatesListener);
+
+    List<String> options = vlcPlayerController.options?.subtitle?.options ?? [];
+
+    String? fontSizeOption;
+    String? fontColorOption;
+    String? backgroundColorOption;
+
+    for (String option in options) {
+      if (option.startsWith("--freetype-fontsize=")) {
+        fontSizeOption = option;
+      }
+      if (option.startsWith("--freetype-color=")) {
+        fontColorOption = option;
+      }
+      if (option.startsWith("--freetype-background-color=")) {
+        backgroundColorOption = option;
+      }
+    }
+
+    RegExp regex = RegExp(r'\d+');
+    String? fontSizeString = regex.stringMatch(fontSizeOption ?? "");
+    String? fontColorString = regex.stringMatch(fontColorOption ?? "");
+    String? fontBackgroundColorString =
+        regex.stringMatch(backgroundColorOption ?? "");
+
+    if (fontSizeString != null) {
+      int fontSize = int.parse(fontSizeString);
+      _selectedCaptionSize = fontSize;
+    }
+
+    if (fontColorString != null) {
+      Color fontColor = AppUtils.decimalToColor(int.parse(fontColorString));
+      Color? backgroundColor = fontBackgroundColorString == null
+          ? null
+          : AppUtils.decimalToColor(int.parse(fontBackgroundColorString));
+      SubtitleColor selectedCaptionColor =
+          SubtitleColor(color: fontColor, backgroundColor: backgroundColor);
+      _selectedCaptionColor = selectedCaptionColor;
+    }
+
     if (vlcPlayerController.autoPlay) {
       _cancelAndRestartTimer();
     }
@@ -84,6 +129,22 @@ class PlayerControlsNotifier extends ChangeNotifier {
   double get currentPlaybackSpeed => playbackSpeeds[playbackSpeedIndex];
 
   int selectedAudioTrackId = 1;
+
+  int _selectedCaptionSize = 48;
+  int get selectedCaptionSize => _selectedCaptionSize;
+  set selectedCaptionSize(value) {
+    _selectedCaptionSize = value;
+    notifyListeners();
+  }
+
+  SubtitleColor _selectedCaptionColor =
+      const SubtitleColor(color: Colors.white, backgroundColor: Colors.black);
+
+  SubtitleColor get selectedCaptionColor => _selectedCaptionColor;
+  set selectedCaptionColor(value) {
+    _selectedCaptionColor = value;
+    notifyListeners();
+  }
 
   // ---- Getters & Setters END ----
 

@@ -11,6 +11,7 @@ import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/shared_widgets/button.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 
+import '../../../../../core/utilities/app_utility.dart';
 import '../../../models/player/subtitle_color.dart';
 import 'controls_notifier.dart';
 
@@ -275,7 +276,8 @@ class PlayerControls extends HookConsumerWidget {
                                   controlsModel.pause();
                                   controlsModel.forceStopped = true;
 
-                                  final result = await _setCaptionStyle();
+                                  final result =
+                                      await _setCaptionStyle(controlsModel);
 
                                   controlsModel.forceStopped = false;
                                   if (result == null) return;
@@ -292,8 +294,7 @@ class PlayerControls extends HookConsumerWidget {
                                         return result.containsKey("fontColor");
                                       } else if (opt.contains(
                                           "--freetype-background-color=")) {
-                                        return result
-                                            .containsKey("backgroundColor");
+                                        return true;
                                       }
                                       return false;
                                     },
@@ -320,6 +321,23 @@ class PlayerControls extends HookConsumerWidget {
                                         VlcSubtitleOptions.boldStyle(false),
                                     ],
                                   );
+
+                                  if (result.containsKey("fontSize")) {
+                                    controlsModel.selectedCaptionSize =
+                                        result["fontSize"];
+                                  }
+                                  if (result.containsKey("fontColor")) {
+                                    controlsModel.selectedCaptionColor =
+                                        SubtitleColor(
+                                      color: AppUtils.decimalToColor(
+                                          result["fontColor"].value),
+                                      backgroundColor: (result
+                                              .containsKey("backgroundColor"))
+                                          ? AppUtils.decimalToColor(
+                                              result["backgroundColor"].value)
+                                          : null,
+                                    );
+                                  }
 
                                   onControllerChanged.call(vlcPlayerController);
                                 },
@@ -395,21 +413,8 @@ class PlayerControls extends HookConsumerWidget {
     }
   }
 
-  Color decimalToColor(int decimal) {
-    int r = (decimal >> 16) & 0xff;
-    int g = (decimal >> 8) & 0xff;
-    int b = (decimal) & 0xff;
-    return Color.fromARGB(255, r, g, b);
-  }
-
-  int colorToDecimal(Color color) {
-    int r = color.red;
-    int g = color.green;
-    int b = color.blue;
-    return (r << 16) | (g << 8) | b;
-  }
-
-  Future<Map<String, dynamic>?> _setCaptionStyle() async {
+  Future<Map<String, dynamic>?> _setCaptionStyle(
+      PlayerControlsNotifier controlsModel) async {
     var subtitleTracks = await vlcPlayerController.getSpuTracks();
     log("Found Subtitle Tracks: ${subtitleTracks.length}");
 
@@ -419,8 +424,9 @@ class PlayerControls extends HookConsumerWidget {
       [VlcSubtitleColor.white, VlcSubtitleColor.black],
     ].map((e) {
       return SubtitleColor(
-        color: decimalToColor(e[0]!.value),
-        backgroundColor: e[1] != null ? decimalToColor(e[1]!.value) : null,
+        color: AppUtils.decimalToColor(e[0]!.value),
+        backgroundColor:
+            e[1] != null ? AppUtils.decimalToColor(e[1]!.value) : null,
       );
     }).toList();
 
@@ -467,7 +473,13 @@ class PlayerControls extends HookConsumerWidget {
                                         child: _CCFontSize(
                                           fontSize: cShowcaseSize.toDouble(),
                                           autofocus: index == 0,
-                                          isSelected: selectedSize == cSize,
+                                          isSelected: selectedSize == cSize
+                                              ? true
+                                              : selectedSize == null
+                                                  ? controlsModel
+                                                          .selectedCaptionSize ==
+                                                      cSize
+                                                  : false,
                                           onTap: () {
                                             setState(() {
                                               selectedSize = cSize;
@@ -503,8 +515,14 @@ class PlayerControls extends HookConsumerWidget {
                                         color: colors[index].color,
                                         backgroundColor:
                                             colors[index].backgroundColor,
-                                        isSelected:
-                                            selectedColor == colors[index],
+                                        isSelected: selectedColor ==
+                                                colors[index]
+                                            ? true
+                                            : selectedColor == null
+                                                ? controlsModel
+                                                        .selectedCaptionColor ==
+                                                    colors[index]
+                                                : false,
                                         onTap: () {
                                           setState(() {
                                             selectedColor = colors[index];
@@ -541,10 +559,11 @@ class PlayerControls extends HookConsumerWidget {
         return {
           if (selectedSize != null) "fontSize": selectedSize,
           if (selectedColor != null)
-            "fontColor": VlcSubtitleColor(colorToDecimal(selectedColor!.color)),
+            "fontColor":
+                VlcSubtitleColor(AppUtils.colorToDecimal(selectedColor!.color)),
           if (selectedColor?.backgroundColor != null)
             "backgroundColor": VlcSubtitleColor(
-                colorToDecimal(selectedColor!.backgroundColor!)),
+                AppUtils.colorToDecimal(selectedColor!.backgroundColor!)),
         };
       }
     }

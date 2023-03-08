@@ -257,6 +257,20 @@ class AppUtils {
   // static Future<void> openUrl(String url) async {
   //   if (!await launch(url)) throw 'Could not launch $url';
   // }
+
+  static Color decimalToColor(int decimal) {
+    int r = (decimal >> 16) & 0xff;
+    int g = (decimal >> 8) & 0xff;
+    int b = (decimal) & 0xff;
+    return Color.fromARGB(255, r, g, b);
+  }
+
+  static int colorToDecimal(Color color) {
+    int r = color.red;
+    int g = color.green;
+    int b = color.blue;
+    return (r << 16) | (g << 8) | b;
+  }
 }
 
 class AppDebouncer {
