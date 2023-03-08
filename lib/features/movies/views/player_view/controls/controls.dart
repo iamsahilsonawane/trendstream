@@ -294,7 +294,7 @@ class PlayerControls extends HookConsumerWidget {
                                         return result.containsKey("fontColor");
                                       } else if (opt.contains(
                                           "--freetype-background-color=")) {
-                                        return true;
+                                        return result.containsKey("fontColor");
                                       }
                                       return false;
                                     },
