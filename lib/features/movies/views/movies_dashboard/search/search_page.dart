@@ -89,20 +89,41 @@ class SearchPage extends HookConsumerWidget {
                               isExpanded: true,
                               dropdownColor: kBackgroundColor,
                               icon: const Icon(Icons.filter_list),
+                              iconEnabledColor: kPrimaryAccentColor,
                               style: const TextStyle(color: Colors.white),
                               value: getSearchTypeString(searchType),
-                              items: const [
+                              items: [
                                 DropdownMenuItem(
                                   value: SearchTypeConstants.all,
-                                  child: Text("All"),
+                                  child: Text(
+                                    "All",
+                                    style: TextStyle(
+                                      color: searchType == SearchType.all
+                                          ? kPrimaryAccentColor
+                                          : Colors.white,
+                                    ),
+                                  ),
                                 ),
                                 DropdownMenuItem(
                                   value: SearchTypeConstants.movie,
-                                  child: Text("Movies"),
+                                  child: Text(
+                                    "Movies",
+                                    style: TextStyle(
+                                      color: searchType == SearchType.movies
+                                          ? kPrimaryAccentColor
+                                          : Colors.white,
+                                    ),
+                                  ),
                                 ),
                                 DropdownMenuItem(
                                   value: SearchTypeConstants.tvShows,
-                                  child: Text("TV Shows"),
+                                  child: Text(
+                                    "TV Shows",
+                                    style: TextStyle(
+                                        color: searchType == SearchType.tvShows
+                                            ? kPrimaryAccentColor
+                                            : Colors.white),
+                                  ),
                                 ),
                               ],
                               onChanged: (String? newValue) {
