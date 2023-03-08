@@ -69,6 +69,16 @@ class PlayerControlsNotifier extends ChangeNotifier {
       _selectedCaptionColor = selectedCaptionColor;
     }
 
+    vlcPlayerController.addOnInitListener(() async {
+      await Future.delayed(const Duration(milliseconds: 1200));
+      final playbackSpeed = await vlcPlayerController.getPlaybackSpeed();
+
+      playbackSpeedIndex =
+          playbackSpeeds.indexWhere((element) => element == playbackSpeed);
+
+      notifyListeners();
+    });
+
     if (vlcPlayerController.autoPlay) {
       _cancelAndRestartTimer();
     }
@@ -195,6 +205,11 @@ class PlayerControlsNotifier extends ChangeNotifier {
       log("Video has been ended / stopped. Cancelling timer");
       stopTimer();
     }
+
+    final playbackSpeed = await vlcPlayerController.getPlaybackSpeed();
+    playbackSpeedIndex =
+        playbackSpeeds.indexWhere((element) => element == playbackSpeed);
+
     // } else if (_playingState == PlayingState.playing) {
     //   log("Video is playing. Starting timer");
     //   if (!_hideStuff) {

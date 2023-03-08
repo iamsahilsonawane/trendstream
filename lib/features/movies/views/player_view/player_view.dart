@@ -82,6 +82,8 @@ class _PlayerViewState extends State<PlayerView> {
               key: ValueKey(key),
               vlcPlayerController: _videoPlayerController,
               onControllerChanged: (VlcPlayerController currentCtrl) async {
+                final playbackSpeed = await currentCtrl.getPlaybackSpeed();
+
                 await _videoPlayerController.dispose();
                 final ct = currentCtrl.value.position;
 
@@ -91,21 +93,18 @@ class _PlayerViewState extends State<PlayerView> {
                   autoPlay: true,
                   autoInitialize: true,
                   options: VlcPlayerOptions(
-                    advanced: VlcAdvancedOptions([
-                      VlcAdvancedOptions.networkCaching(2000),
-                    ]),
+                    advanced: currentCtrl.options?.advanced,
                     subtitle: currentCtrl.options?.subtitle,
-                    http: VlcHttpOptions([
-                      VlcHttpOptions.httpReconnect(true),
-                    ]),
-                    rtp: VlcRtpOptions([
-                      VlcRtpOptions.rtpOverRtsp(true),
-                    ]),
+                    http: currentCtrl.options?.http,
+                    rtp: currentCtrl.options?.rtp,
+                    video: currentCtrl.options?.video,
                   ),
                 );
 
                 _videoPlayerController.addOnInitListener(() {
-                  Future.delayed(const Duration(seconds: 1), () {
+                  Future.delayed(const Duration(seconds: 1), () async {
+                    await _videoPlayerController
+                        .setPlaybackSpeed(playbackSpeed ?? 1.0);
                     _videoPlayerController.seekTo(ct);
                   });
                 });
