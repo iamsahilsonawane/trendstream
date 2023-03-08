@@ -26,3 +26,7 @@ final seasonDetailsProvider =
         seasonNumber: args.seasonNumber,
       );
 });
+
+// final allSeasonsEpisodesProvider = FutureProvider.family<List<SeasonDetails>, int>((ref, id) async {
+//   return ;
+// });

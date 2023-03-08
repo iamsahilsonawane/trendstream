@@ -10,6 +10,7 @@ import '../../features/movies/views/player_view/player_view.dart';
 import 'dart:developer';
 
 import '../../features/movies/views/player_view/youtube_player_view.dart';
+import '../../features/movies/views/tv_show_details/tv_show_all_episodes.dart';
 
 part '_app_router.dart';
 part '_routes.dart';

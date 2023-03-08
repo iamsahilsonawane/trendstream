@@ -12,4 +12,6 @@ class Routes {
   static const String livePlayerView = "/live-player-view";
 
   static const String youtubePlayerView = "/youtube-player-view";
+
+  static const tvShowAllEpisodes = "/tv-show-all-episodes";
 }

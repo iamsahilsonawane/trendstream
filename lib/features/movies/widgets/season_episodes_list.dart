@@ -11,7 +11,10 @@ import '../../../core/config/config.dart';
 import '../../../core/utilities/design_utility.dart';
 
 class SeasonEpisodesList extends HookConsumerWidget {
-  const SeasonEpisodesList({Key? key}) : super(key: key);
+  const SeasonEpisodesList({Key? key, this.showSeasonNumber = false})
+      : super(key: key);
+
+  final bool showSeasonNumber;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -25,7 +28,8 @@ class SeasonEpisodesList extends HookConsumerWidget {
           itemCount: seasonDetails.episodes?.length ?? 0,
           itemBuilder: (context, index) {
             final episode = seasonDetails.episodes![index];
-            return EpisodeTile(episode: episode);
+            return EpisodeTile(
+                episode: episode, showSeasonNumber: showSeasonNumber);
           },
         );
       },
@@ -39,15 +43,19 @@ class EpisodeTile extends HookWidget {
   const EpisodeTile({
     Key? key,
     required this.episode,
+    this.showSeasonNumber = false,
   }) : super(key: key);
 
   final Episode episode;
+  final bool showSeasonNumber;
 
   @override
   Widget build(BuildContext context) {
     //* NOTE ON THIS WIDGET
     //* for some reasons the focus scope with inkwell is not working as in [MovieTile]
     //* there using hooks for manual control
+
+    const double imageSize = 140;
 
     final hasFocus = useState(false);
     return Focus(
@@ -69,19 +77,19 @@ class EpisodeTile extends HookWidget {
               children: [
                 Image.network(
                   "${Configs.baseImagePath}${episode.stillPath}",
-                  width: 140,
-                  height: 140,
+                  width: imageSize,
+                  height: imageSize,
                   errorBuilder: (context, error, stackTrace) {
                     return const SizedBox(
-                      width: 140,
-                      height: 140,
+                      width: imageSize,
+                      height: imageSize,
                       child: Center(
                         child: Icon(Icons.hide_image),
                       ),
                     );
                   },
                 ),
-                horizontalSpaceSmall,
+                horizontalSpaceRegular,
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,6 +103,16 @@ class EpisodeTile extends HookWidget {
                         ),
                       ),
                       verticalSpaceSmall,
+                      if (showSeasonNumber) ...[
+                        Text(
+                          "Season ${episode.seasonNumber}",
+                          style: const TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                        verticalSpaceSmall,
+                      ],
                       const Text(
                         "1hr 2m",
                         style: TextStyle(
