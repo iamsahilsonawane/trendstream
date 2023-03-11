@@ -537,13 +537,23 @@ class PlayerControls extends HookConsumerWidget {
                           ],
                         ),
                         verticalSpaceRegular,
-                        AppButton(
-                          onTap: selectedColor == null && selectedSize == null
-                              ? null
-                              : () {
-                                  Navigator.pop(context, true);
-                                },
-                          text: "Apply Changes",
+                        Row(
+                          children: [
+                            AppButton(
+                              onTap:
+                                  selectedColor == null && selectedSize == null
+                                      ? null
+                                      : () {
+                                          Navigator.pop(context, true);
+                                        },
+                              text: "Apply Changes",
+                            ),
+                            horizontalSpaceRegular,
+                            AppButton(
+                              onTap: () => Navigator.pop(context),
+                              text: "Cancel",
+                            ),
+                          ],
                         ),
                       ],
                     ),
