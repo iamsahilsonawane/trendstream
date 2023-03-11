@@ -3,6 +3,8 @@ import 'package:latest_movies/features/movies/models/season_details_args/season_
 import 'package:latest_movies/features/movies/repositories/tv_shows_repository.dart';
 
 import '../models/season_details/season_details.dart';
+import '../models/tv_show/tv_show.dart';
+import '../models/tv_show_details/tv_show_details.dart';
 
 // /// A provider that overrides the current selected season arg required for [seasonDetailsProvider].
 // ///
@@ -27,6 +29,15 @@ final seasonDetailsProvider =
       );
 });
 
-// final allSeasonsEpisodesProvider = FutureProvider.family<List<SeasonDetails>, int>((ref, id) async {
-//   return ;
-// });
+final allSeasonDetailsProvider =
+    FutureProvider.family<List<SeasonDetails>, TvShowDetails>(
+        (ref, show) async {
+  final results = <SeasonDetails>[];
+  for (var season in show.seasons!) {
+    results.add(
+      await ref.watch(tvShowsRepositoryProvider).fetchTvShowSeasonDetails(
+          tvShowId: show.id!, seasonNumber: season.seasonNumber!),
+    );
+  }
+  return results;
+});

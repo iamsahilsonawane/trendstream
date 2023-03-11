@@ -99,6 +99,12 @@ class AppRouter {
           settings: settings,
           fullscreenDialog: false,
         );
+      case Routes.tvShowSeasons:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => const TvShowSeasons(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
       default:
         return null;
     }

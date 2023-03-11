@@ -36,17 +36,10 @@ class TvShowDetailsView extends HookConsumerWidget {
     final tvShowDetailsAsync = ref.watch(tvShowDetailsProvider(showId));
 
     final posterContainerHeight = MediaQuery.of(context).size.height * 0.7;
-    final selectedSeason = useState<Season?>(null);
 
     return Scaffold(
       body: tvShowDetailsAsync.when(
         data: (show) {
-          if ((show.seasons?.isNotEmpty ?? false) &&
-              selectedSeason.value == null) {
-            selectedSeason.value = show.seasons!.firstWhere(
-                (s) => s.seasonNumber == 1,
-                orElse: () => show.seasons!.first);
-          }
           return DecoratedBox(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -61,198 +54,199 @@ class TvShowDetailsView extends HookConsumerWidget {
               child: SizedBox.expand(
                 child: ColoredBox(
                   color: Colors.black.withOpacity(.8),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: TextButton.icon(
-                              onPressed: () {
-                                Debouncer(
-                                        delay:
-                                            const Duration(milliseconds: 500))
-                                    .call(() {
-                                  AppRouter.pop();
-                                });
-                              },
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                              ),
-                              icon: const Icon(Icons.arrow_back),
-                              label: const Text("Back")),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                          height: posterContainerHeight,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: posterContainerHeight,
-                                width: 250,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(.7),
-                                          blurRadius: 5,
-                                          spreadRadius: 1,
-                                          offset: const Offset(0, 1),
-                                        ),
-                                      ],
-                                    ),
-                                    child: AppImage(
-                                      imageUrl:
-                                          "${Configs.baseImagePath}${show.posterPath}",
-                                      //todo: add a not available image in case there's no image
-                                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16.0, horizontal: 40.0),
+                        child: TextButton.icon(
+                            onPressed: () {
+                              Debouncer(
+                                      delay: const Duration(milliseconds: 500))
+                                  .call(() {
+                                AppRouter.pop();
+                              });
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                            ),
+                            icon: const Icon(Icons.arrow_back),
+                            label: const Text("Back")),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                        height: posterContainerHeight,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: posterContainerHeight,
+                              width: 250,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(.7),
+                                        blurRadius: 5,
+                                        spreadRadius: 1,
+                                        offset: const Offset(0, 1),
+                                      ),
+                                    ],
+                                  ),
+                                  child: AppImage(
+                                    imageUrl:
+                                        "${Configs.baseImagePath}${show.posterPath}",
+                                    //todo: add a not available image in case there's no image
                                   ),
                                 ),
                               ),
-                              const SizedBox(width: 20),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      validString(show.name),
-                                      style: const TextStyle(
-                                        fontSize: 24.0,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    validString(show.name),
+                                    style: const TextStyle(
+                                      fontSize: 24.0,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      validString(show.tagline),
-                                      style: const TextStyle(
-                                        fontSize: 14.0,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300,
-                                      ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    validString(show.tagline),
+                                    style: const TextStyle(
+                                      fontSize: 14.0,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w300,
                                     ),
-                                    const SizedBox(height: 20),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Icon(
-                                              Icons.star,
-                                              color: Colors.yellow,
-                                              size: 16,
-                                            ),
-                                            const SizedBox(width: 5),
-                                            Text(
-                                              (show.voteAverage ?? 0.0)
-                                                  .toStringAsFixed(2),
-                                              style: const TextStyle(
-                                                fontSize: 14.0,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 5),
-                                            Text(
-                                              "(${show.voteCount})",
-                                              style: TextStyle(
-                                                fontSize: 14.0,
-                                                color: Colors.grey[500],
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "${show.genres?.map((e) => e.name).join(" / ")} | ${show.spokenLanguages?.map((e) => e.name).join(", ")} | ${show.numberOfSeasons} ${show.numberOfSeasons == 1 ? "Season" : "Seasons"}",
-                                          style: TextStyle(
-                                            fontSize: 14.0,
-                                            color: Colors.grey[500],
-                                            fontWeight: FontWeight.w500,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Icon(
+                                            Icons.star,
+                                            color: Colors.yellow,
+                                            size: 16,
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                      validString(show.overview),
-                                      style: const TextStyle(
-                                        fontSize: 14.0,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300,
-                                      ),
-                                    ),
-                                    const Expanded(child: SizedBox()),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                            child: _buildWatchButtons(show)),
-                                        AppButton(
-                                          autofocus: true,
-                                          text: selectedSeason.value?.name ??
-                                              "Season 1",
-                                          onTap: () async {
-                                            final seasonOrNull =
-                                                await showDialog(
-                                              context: context,
-                                              builder: (context) =>
-                                                  SeasonPickerDialog(
-                                                seasons: show.seasons ?? [],
-                                                selectedSeasonId:
-                                                    selectedSeason.value?.id ??
-                                                        -1,
-                                                tvShowId: show.id!,
-                                              ),
-                                            );
-                                            if (seasonOrNull != null) {
-                                              switch (
-                                                  seasonOrNull.runtimeType) {
-                                                case Season:
-                                                  selectedSeason.value =
-                                                      seasonOrNull;
-                                                  break;
-                                                default:
-                                              }
-                                              log("Selected season: ${seasonOrNull.name}");
-                                            }
-                                          },
-                                          prefix: const Icon(
-                                            Icons.movie_creation_rounded,
-                                            color: Colors.white,
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            (show.voteAverage ?? 0.0)
+                                                .toStringAsFixed(2),
+                                            style: const TextStyle(
+                                              fontSize: 14.0,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                            ),
                                           ),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            "(${show.voteCount})",
+                                            style: TextStyle(
+                                              fontSize: 14.0,
+                                              color: Colors.grey[500],
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${show.genres?.map((e) => e.name).join(" / ")} | ${show.spokenLanguages?.map((e) => e.name).join(", ")} | ${show.numberOfSeasons} ${show.numberOfSeasons == 1 ? "Season" : "Seasons"}",
+                                        style: TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.grey[500],
+                                          fontWeight: FontWeight.w500,
                                         ),
-                                      ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Text(
+                                    validString(show.overview),
+                                    style: const TextStyle(
+                                      fontSize: 14.0,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w300,
                                     ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
+                                  ),
+                                  const Expanded(child: SizedBox()),
+                                  Row(
+                                    children: [
+                                      Expanded(child: _buildWatchButtons(show)),
+                                      AppButton(
+                                        autofocus: true,
+                                        text: "All Seasons",
+                                        onTap: () async {
+                                          AppRouter.navigateToPage(
+                                            Routes.tvShowSeasons,
+                                            arguments: show.id,
+                                          );
+                                          return;
+                                          // final seasonOrNull =
+                                          //     await showDialog(
+                                          //   context: context,
+                                          //   builder: (context) =>
+                                          //       SeasonPickerDialog(
+                                          //     seasons: show.seasons ?? [],
+                                          //     selectedSeasonId:
+                                          //         selectedSeason.value?.id ??
+                                          //             -1,
+                                          //     tvShowId: show.id!,
+                                          //   ),
+                                          // );
+                                          // if (seasonOrNull != null) {
+                                          //   switch (
+                                          //       seasonOrNull.runtimeType) {
+                                          //     case Season:
+                                          //       selectedSeason.value =
+                                          //           seasonOrNull;
+                                          //       break;
+                                          //     default:
+                                          //   }
+                                          //   log("Selected season: ${seasonOrNull.name}");
+                                          // }
+                                        },
+                                        prefix: const Icon(
+                                          Icons.movie_creation_rounded,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
                         ),
-                        verticalSpaceLarge,
-                        ProviderScope(overrides: [
-                          currentSeasonDetailsProvider.overrideWithValue(
-                            ref.watch(seasonDetailsProvider(SeasonDetailsArgs(
-                              show.id!,
-                              selectedSeason.value!.seasonNumber!,
-                            ))),
-                          ),
-                        ], child: const SeasonEpisodesList()),
-                      ],
-                    ),
+                      ),
+                      // verticalSpaceLarge,
+                      // ProviderScope(overrides: [
+                      //   currentSeasonDetailsProvider.overrideWithValue(
+                      //     ref.watch(seasonDetailsProvider(SeasonDetailsArgs(
+                      //       show.id!,
+                      //       selectedSeason.value!.seasonNumber!,
+                      //     ))),
+                      //   ),
+                      // ], child: const SeasonEpisodesList()),
+                    ],
                   ),
                 ),
               ),
