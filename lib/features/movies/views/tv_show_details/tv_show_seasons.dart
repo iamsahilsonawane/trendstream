@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,6 +11,7 @@ import '../../../../core/router/router.dart';
 import '../../../../core/shared_widgets/app_loader.dart';
 import '../../../../core/shared_widgets/default_app_padding.dart';
 import '../../../../core/shared_widgets/error_view.dart';
+import '../../../../core/shared_widgets/image.dart';
 import '../../../../core/utilities/debouncer.dart';
 import '../../../../core/utilities/design_utility.dart';
 import '../../controllers/tv_show_season_details_provider.dart';
@@ -82,9 +84,11 @@ class TvShowSeasons extends HookConsumerWidget {
                                   DefaultAppPadding.horizontal(
                                     child: Row(
                                       children: [
-                                        Image.network(
-                                          "${Configs.baseImagePath}${show.posterPath}",
+                                        CachedNetworkImage(
+                                          imageUrl:
+                                              "${Configs.baseImagePath}${show.posterPath}",
                                           height: 100,
+                                          maxHeightDiskCache: 100,
                                           fit: BoxFit.cover,
                                         ),
                                         horizontalSpaceSmall,
