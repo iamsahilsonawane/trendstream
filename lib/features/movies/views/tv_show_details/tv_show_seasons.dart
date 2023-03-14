@@ -47,7 +47,7 @@ class TvShowSeasons extends HookConsumerWidget {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
-                  "${Configs.baseImagePath}${show.posterPath}",
+                  "${Configs.largeBaseImagePath}${show.posterPath}",
                 ),
                 fit: BoxFit.cover,
               ),
@@ -86,7 +86,7 @@ class TvShowSeasons extends HookConsumerWidget {
                                       children: [
                                         CachedNetworkImage(
                                           imageUrl:
-                                              "${Configs.baseImagePath}${show.posterPath}",
+                                              "${Configs.largeBaseImagePath}${show.posterPath}",
                                           height: 100,
                                           maxHeightDiskCache: 100,
                                           fit: BoxFit.cover,
@@ -178,32 +178,34 @@ class TvShowSeasons extends HookConsumerWidget {
                             horizontalSpaceSmall,
                             Expanded(
                               flex: 8,
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    verticalSpaceMedium,
-                                    if (currentSeason.value != -1)
-                                      ProviderScope(
-                                        overrides: [
-                                          currentSeasonDetailsProvider
-                                              .overrideWithValue(
-                                            ref.watch(seasonDetailsProvider(
-                                                SeasonDetailsArgs(
-                                              show.id!,
-                                              currentSeason.value,
-                                            ))),
-                                          ),
+                              child: currentSeason.value != -1
+                                  ? SingleChildScrollView(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          verticalSpaceMedium,
+                                          if (currentSeason.value != -1)
+                                            ProviderScope(
+                                              overrides: [
+                                                currentSeasonDetailsProvider
+                                                    .overrideWithValue(
+                                                  ref.watch(
+                                                      seasonDetailsProvider(
+                                                          SeasonDetailsArgs(
+                                                    show.id!,
+                                                    currentSeason.value,
+                                                  ))),
+                                                ),
+                                              ],
+                                              child: const SeasonEpisodesList(
+                                                  showSeasonNumber: true),
+                                            )
                                         ],
-                                        child: const SeasonEpisodesList(
-                                            showSeasonNumber: true),
-                                      )
-                                    else
-                                      AllSeasonEpisodesList(show: show)
-                                  ],
-                                ),
-                              ),
+                                      ),
+                                    )
+                                  : AllSeasonEpisodesList(show: show),
                             ),
                           ],
                         ),
@@ -257,14 +259,18 @@ class SeasonSelectionButton extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Text(
-                  seasonText,
-                  style: TextStyle(
-                    fontWeight: isFocused ? FontWeight.bold : FontWeight.normal,
-                    color: isFocused ? Colors.white : Colors.grey,
+                Expanded(
+                  child: Text(
+                    seasonText,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontWeight:
+                          isFocused ? FontWeight.bold : FontWeight.normal,
+                      color: isFocused ? Colors.white : Colors.grey,
+                    ),
                   ),
                 ),
-                const Spacer(),
                 if (isFocused)
                   Text(
                     "$totalNumberOfEpisodes Episodes",

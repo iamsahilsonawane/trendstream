@@ -87,7 +87,7 @@ class RawTvShowItem extends StatelessWidget {
                       : null,
                 ),
                 child: AppImage(
-                  imageUrl: "${Configs.baseImagePath}${show.posterPath}",
+                  imageUrl: "${Configs.regularBaseImagePath}${show.posterPath}",
                 ),
               ),
               verticalSpaceRegular,

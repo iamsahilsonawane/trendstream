@@ -45,41 +45,84 @@ class SeasonEpisodesList extends HookConsumerWidget {
   }
 }
 
-class AllSeasonEpisodesList extends HookConsumerWidget {
+class AllSeasonEpisodesList extends ConsumerStatefulWidget {
   const AllSeasonEpisodesList({Key? key, required this.show}) : super(key: key);
 
   final TvShowDetails show;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final tvShowSeasonDetailsAsync = ref.watch(allSeasonDetailsProvider(show));
-    return tvShowSeasonDetailsAsync.when(
-      data: (allSeasons) {
-        return ListView.builder(
-          key: const Key('allSeasonsList'),
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: allSeasons.length,
-          itemBuilder: (context, index) {
-            final seasonDetails = allSeasons[index];
-            return ListView.builder(
-              key: const Key('seasonAllEpisodesList'),
+  _AllSeasonEpisodesListState createState() => _AllSeasonEpisodesListState();
+}
+
+class _AllSeasonEpisodesListState extends ConsumerState<AllSeasonEpisodesList> {
+  final _scrollController = ScrollController();
+
+  late final _seasonsNotifier =
+      ref.watch(allSeasonDetailsProvider(widget.show).notifier);
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void didChangeDependencies() {
+    _seasonsNotifier.fetchNextPage();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 300) {
+      _seasonsNotifier.fetchNextPage();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final seasons = ref.watch(allSeasonDetailsProvider(widget.show));
+
+    return ListView.builder(
+      key: const Key('allSeasonsList'),
+      controller: _scrollController,
+      itemCount: seasons.length + 1,
+      itemBuilder: (context, index) {
+        if (index == seasons.length) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final season = seasons[index];
+
+        return Column(
+          children: [
+            ListTile(
+              title: Text('Season ${season.seasonNumber}'),
+            ),
+            ListView.builder(
+              key: Key('season${season.seasonNumber}EpisodesList'),
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: seasonDetails.episodes?.length ?? 0,
+              itemCount: season.episodes!.length,
               itemBuilder: (context, index) {
-                final episode = seasonDetails.episodes![index];
+                final episode = season.episodes![index];
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 12.0),
-                  child: EpisodeTile(episode: episode, showSeasonNumber: true),
+                  child: EpisodeTile(
+                    episode: episode,
+                    showSeasonNumber: true,
+                  ),
                 );
               },
-            );
-          },
+            ),
+          ],
         );
       },
-      error: (err, st) => const SizedBox.shrink(),
-      loading: () => const SizedBox.shrink(),
     );
   }
 }
@@ -100,12 +143,12 @@ class EpisodeTile extends StatelessWidget {
       onTap: () {},
       child: Builder(builder: (context) {
         final hasFocus = Focus.of(context).hasPrimaryFocus;
-        return SizedBox(
-          height: 160,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              AspectRatio(
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              height: 150,
+              child: AspectRatio(
                 aspectRatio: 16 / 9,
                 child: Container(
                   clipBehavior: Clip.antiAlias,
@@ -118,7 +161,8 @@ class EpisodeTile extends StatelessWidget {
                         width: 3),
                   ),
                   child: CachedNetworkImage(
-                    imageUrl: "${Configs.baseImagePath}${episode.stillPath}",
+                    imageUrl:
+                        "${Configs.regularBaseImagePath}${episode.stillPath}",
                     fit: BoxFit.cover,
                     errorWidget: (context, error, stackTrace) {
                       return const Center(
@@ -128,58 +172,59 @@ class EpisodeTile extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      episode.name ?? "",
+                      style: const TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    verticalSpaceSmall,
+                    if (showSeasonNumber) ...[
                       Text(
-                        episode.name ?? "",
+                        "Season ${episode.seasonNumber}",
                         style: const TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w300,
                         ),
                       ),
                       verticalSpaceSmall,
-                      if (showSeasonNumber) ...[
-                        Text(
-                          "Season ${episode.seasonNumber}",
-                          style: const TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                        verticalSpaceSmall,
-                      ],
-                      const Text(
-                        "1hr 2m",
-                        style: TextStyle(
+                    ],
+                    const Text(
+                      "1hr 2m",
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    if (episode.overview != null) ...[
+                      verticalSpaceSmall,
+                      Text(
+                        episode.overview!,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
                           fontSize: 14.0,
                           color: Colors.grey,
                           fontWeight: FontWeight.w300,
                         ),
                       ),
-                      if (episode.overview != null) ...[
-                        verticalSpaceSmall,
-                        Text(
-                          episode.overview!,
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.grey,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ],
                     ],
-                  ),
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         );
       }),
     );

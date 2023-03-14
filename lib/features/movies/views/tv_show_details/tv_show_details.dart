@@ -44,7 +44,7 @@ class TvShowDetailsView extends HookConsumerWidget {
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(
-                  "${Configs.baseImagePath}${show.posterPath}",
+                  "${Configs.largeBaseImagePath}${show.posterPath}",
                 ),
                 fit: BoxFit.cover,
               ),
@@ -98,7 +98,7 @@ class TvShowDetailsView extends HookConsumerWidget {
                                   ),
                                   child: AppImage(
                                     imageUrl:
-                                        "${Configs.baseImagePath}${show.posterPath}",
+                                        "${Configs.largeBaseImagePath}${show.posterPath}",
                                     //todo: add a not available image in case there's no image
                                   ),
                                 ),
@@ -407,7 +407,7 @@ class _SeasonPickerDialogState extends State<SeasonPickerDialog> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Image.network(
-                              "${Configs.baseImagePath}${season.posterPath}",
+                              "${Configs.largeBaseImagePath}${season.posterPath}",
                               width: 100,
                               height: 100,
                               errorBuilder: (context, error, stack) {
@@ -540,7 +540,7 @@ class EpisodePickerDialog extends HookConsumerWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Image.network(
-                                  "${Configs.baseImagePath}${episode.stillPath}",
+                                  "${Configs.largeBaseImagePath}${episode.stillPath}",
                                   width: 100,
                                   errorBuilder: (context, error, stack) {
                                     return const SizedBox(

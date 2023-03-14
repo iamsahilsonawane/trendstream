@@ -33,7 +33,7 @@ class MovieDetailsView extends HookConsumerWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(
-                "${Configs.baseImagePath}${movie.posterPath}",
+                "${Configs.largeBaseImagePath}${movie.posterPath}",
               ),
               fit: BoxFit.cover,
             ),
@@ -84,7 +84,7 @@ class MovieDetailsView extends HookConsumerWidget {
                               ),
                               child: AppImage(
                                 imageUrl:
-                                    "${Configs.baseImagePath}${movie.posterPath}",
+                                    "${Configs.largeBaseImagePath}${movie.posterPath}",
                                 //todo: add a not available image in case there's no image
                               ),
                             ),

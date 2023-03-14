@@ -29,15 +29,68 @@ final seasonDetailsProvider =
       );
 });
 
-final allSeasonDetailsProvider =
-    FutureProvider.family<List<SeasonDetails>, TvShowDetails>(
-        (ref, show) async {
-  final results = <SeasonDetails>[];
-  for (var season in show.seasons!) {
-    results.add(
-      await ref.watch(tvShowsRepositoryProvider).fetchTvShowSeasonDetails(
-          tvShowId: show.id!, seasonNumber: season.seasonNumber!),
-    );
+final allSeasonDetailsProvider = StateNotifierProvider.autoDispose
+    .family<AllSeasonDetailsNotifier, List<SeasonDetails>, TvShowDetails>((ref,
+            show) =>
+        AllSeasonDetailsNotifier(ref.read(tvShowsRepositoryProvider), show));
+
+class AllSeasonDetailsNotifier extends StateNotifier<List<SeasonDetails>> {
+  AllSeasonDetailsNotifier(this._tvShowsRepository, this.show) : super([]);
+
+  final TvShowDetails show;
+  final TvShowsRepository _tvShowsRepository;
+
+  int currentSeason = 0;
+  bool _isFetching = false;
+
+  Future<void> fetchAllSeasons(TvShowDetails show) async {
+    try {
+      // Set loading state
+      // Fetch all seasons
+      final results = <SeasonDetails>[];
+      for (var season in show.seasons!) {
+        results.add(await _tvShowsRepository.fetchTvShowSeasonDetails(
+            tvShowId: show.id!, seasonNumber: season.seasonNumber!));
+      }
+      // Remove loading state and set results
+      state = results;
+    } catch (error) {
+      // Handle error state
+    }
   }
-  return results;
-});
+
+  Future<void> fetchNextPage() async {
+    try {
+      if (_isFetching) return;
+      if (currentSeason > show.seasons!.last.seasonNumber!) return;
+      _isFetching = true;
+
+      if (currentSeason == 0) {
+        //if seasons contains 0 the only use 0 other wise use 1
+        if (show.seasons!
+            .where((element) => element.seasonNumber == 0)
+            .isNotEmpty) {
+          currentSeason = 0;
+        } else {
+          currentSeason = 1;
+        }
+      }
+
+      final results = <SeasonDetails>[];
+
+      final season = show.seasons!
+          .firstWhere((element) => element.seasonNumber == currentSeason);
+
+      results.add(await _tvShowsRepository.fetchTvShowSeasonDetails(
+          tvShowId: show.id!, seasonNumber: season.seasonNumber!));
+
+      _isFetching = false;
+      // Remove loading state and append results
+      state = [...state, ...results];
+      currentSeason++;
+    } catch (error) {
+      print("error fetching next page: ${error}");
+      // Handle error state
+    }
+  }
+}
