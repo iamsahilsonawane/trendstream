@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -11,6 +13,15 @@ import 'package:latest_movies/features/movies/views/movies_dashboard/movies_dash
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +41,10 @@ void main() async {
   };
 
   final prefs = await SharedPreferences.getInstance();
+
+  if (kDebugMode) {
+    HttpOverrides.global = MyHttpOverrides();
+  }
 
   runApp(
     ProviderScope(
