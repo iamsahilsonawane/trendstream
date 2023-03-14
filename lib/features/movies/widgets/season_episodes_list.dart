@@ -83,7 +83,7 @@ class AllSeasonEpisodesList extends HookConsumerWidget {
   }
 }
 
-class EpisodeTile extends HookWidget {
+class EpisodeTile extends StatelessWidget {
   const EpisodeTile({
     Key? key,
     required this.episode,
@@ -95,16 +95,8 @@ class EpisodeTile extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    //* NOTE ON THIS WIDGET
-    //* for some reasons the focus scope with inkwell is not working as in [MovieTile]
-    //* there using hooks for manual control
-
-    const double imageSize = 140;
-
     return InkWell(
-      onTap: () {
-        log("tapped");
-      },
+      onTap: () {},
       child: Builder(builder: (context) {
         final hasFocus = Focus.of(context).hasPrimaryFocus;
         return SizedBox(
