@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/config/config.dart';
 import '../../../../core/router/router.dart';
@@ -75,34 +76,99 @@ class TvShowSeasons extends HookConsumerWidget {
                           children: [
                             Expanded(
                               flex: 4,
-                              child: SingleChildScrollView(
-                                child: DefaultAppPadding(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      for (int i = 0; i < seasons.length; i++)
-                                        Builder(builder: (context) {
-                                          final s = seasons[i];
-                                          return Padding(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 8.0),
-                                            child: SeasonSelectionButton(
-                                              autofocus: i == 0,
-                                              seasonText: s.name ?? "N/A",
-                                              totalNumberOfEpisodes:
-                                                  s.episodeCount ?? 0,
-                                              onTap: () {
-                                                currentSeason.value =
-                                                    s.seasonNumber!;
-                                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  DefaultAppPadding.horizontal(
+                                    child: Row(
+                                      children: [
+                                        Image.network(
+                                          "${Configs.baseImagePath}${show.posterPath}",
+                                          height: 100,
+                                          fit: BoxFit.cover,
+                                        ),
+                                        horizontalSpaceSmall,
+                                        Expanded(
+                                            child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              show.name ?? "N/A",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleLarge!
+                                                  .copyWith(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
                                             ),
-                                          );
-                                        }),
-                                    ],
+                                            verticalSpaceRegular,
+                                            Text(
+                                              "${show.seasons!.length} Seasons",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyLarge!
+                                                  .copyWith(
+                                                    color: Colors.grey,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                            ),
+                                            verticalSpaceTiny,
+                                            if (show.firstAirDate != null &&
+                                                show.lastAirDate != null)
+                                              Text(
+                                                "${DateFormat("dd MMM, yyyy").format(DateTime.parse(show.firstAirDate!))} - ${DateFormat("dd MMM, yyyy").format(DateTime.parse(show.lastAirDate!))}",
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyLarge!
+                                                    .copyWith(
+                                                      color: Colors.grey,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                              ),
+                                          ],
+                                        ))
+                                      ],
+                                    ),
                                   ),
-                                ),
+                                  verticalSpaceMedium,
+                                  Expanded(
+                                    child: SingleChildScrollView(
+                                      child: DefaultAppPadding(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            for (int i = 0;
+                                                i < seasons.length;
+                                                i++)
+                                              Builder(builder: (context) {
+                                                final s = seasons[i];
+                                                return Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 8.0),
+                                                  child: SeasonSelectionButton(
+                                                    autofocus: i == 0,
+                                                    seasonText: s.name ?? "N/A",
+                                                    totalNumberOfEpisodes:
+                                                        s.episodeCount ?? 0,
+                                                    onTap: () {
+                                                      currentSeason.value =
+                                                          s.seasonNumber!;
+                                                    },
+                                                  ),
+                                                );
+                                              }),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             horizontalSpaceSmall,
