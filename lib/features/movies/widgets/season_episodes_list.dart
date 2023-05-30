@@ -162,7 +162,7 @@ class EpisodeTile extends StatelessWidget {
                   ),
                   child: CachedNetworkImage(
                     imageUrl:
-                        "${Configs.regularBaseImagePath}${episode.stillPath}",
+                        "${Configs.mediumBaseImagePath}${episode.stillPath}",
                     fit: BoxFit.cover,
                     errorWidget: (context, error, stackTrace) {
                       return const Center(

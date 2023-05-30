@@ -89,8 +89,7 @@ class RawMovieTile extends StatelessWidget {
                       : null,
                 ),
                 child: AppImage(
-                  imageUrl:
-                      "${Configs.regularBaseImagePath}${movie.posterPath}",
+                  imageUrl: "${Configs.largeBaseImagePath}${movie.posterPath}",
                 ),
               ),
               verticalSpaceRegular,
