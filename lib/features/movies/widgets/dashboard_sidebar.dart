@@ -283,6 +283,7 @@ class DrawerItem extends StatelessWidget {
       horizontalTitleGap: onlyIcon ? 0 : 5,
       style: ListTileStyle.drawer,
       selectedTileColor: kPrimaryColor.withOpacity(.6),
+      focusColor: kPrimaryColor.withOpacity(.3),
       selected: isSelected,
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
