@@ -14,6 +14,7 @@ import 'package:latest_movies/features/movies/widgets/tvshows_grid.dart';
 import 'package:latest_movies/features/sports/views/sports_view.dart';
 
 import '../../../../core/utilities/design_utility.dart';
+import '../../controllers/dashboard_sidebar_expanded_provider.dart';
 import '../../controllers/side_bar_controller.dart';
 import '../../controllers/update_dowload_providers/update_download_manager_provider.dart';
 import '../../widgets/adult_grid.dart';
@@ -29,6 +30,9 @@ class HomeView extends HookConsumerWidget {
     final isMounted = useIsMounted();
     final shouldReAskForUpdate = useState(false);
     final backCounter = useRef(0);
+
+    final isSidebarExpanded = ref.watch(dashboardSidebarStatusProvider) ==
+        DashboardSidebarStatus.expanded;
 
     useEffect(() {
       Future.microtask(() async {
@@ -100,8 +104,9 @@ class HomeView extends HookConsumerWidget {
         ),
         body: Row(
           children: <Widget>[
-            Expanded(
-                flex: 2,
+            SizedBox(
+                height: double.infinity,
+                width: isSidebarExpanded ? 200 : 55,
                 child: FocusTraversalGroup(child: const DashboardSideBar())),
             Expanded(
               flex: 10,
@@ -122,14 +127,6 @@ class HomeView extends HookConsumerWidget {
                       return const MoviesGrid();
                   }
                 }),
-
-                // IndexedStack(
-                //   index: sidebarState.sidebarOptions.index,
-                //   children: [
-                //     FocusTraversalGroup(child: const MoviesGrid()),
-                //     const SearchPage(),
-                //   ],
-                // ),
               ),
             ),
           ],
