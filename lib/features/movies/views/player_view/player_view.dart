@@ -54,6 +54,7 @@ class _PlayerViewState extends State<PlayerView> {
   void dispose() async {
     super.dispose();
     if (_videoPlayerController.value.isInitialized) {
+      
       await _videoPlayerController.stopRendererScanning();
       await _videoPlayerController.dispose();
     }

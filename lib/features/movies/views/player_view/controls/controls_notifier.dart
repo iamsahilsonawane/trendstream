@@ -10,7 +10,7 @@ import 'package:latest_movies/features/movies/models/player/subtitle_color.dart'
 import '../../../../../core/utilities/app_utility.dart';
 
 final playerControlsNotifierProvider =
-    ChangeNotifierProvider.family<PlayerControlsNotifier, VlcPlayerController>(
+    ChangeNotifierProvider.autoDispose.family<PlayerControlsNotifier, VlcPlayerController>(
         (ref, controller) {
   return PlayerControlsNotifier(vlcPlayerController: controller);
 });
@@ -86,6 +86,7 @@ class PlayerControlsNotifier extends ChangeNotifier {
 
   @override
   void dispose() {
+    print("from player: dispose called");
     vlcPlayerController.removeListener(_updatesListener);
     _hideTimer?.cancel();
     _controlsVisibilityController.close();
@@ -196,6 +197,11 @@ class PlayerControlsNotifier extends ChangeNotifier {
   }
 
   Future<void> _updatesListener() async {
+    //check if hte player is disposed
+    if (vlcPlayerController.value.isInitialized == false) {
+      log("Player is not initialized");
+      return;
+    }
     //not using setter for all as it would call notifyListeners() each time
     _playingState = vlcPlayerController.value.playingState;
     _playbackPosition = vlcPlayerController.value.position;

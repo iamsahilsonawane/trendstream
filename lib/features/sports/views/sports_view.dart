@@ -1,7 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/shared_widgets/clock.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
@@ -11,8 +9,15 @@ import 'package:latest_movies/features/sports/widgtes/sports_program_list_tile.d
 import '../../../core/router/router.dart';
 import '../../tv_guide/views/tv_guide/tv_guide.dart';
 
-class SportsPage extends StatelessWidget {
+class SportsPage extends StatefulWidget {
   const SportsPage({super.key});
+
+  @override
+  State<SportsPage> createState() => _SportsPageState();
+}
+
+class _SportsPageState extends State<SportsPage> {
+  late VlcPlayerController previewController;
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +58,12 @@ class SportsPage extends StatelessWidget {
                     "07:00 p.m. - lunes ${index + 1} - NBA Regular Season - Orlando Magic vs Chicago Bulls",
                 icon: Icons.sports_football,
                 autofocus: index == 0,
-                onTap: () {
-                  AppRouter.navigateToPage(Routes.playerView);
+                onTap: () async {
+                  if (previewController.value.isPlaying) {
+                    previewController.pause();
+                  }
+                  await AppRouter.navigateToPage(Routes.playerView);
+                  // previewController.play();
                 },
               );
             },
@@ -93,7 +102,7 @@ class SportsPage extends StatelessWidget {
           ],
         ),
         const Spacer(),
-        const SizedBox(
+        SizedBox(
           height: 100,
           // child: AspectRatio(
           //   aspectRatio: 16 / 9,
@@ -101,7 +110,11 @@ class SportsPage extends StatelessWidget {
           //     child: ColoredBox(color: Colors.black),
           //   ),
           // ),
-          child: PreviewPlayer(),
+          child: PreviewPlayer(
+            onControllerInitialized: (controller) {
+              previewController = controller;
+            },
+          ),
         ),
       ],
     );

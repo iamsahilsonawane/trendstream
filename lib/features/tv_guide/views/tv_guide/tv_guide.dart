@@ -396,7 +396,9 @@ class CurrentProgramInfo extends StatelessWidget {
 }
 
 class PreviewPlayer extends StatefulWidget {
-  const PreviewPlayer({super.key});
+  const PreviewPlayer({super.key, this.onControllerInitialized});
+
+  final Function(VlcPlayerController controller)? onControllerInitialized;
 
   @override
   State<PreviewPlayer> createState() => _PreviewPlayerState();
@@ -404,6 +406,12 @@ class PreviewPlayer extends StatefulWidget {
 
 class _PreviewPlayerState extends State<PreviewPlayer> {
   late VlcPlayerController _videoPlayerController;
+
+  void initListener() {
+    if (_videoPlayerController.value.isInitialized) {
+      _videoPlayerController.setVolume(0);
+    }
+  }
 
   @override
   void initState() {
@@ -430,8 +438,9 @@ class _PreviewPlayerState extends State<PreviewPlayer> {
         ]),
       ),
     );
+    widget.onControllerInitialized?.call(_videoPlayerController);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _videoPlayerController.setVolume(0);
+      _videoPlayerController.addOnInitListener(initListener);
     });
   }
 
