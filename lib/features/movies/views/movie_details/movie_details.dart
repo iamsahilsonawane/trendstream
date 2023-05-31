@@ -7,10 +7,8 @@ import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/shared_widgets/app_loader.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/core/shared_widgets/image.dart';
-import 'package:latest_movies/core/utilities/app_utility.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/movie_videos_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/config/config.dart';
 import '../../../../core/shared_widgets/button.dart';
 import '../../../../core/utilities/debouncer.dart';
@@ -33,7 +31,7 @@ class MovieDetailsView extends HookConsumerWidget {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: NetworkImage(
-                "${Configs.largeBaseImagePath}${movie.posterPath}",
+                "${Configs.largeBaseImagePath}${movie.backdropPath}",
               ),
               fit: BoxFit.cover,
             ),
