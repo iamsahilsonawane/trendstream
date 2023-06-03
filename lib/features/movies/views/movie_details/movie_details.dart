@@ -177,18 +177,13 @@ class MovieDetailsView extends HookConsumerWidget {
                                 ],
                               ),
                               const SizedBox(height: 10),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${(movie.adult ?? false) ? "18+ | " : ""}${movie.genres?.map((e) => e.name).join(" / ")} | ${movie.spokenLanguages?.map((e) => e.name).join(", ")} | ${movie.releaseDate?.split("-").first}",
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.grey[500],
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                "${(movie.adult ?? false) ? "18+ | " : ""}${movie.genres?.map((e) => e.name).join(" / ")} | ${movie.spokenLanguages?.map((e) => e.name).join(", ")} | ${movie.releaseDate?.split("-").first}",
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  color: Colors.grey[500],
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                               const SizedBox(height: 20),
                               Text(
