@@ -14,6 +14,8 @@ String getSearchTypeString(SearchType searchType) {
       return SearchTypeConstants.movie;
     case SearchType.tvShows:
       return SearchTypeConstants.tvShows;
+    case SearchType.liveChannels:
+      return SearchTypeConstants.liveChannels;
     default:
       return SearchTypeConstants.movie;
   }
@@ -27,6 +29,8 @@ SearchType getSearchTypeFromString(String searchType) {
       return SearchType.movies;
     case SearchTypeConstants.tvShows:
       return SearchType.tvShows;
+    case SearchTypeConstants.liveChannels:
+      return SearchType.liveChannels;
     default:
       return SearchType.movies;
   }

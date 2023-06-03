@@ -9,9 +9,8 @@ import 'package:latest_movies/features/movies/models/player/subtitle_color.dart'
 
 import '../../../../../core/utilities/app_utility.dart';
 
-final playerControlsNotifierProvider =
-    ChangeNotifierProvider.autoDispose.family<PlayerControlsNotifier, VlcPlayerController>(
-        (ref, controller) {
+final playerControlsNotifierProvider = ChangeNotifierProvider.autoDispose
+    .family<PlayerControlsNotifier, VlcPlayerController>((ref, controller) {
   return PlayerControlsNotifier(vlcPlayerController: controller);
 });
 
