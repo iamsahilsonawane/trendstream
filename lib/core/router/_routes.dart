@@ -16,4 +16,5 @@ class Routes {
   static const String tvShowAllEpisodes = "/tv-show-all-episodes";
 
   static const String tvShowSeasons = "/tv-show-seasons";
+  static const String allMovieCastAndCrew = "/all-movie-cast-and-crew";
 }

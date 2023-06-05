@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import 'credits/credits.dart';
 import 'genre.dart';
 import 'production_company.dart';
 import 'production_country.dart';
@@ -47,6 +48,7 @@ class Movie extends Equatable {
   final double? voteAverage;
   @JsonKey(name: 'vote_count')
   final int? voteCount;
+  final Credits? credits; 
 
   const Movie({
     this.adult,
@@ -74,6 +76,7 @@ class Movie extends Equatable {
     this.video,
     this.voteAverage,
     this.voteCount,
+    this.credits,
   });
 
   factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
@@ -106,6 +109,7 @@ class Movie extends Equatable {
     bool? video,
     double? voteAverage,
     int? voteCount,
+    Credits? credits,
   }) {
     return Movie(
       adult: adult ?? this.adult,
@@ -133,6 +137,7 @@ class Movie extends Equatable {
       video: video ?? this.video,
       voteAverage: voteAverage ?? this.voteAverage,
       voteCount: voteCount ?? this.voteCount,
+      credits: credits ?? this.credits,
     );
   }
 
@@ -167,6 +172,7 @@ class Movie extends Equatable {
       video,
       voteAverage,
       voteCount,
+      credits,
     ];
   }
 }

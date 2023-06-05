@@ -19,7 +19,8 @@ class LiveChannelsSearchGrid extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searchedLiveChannelsCount = ref.watch(searchedLiveChannelsCountProvider);
+    final searchedLiveChannelsCount =
+        ref.watch(searchedLiveChannelsCountProvider);
     final pageBucket = useMemoized(() => PageStorageBucket());
 
     return PageStorage(

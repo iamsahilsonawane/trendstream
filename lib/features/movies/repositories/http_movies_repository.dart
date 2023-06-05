@@ -69,6 +69,7 @@ class HttpMoviesRepository implements MoviesRepository {
       '/movie/$movieId',
       forceRefresh: forceRefresh,
       queryParameters: {
+        'append_to_response': 'credits',
         'api_key': apiKey,
       },
     );

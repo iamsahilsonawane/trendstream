@@ -105,6 +105,12 @@ class AppRouter {
           settings: settings,
           fullscreenDialog: false,
         );
+      case Routes.allMovieCastAndCrew:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => const AllCastAndCrewView(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
       default:
         return null;
     }

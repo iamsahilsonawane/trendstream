@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:latest_movies/features/auth/views/login.dart';
 import 'package:latest_movies/features/auth/views/signup.dart';
+import 'package:latest_movies/features/movies/views/movie_details/all_cast_crew_view.dart';
 import 'package:latest_movies/features/movies/views/movies_dashboard/movies_dashboard.dart';
 import 'package:latest_movies/features/movies/views/tv_show_details/tv_show_details.dart';
 import 'package:latest_movies/features/movies/views/tv_show_details/tv_show_seasons.dart';
