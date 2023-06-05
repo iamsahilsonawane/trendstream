@@ -4,12 +4,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/shared_widgets/app_loader.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/core/shared_widgets/image.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/movie_videos_provider.dart';
+import 'package:latest_movies/features/movies/models/movie/spoken_language.dart';
 import '../../../../core/config/config.dart';
 import '../../../../core/shared_widgets/button.dart';
 import '../../../../core/utilities/debouncer.dart';
@@ -274,54 +277,129 @@ class MovieDetailsView extends HookConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           verticalSpaceMedium,
-                          const Text(
-                            "Cast",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          verticalSpaceMedium,
                           Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
-                                child: SizedBox(
-                                  height: 230,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: min(
-                                            movie.credits?.cast?.length ?? 10,
-                                            10) +
-                                        1,
-                                    clipBehavior: Clip.none,
-                                    itemBuilder: (context, index) {
-                                      //if item is last
-                                      if (index ==
-                                          min(movie.credits?.cast?.length ?? 10,
-                                              10)) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(16.0),
-                                          child: TextButton.icon(
-                                              onPressed: () {
-                                                AppRouter.navigateToPage(
-                                                    Routes.allMovieCastAndCrew,
-                                                    arguments: movie);
-                                              },
-                                              style: TextButton.styleFrom(
-                                                foregroundColor: Colors.white,
-                                              ),
-                                              icon: const Icon(
-                                                  Icons.arrow_forward),
-                                              label: const Text("View all")),
-                                        );
-                                      }
-                                      final cast = movie.credits?.cast?[index];
-                                      return CastTile(
-                                          name: cast?.name,
-                                          character: cast?.character,
-                                          profilePath: cast?.profilePath);
-                                    },
-                                  ),
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Cast",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      verticalSpaceMedium,
+                                      SizedBox(
+                                        height: 230,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: min(
+                                                  movie.credits?.cast?.length ??
+                                                      10,
+                                                  10) +
+                                              1,
+                                          clipBehavior: Clip.none,
+                                          itemBuilder: (context, index) {
+                                            //if item is last
+                                            if (index ==
+                                                min(
+                                                    movie.credits?.cast
+                                                            ?.length ??
+                                                        10,
+                                                    10)) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(16.0),
+                                                child: TextButton.icon(
+                                                    onPressed: () {
+                                                      AppRouter.navigateToPage(
+                                                          Routes
+                                                              .allMovieCastAndCrew,
+                                                          arguments: movie);
+                                                    },
+                                                    style: TextButton.styleFrom(
+                                                      foregroundColor:
+                                                          Colors.white,
+                                                    ),
+                                                    icon: const Icon(
+                                                        Icons.arrow_forward),
+                                                    label:
+                                                        const Text("View all")),
+                                              );
+                                            }
+                                            final cast =
+                                                movie.credits?.cast?[index];
+                                            return CastTile(
+                                                name: cast?.name,
+                                                character: cast?.character,
+                                                profilePath: cast?.profilePath);
+                                          },
+                                        ),
+                                      ),
+                                    ]),
+                              ),
+                              horizontalSpaceLarge,
+                              SizedBox(
+                                width: 200,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Stats",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    verticalSpaceMedium,
+                                    Container(
+                                      padding: const EdgeInsets.all(14.0),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            kPrimaryAccentColor.withOpacity(.2),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      width: double.infinity,
+                                      height: 230,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          StatsItem(
+                                            stat: "Budget",
+                                            value: "\$${NumberFormat.currency(name: "").format(movie.budget)}",
+                                          ),
+                                          verticalSpaceRegular,
+                                          StatsItem(
+                                            stat: "Revenue",
+                                            value: "\$${NumberFormat.currency(name: "").format(movie.revenue ?? 0)}",
+                                          ),
+                                          verticalSpaceRegular,
+                                          StatsItem(
+                                            stat: "Original Language",
+                                            value: movie.spokenLanguages
+                                                    ?.firstWhere(
+                                                        (element) =>
+                                                            element.iso6391 ==
+                                                            movie
+                                                                .originalLanguage,
+                                                        orElse: () =>
+                                                            const SpokenLanguage(
+                                                                name:
+                                                                    "English"))
+                                                    .name ??
+                                                "N/A",
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ],
@@ -356,6 +434,37 @@ class MovieDetailsView extends HookConsumerWidget {
           ),
           icon: const Icon(Icons.arrow_back),
           label: const Text("Back")),
+    );
+  }
+}
+
+class StatsItem extends StatelessWidget {
+  const StatsItem({
+    super.key,
+    required this.stat,
+    required this.value,
+  });
+
+  final String stat;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          stat,
+          style: const TextStyle(
+              color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
+        ),
+        verticalSpaceSmall,
+        Text(
+          value,
+          style: const TextStyle(
+              color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
+        ),
+      ],
     );
   }
 }
