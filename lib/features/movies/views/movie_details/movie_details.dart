@@ -26,6 +26,45 @@ class MovieDetailsView extends HookConsumerWidget {
     final movieVideosAsync = ref.watch(movieVideosProvider(movieId));
     final posterContainerHeight = MediaQuery.of(context).size.height * 0.7;
 
+    // States
+    final uniqueMainCrew = useState(<String, String>{});
+
+    // Function to run some code after movie is fetched. This will only be called once the movie is changed and not on every build method
+    useEffect(() {
+      movieDetailsAsync.whenData((movie) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          final mainCrew = movie.credits?.crew
+                  ?.where((c) =>
+                      c.job == "Director" ||
+                      c.job == "Producer" ||
+                      c.job == "Creator" ||
+                      c.job == "Writer")
+                  .toList() ??
+              [];
+
+          // Create a map to store unique names and their corresponding jobs
+          final uniqueNames = <String, String>{};
+
+          // Iterate over the crew members and merge their jobs for duplicate names
+          for (final crewMember in mainCrew) {
+            final name = crewMember.name!;
+            final job = crewMember.job ?? "N/A";
+
+            if (uniqueNames.containsKey(name)) {
+              // Merge the job with the existing entry
+              uniqueNames[name] = '${uniqueNames[name]}, $job';
+            } else {
+              // Add the new entry
+              uniqueNames[name] = job;
+            }
+          }
+
+          uniqueMainCrew.value = uniqueNames;
+        });
+      });
+      return null;
+    }, [movieDetailsAsync]);
+
     return Scaffold(
       body: movieDetailsAsync.when(
         data: (movie) => Container(
@@ -45,21 +84,7 @@ class MovieDetailsView extends HookConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: TextButton.icon(
-                          onPressed: () {
-                            Debouncer(delay: const Duration(milliseconds: 500))
-                                .call(() {
-                              AppRouter.pop();
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.white,
-                          ),
-                          icon: const Icon(Icons.arrow_back),
-                          label: const Text("Back")),
-                    ),
+                    _buildBackButton(),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 40.0),
                       height: posterContainerHeight,
@@ -85,7 +110,6 @@ class MovieDetailsView extends HookConsumerWidget {
                                 child: AppImage(
                                   imageUrl:
                                       "${Configs.largeBaseImagePath}${movie.posterPath}",
-                                  //todo: add a not available image in case there's no image
                                 ),
                               ),
                             ),
@@ -146,36 +170,6 @@ class MovieDetailsView extends HookConsumerWidget {
                                         ),
                                       ],
                                     ),
-                                    // Text(
-                                    //   " | ",
-                                    //   style: TextStyle(
-                                    //     fontSize: 14.0,
-                                    //     color: Colors.grey[500],
-                                    //     fontWeight: FontWeight.w500,
-                                    //   ),
-                                    // ),
-                                    // Row(
-                                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                                    //   children: [
-                                    //     Text(
-                                    //       "IMDb: ",
-                                    //       style: TextStyle(
-                                    //         fontSize: 14.0,
-                                    //         color: Colors.grey[500],
-                                    //         fontWeight: FontWeight.w500,
-                                    //       ),
-                                    //     ),
-                                    //     const SizedBox(width: 5),
-                                    //     const Text(
-                                    //       "8.8/10",
-                                    //       style: TextStyle(
-                                    //         fontSize: 14.0,
-                                    //         color: Colors.white,
-                                    //         fontWeight: FontWeight.w500,
-                                    //       ),
-                                    //     ),
-                                    //   ],
-                                    // ),
                                   ],
                                 ),
                                 const SizedBox(height: 10),
@@ -195,6 +189,16 @@ class MovieDetailsView extends HookConsumerWidget {
                                     color: Colors.white,
                                     fontWeight: FontWeight.w300,
                                   ),
+                                ),
+                                const SizedBox(height: 20),
+                                Wrap(
+                                  spacing: 20,
+                                  runSpacing: 10,
+                                  children: [
+                                    ...uniqueMainCrew.value.entries.map(
+                                        (entry) => CreatorItem(
+                                            name: entry.key, job: entry.value)),
+                                  ],
                                 ),
                                 const Expanded(child: SizedBox()),
                                 Row(
@@ -321,7 +325,8 @@ class MovieDetailsView extends HookConsumerWidget {
                                 ),
                               ),
                             ],
-                          )
+                          ),
+                          verticalSpaceMedium,
                         ],
                       ),
                     ),
@@ -334,6 +339,59 @@ class MovieDetailsView extends HookConsumerWidget {
         loading: () => const AppLoader(),
         error: (error, stack) => const ErrorView(),
       ),
+    );
+  }
+
+  Padding _buildBackButton() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: TextButton.icon(
+          onPressed: () {
+            Debouncer(delay: const Duration(milliseconds: 500)).call(() {
+              AppRouter.pop();
+            });
+          },
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white,
+          ),
+          icon: const Icon(Icons.arrow_back),
+          label: const Text("Back")),
+    );
+  }
+}
+
+class CreatorItem extends StatelessWidget {
+  const CreatorItem({
+    super.key,
+    required this.name,
+    required this.job,
+  });
+
+  final String name;
+  final String job;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          name,
+          style: const TextStyle(
+            fontSize: 14.0,
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        Text(
+          job,
+          style: const TextStyle(
+            fontSize: 12.0,
+            color: Colors.grey,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
     );
   }
 }
