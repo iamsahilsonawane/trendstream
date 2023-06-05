@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../movie/credits/credits.dart';
+
 part 'tv_show.g.dart';
 
 @JsonSerializable()
@@ -27,6 +29,7 @@ class TvShow extends Equatable {
   final String? name;
   @JsonKey(name: 'original_name')
   final String? originalName;
+  final Credits? credits;
 
   const TvShow({
     this.posterPath,
@@ -42,6 +45,7 @@ class TvShow extends Equatable {
     this.voteCount,
     this.name,
     this.originalName,
+    this.credits,
   });
 
   factory TvShow.fromJson(Map<String, dynamic> json) {
@@ -64,6 +68,7 @@ class TvShow extends Equatable {
     int? voteCount,
     String? name,
     String? originalName,
+    Credits? credits,
   }) {
     return TvShow(
       posterPath: posterPath ?? this.posterPath,
@@ -79,6 +84,7 @@ class TvShow extends Equatable {
       voteCount: voteCount ?? this.voteCount,
       name: name ?? this.name,
       originalName: originalName ?? this.originalName,
+      credits: credits ?? this.credits,
     );
   }
 
@@ -101,6 +107,7 @@ class TvShow extends Equatable {
       voteCount,
       name,
       originalName,
+      credits,
     ];
   }
 }

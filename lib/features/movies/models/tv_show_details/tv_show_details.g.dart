@@ -65,6 +65,9 @@ TvShowDetails _$TvShowDetailsFromJson(Map<String, dynamic> json) =>
       videos: json['videos'] == null
           ? null
           : VideosResult.fromJson(json['videos'] as Map<String, dynamic>),
+      credits: json['credits'] == null
+          ? null
+          : Credits.fromJson(json['credits'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$TvShowDetailsToJson(TvShowDetails instance) =>
@@ -101,4 +104,5 @@ Map<String, dynamic> _$TvShowDetailsToJson(TvShowDetails instance) =>
       'vote_average': instance.voteAverage,
       'vote_count': instance.voteCount,
       'videos': instance.videos,
+      'credits': instance.credits,
     };

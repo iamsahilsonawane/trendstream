@@ -71,7 +71,7 @@ class HttpTvShowsRepository implements TvShowsRepository {
       forceRefresh: forceRefresh,
       queryParameters: {
         'api_key': apiKey,
-        'append_to_response': 'videos',
+        'append_to_response': 'videos,credits',
       },
     );
 

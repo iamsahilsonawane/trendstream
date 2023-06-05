@@ -7,5 +7,5 @@ enum DashboardSidebarStatus {
 
 final dashboardSidebarStatusProvider =
     StateProvider<DashboardSidebarStatus>((ref) {
-  return DashboardSidebarStatus.expanded;
+  return DashboardSidebarStatus.collapsed;
 });

@@ -3,26 +3,50 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:latest_movies/features/movies/models/movie/credits/credits.dart';
 
 import '../../../../core/config/config.dart';
+import '../../../../core/router/router.dart';
+import '../../../../core/utilities/debouncer.dart';
 import '../../../../core/utilities/design_utility.dart';
-import '../../models/movie/movie.dart';
 import 'movie_details.dart';
+
+class AllClassAndCrewArgs {
+  final Credits credits;
+  final String backdropPath;
+
+  const AllClassAndCrewArgs(
+      {required this.credits, required this.backdropPath});
+}
 
 class AllCastAndCrewView extends HookWidget {
   const AllCastAndCrewView({super.key});
 
+  Widget _buildBackButton() {
+    return TextButton.icon(
+        onPressed: () {
+          Debouncer(delay: const Duration(milliseconds: 500)).call(() {
+            AppRouter.pop();
+          });
+        },
+        style: TextButton.styleFrom(
+          foregroundColor: Colors.white,
+        ),
+        icon: const Icon(Icons.arrow_back),
+        label: const Text("Back"));
+  }
+
   @override
   Widget build(BuildContext context) {
-    final movie =
-        useMemoized(() => ModalRoute.of(context)!.settings.arguments as Movie);
+    final args = useMemoized(() =>
+        ModalRoute.of(context)!.settings.arguments as AllClassAndCrewArgs);
 
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(
             image: NetworkImage(
-              "${Configs.largeBaseImagePath}${movie.backdropPath}",
+              "${Configs.largeBaseImagePath}${args.backdropPath}",
             ),
             fit: BoxFit.cover,
           ),
@@ -38,7 +62,8 @@ class AllCastAndCrewView extends HookWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    verticalSpaceMedium,
+                    _buildBackButton(),
+                    verticalSpaceRegular,
                     const Text(
                       "Cast",
                       style: TextStyle(
@@ -53,9 +78,9 @@ class AllCastAndCrewView extends HookWidget {
                       mainAxisSpacing: 12,
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: movie.credits!.cast!.length,
+                      itemCount: args.credits.cast!.length,
                       itemBuilder: (context, index) {
-                        final cast = movie.credits!.cast![index];
+                        final cast = args.credits.cast![index];
                         return CastTile(
                             name: cast.name,
                             character: cast.character,
@@ -77,9 +102,9 @@ class AllCastAndCrewView extends HookWidget {
                       mainAxisSpacing: 12,
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: movie.credits!.crew!.length,
+                      itemCount: args.credits.crew!.length,
                       itemBuilder: (context, index) {
-                        final crew = movie.credits!.crew![index];
+                        final crew = args.credits.crew![index];
                         return CastTile(
                           name: crew.name,
                           character: crew.job,

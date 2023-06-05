@@ -1,7 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:latest_movies/features/movies/models/tv_show_details/spoken_language.dart';
 import 'package:latest_movies/features/movies/models/tv_show_details/videos_result.dart';
 
+import '../movie/credits/credits.dart';
 import 'created_by.dart';
 import 'genre.dart';
 import 'last_episode_to_air.dart';
@@ -9,7 +11,6 @@ import 'network.dart';
 import 'production_company.dart';
 import 'production_country.dart';
 import 'season.dart';
-import 'spoken_language.dart';
 
 part 'tv_show_details.g.dart';
 
@@ -67,6 +68,7 @@ class TvShowDetails extends Equatable {
   final int? voteCount;
   @JsonKey(name: 'videos')
   final VideosResult? videos;
+  final Credits? credits;
 
   const TvShowDetails({
     this.backdropPath,
@@ -101,6 +103,7 @@ class TvShowDetails extends Equatable {
     this.voteAverage,
     this.voteCount,
     this.videos,
+    this.credits,
   });
 
   factory TvShowDetails.fromJson(Map<String, dynamic> json) {
@@ -142,6 +145,7 @@ class TvShowDetails extends Equatable {
     double? voteAverage,
     int? voteCount,
     VideosResult? videos,
+    Credits? credits,
   }) {
     return TvShowDetails(
       backdropPath: backdropPath ?? this.backdropPath,
@@ -176,6 +180,7 @@ class TvShowDetails extends Equatable {
       voteAverage: voteAverage ?? this.voteAverage,
       voteCount: voteCount ?? this.voteCount,
       videos: videos ?? this.videos,
+      credits: credits ?? this.credits,
     );
   }
 
@@ -217,6 +222,7 @@ class TvShowDetails extends Equatable {
       voteAverage,
       voteCount,
       videos,
+      credits,
     ];
   }
 }

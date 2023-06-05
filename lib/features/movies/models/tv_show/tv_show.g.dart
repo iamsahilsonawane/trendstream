@@ -23,6 +23,9 @@ TvShow _$TvShowFromJson(Map<String, dynamic> json) => TvShow(
       voteCount: json['vote_count'] as int?,
       name: json['name'] as String?,
       originalName: json['original_name'] as String?,
+      credits: json['credits'] == null
+          ? null
+          : Credits.fromJson(json['credits'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$TvShowToJson(TvShow instance) => <String, dynamic>{
@@ -39,4 +42,5 @@ Map<String, dynamic> _$TvShowToJson(TvShow instance) => <String, dynamic>{
       'vote_count': instance.voteCount,
       'name': instance.name,
       'original_name': instance.originalName,
+      'credits': instance.credits,
     };

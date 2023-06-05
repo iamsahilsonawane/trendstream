@@ -13,6 +13,7 @@ import 'package:latest_movies/core/shared_widgets/image.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/movie_videos_provider.dart';
 import 'package:latest_movies/features/movies/models/movie/spoken_language.dart';
+import 'package:latest_movies/features/movies/views/movie_details/all_cast_crew_view.dart';
 import '../../../../core/config/config.dart';
 import '../../../../core/shared_widgets/button.dart';
 import '../../../../core/utilities/debouncer.dart';
@@ -319,7 +320,11 @@ class MovieDetailsView extends HookConsumerWidget {
                                                       AppRouter.navigateToPage(
                                                           Routes
                                                               .allMovieCastAndCrew,
-                                                          arguments: movie);
+                                                          arguments: AllClassAndCrewArgs(
+                                                              credits: movie
+                                                                  .credits!,
+                                                              backdropPath: movie
+                                                                  .backdropPath!));
                                                     },
                                                     style: TextButton.styleFrom(
                                                       foregroundColor:
@@ -373,12 +378,14 @@ class MovieDetailsView extends HookConsumerWidget {
                                         children: [
                                           StatsItem(
                                             stat: "Budget",
-                                            value: "\$${NumberFormat.currency(name: "").format(movie.budget)}",
+                                            value:
+                                                "\$${NumberFormat.currency(name: "").format(movie.budget)}",
                                           ),
                                           verticalSpaceRegular,
                                           StatsItem(
                                             stat: "Revenue",
-                                            value: "\$${NumberFormat.currency(name: "").format(movie.revenue ?? 0)}",
+                                            value:
+                                                "\$${NumberFormat.currency(name: "").format(movie.revenue ?? 0)}",
                                           ),
                                           verticalSpaceRegular,
                                           StatsItem(
