@@ -1,14 +1,11 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/features/movies/controllers/live_channels_provider.dart';
 import 'package:latest_movies/features/movies/models/live_channel/live_channel.dart';
 
-import '../../../../core/utilities/design_utility.dart';
 import "package:flutter/material.dart";
 
 import '../../../core/shared_widgets/app_loader.dart';
 import '../../../core/shared_widgets/error_view.dart';
-import '../../../core/shared_widgets/image.dart';
 
 class LiveChannelTile extends HookConsumerWidget {
   const LiveChannelTile({
@@ -59,39 +56,22 @@ class RawLiveChannelItem extends StatelessWidget {
           padding: const EdgeInsets.all(10.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5.0),
+            color: !hasFocus ? Colors.grey[900] : Colors.grey[200],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                height: 250,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(.4),
-                        blurRadius: 5,
-                        spreadRadius: 1,
-                        offset: const Offset(0, 1)),
-                  ],
-                  border: hasFocus
-                      ? Border.all(
-                          width: 4,
-                          color: kPrimaryAccentColor,
-                        )
-                      : null,
-                ),
-                child: AppImage(
-                  imageUrl: channel.channelBanner!,
-                ),
-              ),
-              verticalSpaceRegular,
               Text(
                 channel.channelName!,
                 style: TextStyle(
                     fontSize: 14,
-                    color: hasFocus ? Colors.white : Colors.grey[700],
-                    fontWeight: hasFocus ? FontWeight.w700 : FontWeight.w600),
+                    color: !hasFocus ? Colors.white : Colors.grey[700],
+                    fontWeight: !hasFocus ? FontWeight.w700 : FontWeight.w600),
+              ),
+              Icon(
+                Icons.play_arrow_rounded,
+                size: 24,
+                color: !hasFocus ? Colors.white : Colors.grey[700],
               ),
             ],
           ),

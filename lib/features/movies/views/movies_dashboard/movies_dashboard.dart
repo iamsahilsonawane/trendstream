@@ -8,6 +8,7 @@ import 'package:latest_movies/core/shared_widgets/default_app_padding.dart';
 import 'package:latest_movies/core/shared_widgets/loading_overlay.dart';
 import 'package:latest_movies/core/utilities/app_utility.dart';
 import 'package:latest_movies/features/movies/enums/sidebar_options.dart';
+import 'package:latest_movies/features/movies/views/movies_dashboard/search/live_channel_search_page.dart';
 import 'package:latest_movies/features/movies/views/movies_dashboard/search/search_page.dart';
 import 'package:latest_movies/features/movies/widgets/movies_grid.dart';
 import 'package:latest_movies/features/movies/widgets/tvshows_grid.dart';
@@ -121,6 +122,8 @@ class HomeView extends HookConsumerWidget {
                       return const AdultGrid();
                     case SidebarOptions.search:
                       return const SearchPage();
+                    case SidebarOptions.liveChannelsSearch:
+                      return const LiveChannelSearchPage();
                     case SidebarOptions.sports:
                       return const SportsPage();
                     default:

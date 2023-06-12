@@ -167,6 +167,18 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
+                  title: 'Live Channel Search',
+                  iconData: Icons.search_outlined,
+                  selectedIconData: Icons.search,
+                  isSelected: sidebarState.sidebarOptions ==
+                      SidebarOptions.liveChannelsSearch,
+                  onlyIcon: shouldHide,
+                  onTap: () {
+                    sidebarStateNotifier
+                        .setSidebarOption(SidebarOptions.liveChannelsSearch);
+                  },
+                ),
+                DrawerItem(
                   title: 'Sports',
                   iconData: Icons.sports_basketball_outlined,
                   selectedIconData: Icons.sports_basketball,

@@ -3,7 +3,7 @@ import 'package:latest_movies/features/movies/controllers/search_paginated_movie
 import 'package:latest_movies/features/movies/models/live_channel/live_channel.dart';
 
 import '../../../core/models/paginated_response.dart';
-import 'movie_search_controller.dart';
+import 'live_channel_controller.dart';
 
 final currentLiveChannelProvider = Provider<AsyncValue<LiveChannel>>((ref) {
   throw UnimplementedError();
@@ -37,7 +37,7 @@ final channels = [
 ];
 
 final searchedLiveChannelsCountProvider = Provider<AsyncValue<int>>((ref) {
-  final query = ref.watch(searchKeywordProvider);
+  final query = ref.watch(liveChannelQueryProvider);
 
   return AsyncData(channels
       .where((element) =>
