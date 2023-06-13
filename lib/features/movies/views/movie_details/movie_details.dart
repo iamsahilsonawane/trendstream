@@ -295,7 +295,7 @@ class MovieDetailsView extends HookConsumerWidget {
                                       ),
                                       verticalSpaceMedium,
                                       SizedBox(
-                                        height: 230,
+                                        height: 220,
                                         child: ListView.builder(
                                           scrollDirection: Axis.horizontal,
                                           itemCount: min(
@@ -554,13 +554,17 @@ class CastTile extends StatelessWidget {
             children: [
               Container(
                 height: 150,
-                color: profilePath == null ? Colors.grey[300] : null,
+                decoration: BoxDecoration(
+                  color: profilePath == null ? Colors.grey[300] : null,
+                  shape: BoxShape.circle,
+                ),
+                clipBehavior: Clip.antiAlias,
                 child: AppImage(
                   imageUrl: "${Configs.mediumBaseImagePath}$profilePath",
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
