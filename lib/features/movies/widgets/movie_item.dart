@@ -94,11 +94,7 @@ class RawMovieTile extends StatelessWidget {
               ),
               verticalSpaceRegular,
               Text(
-                validString(
-                    movie.releaseDate != null && movie.releaseDate!.isNotEmpty
-                        ? DateFormat("dd MMM yyyy").format(
-                            DateFormat("yyyy-MM-dd").parse(movie.releaseDate!))
-                        : null),
+                validString(movie.title.toString()),
                 style: TextStyle(
                     fontSize: 14,
                     color: hasFocus ? Colors.white : Colors.grey[700],
@@ -106,10 +102,22 @@ class RawMovieTile extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
+                validString(
+                    movie.releaseDate != null && movie.releaseDate!.isNotEmpty
+                        ? DateFormat("dd MMM yyyy").format(
+                            DateFormat("yyyy-MM-dd").parse(movie.releaseDate!))
+                        : null),
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[700],
+                    fontWeight: hasFocus ? FontWeight.w700 : FontWeight.w600),
+              ),
+              const SizedBox(height: 5),
+              Text(
                 "⭐️ ${validString(movie.voteAverage.toString())}",
                 style: TextStyle(
                     fontSize: 14,
-                    color: hasFocus ? Colors.white : Colors.grey[700],
+                    color: Colors.grey[700],
                     fontWeight: hasFocus ? FontWeight.w700 : FontWeight.w600),
               ),
             ],
