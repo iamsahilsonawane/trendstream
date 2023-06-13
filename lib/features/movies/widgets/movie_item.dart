@@ -70,26 +70,31 @@ class RawMovieTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 250,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.black.withOpacity(.4),
-                        blurRadius: 5,
-                        spreadRadius: 1,
-                        offset: const Offset(0, 1)),
-                  ],
-                  border: hasFocus
-                      ? Border.all(
-                          width: 4,
-                          color: kPrimaryAccentColor,
-                        )
-                      : null,
-                ),
-                child: AppImage(
-                  imageUrl: "${Configs.largeBaseImagePath}${movie.posterPath}",
+              AspectRatio(
+                  aspectRatio:2/3,
+                child: Container(
+                  // height: 250,
+                  // width: double.infinity,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withOpacity(.4),
+                          blurRadius: 5,
+                          spreadRadius: 1,
+                          offset: const Offset(0, 1)),
+                    ],
+                    border: hasFocus
+                        ? Border.all(
+                            width: 4,
+                            color: kPrimaryAccentColor,
+                          )
+                        : null,
+                  ),
+                  child: AppImage(
+                    imageUrl:
+                        "${Configs.largeBaseImagePath}${movie.posterPath}",
+                        fit: BoxFit.contain,
+                  ),
                 ),
               ),
               verticalSpaceRegular,

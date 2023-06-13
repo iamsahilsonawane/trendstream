@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
+import 'package:latest_movies/features/movies/controllers/dashboard_sidebar_expanded_provider.dart';
 import 'package:latest_movies/features/movies/controllers/popular_movies_count_provider.dart';
 
 import '../../../core/shared_widgets/app_loader.dart';
@@ -17,6 +18,7 @@ class MoviesGrid extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final popularMoviesCount = ref.watch(popularMoviesCountProvider);
+    final sidebarStatus = ref.watch(dashboardSidebarStatusProvider);
 
     return popularMoviesCount.map(
       data: (asyncData) {
@@ -25,7 +27,7 @@ class MoviesGrid extends HookConsumerWidget {
               'preserve_movies_grid_scroll_and_focus'),
           itemCount: asyncData.value,
           crossAxisCount: ResponsiveWidget.isMediumScreen(context)
-              ? 4
+              ?  sidebarStatus == DashboardSidebarStatus.collapsed ? 5 : 4
               : ResponsiveWidget.isSmallScreen(context)
                   ? 2
                   : 6,
