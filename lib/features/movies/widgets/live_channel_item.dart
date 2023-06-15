@@ -6,6 +6,7 @@ import "package:flutter/material.dart";
 
 import '../../../core/shared_widgets/app_loader.dart';
 import '../../../core/shared_widgets/error_view.dart';
+import '../controllers/live_channel_controller.dart';
 
 class LiveChannelTile extends HookConsumerWidget {
   const LiveChannelTile({
@@ -31,7 +32,7 @@ class LiveChannelTile extends HookConsumerWidget {
   }
 }
 
-class RawLiveChannelItem extends StatelessWidget {
+class RawLiveChannelItem extends HookConsumerWidget {
   const RawLiveChannelItem({
     super.key,
     required this.autofocus,
@@ -42,7 +43,7 @@ class RawLiveChannelItem extends StatelessWidget {
   final LiveChannel channel;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       autofocus: autofocus,
       hoverColor: Colors.transparent,
@@ -50,6 +51,11 @@ class RawLiveChannelItem extends StatelessWidget {
       focusColor: Colors.transparent,
       splashColor: Colors.transparent,
       onTap: () {},
+      onFocusChange: (isFocused) {
+        if (isFocused ) {
+          ref.read(currentSelectedLiveChannelProvider.notifier).state = channel;
+        }
+      },
       child: Builder(builder: (context) {
         final bool hasFocus = Focus.of(context).hasPrimaryFocus;
         return Container(

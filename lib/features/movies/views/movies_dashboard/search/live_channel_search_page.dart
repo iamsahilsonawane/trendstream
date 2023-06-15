@@ -16,6 +16,8 @@ class LiveChannelSearchPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final keyword = ref.watch(liveChannelQueryProvider);
+    final liveChannel = ref.watch(currentSelectedLiveChannelProvider);
+
     final previewController = useRef<VlcPlayerController?>(null);
 
     return FocusTraversalGroup(
@@ -97,7 +99,13 @@ class LiveChannelSearchPage extends HookConsumerWidget {
                   ),
                 ),
                 verticalSpaceSmall,
-                const Text("Live Preview")
+                Text(liveChannel?.channelName ?? "N/A",
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16)),
+                verticalSpaceSmall,
+                const Text("Live Preview", style: TextStyle(color: Colors.grey)),
               ],
             ),
           ),
