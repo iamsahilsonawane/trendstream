@@ -71,7 +71,7 @@ class RawMovieTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AspectRatio(
-                  aspectRatio:2/3,
+                aspectRatio: 2 / 3,
                 child: Container(
                   // height: 250,
                   // width: double.infinity,
@@ -93,7 +93,7 @@ class RawMovieTile extends StatelessWidget {
                   child: AppImage(
                     imageUrl:
                         "${Configs.largeBaseImagePath}${movie.posterPath}",
-                        fit: BoxFit.contain,
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
