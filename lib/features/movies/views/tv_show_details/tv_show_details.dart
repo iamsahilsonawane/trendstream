@@ -58,6 +58,7 @@ class TvShowDetailsView extends HookConsumerWidget {
 
           // Iterate over the crew members and merge their jobs for duplicate names
           for (final crewMember in mainCrew) {
+             if (uniqueNames.length == 5) break;
             final name = crewMember.name!;
             final job = crewMember.job ?? "N/A";
 
