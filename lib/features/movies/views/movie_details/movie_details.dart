@@ -345,51 +345,65 @@ class MovieDetailsView extends HookConsumerWidget {
                                   ),
                                 ]),
                             verticalSpaceMedium,
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Stats",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                verticalSpaceMedium,
-                                Row(
+                            Focus(
+                              child: Builder(builder: (context) {
+                                return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    StatsItem(
-                                      stat: "Budget",
-                                      value:
-                                          "\$${NumberFormat.currency(name: "").format(movie.budget)}",
+                                    const Text(
+                                      "Stats",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                    verticalSpaceRegular,
-                                    StatsItem(
-                                      stat: "Revenue",
-                                      value:
-                                          "\$${NumberFormat.currency(name: "").format(movie.revenue ?? 0)}",
+                                    verticalSpaceMedium,
+                                    Container(
+                                      padding: const EdgeInsets.all(14.0),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            kPrimaryAccentColor.withOpacity (.2),
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      width: double.infinity,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          StatsItem(
+                                            stat: "Budget",
+                                            value:
+                                                "\$${NumberFormat.currency(name: "").format(movie.budget)}",
+                                          ),
+                                          verticalSpaceRegular,
+                                          StatsItem(
+                                            stat: "Revenue",
+                                            value:
+                                                "\$${NumberFormat.currency(name: "").format(movie.revenue ?? 0)}",
+                                          ),
+                                          verticalSpaceRegular,
+                                          StatsItem(
+                                            stat: "Original Language",
+                                            value: movie.spokenLanguages
+                                                    ?.firstWhere(
+                                                        (element) =>
+                                                            element.iso6391 ==
+                                                            movie
+                                                                .originalLanguage,
+                                                        orElse: () =>
+                                                            const SpokenLanguage(
+                                                                name:
+                                                                    "English"))
+                                                    .name ??
+                                                "N/A",
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    verticalSpaceRegular,
-                                    StatsItem(
-                                      stat: "Original Language",
-                                      value: movie.spokenLanguages
-                                              ?.firstWhere(
-                                                  (element) =>
-                                                      element.iso6391 ==
-                                                      movie.originalLanguage,
-                                                  orElse: () =>
-                                                      const SpokenLanguage(
-                                                          name: "English"))
-                                              .name ??
-                                          "N/A",
-                                    ),
+                                    verticalSpaceMedium
                                   ],
-                                ),
-                                verticalSpaceMedium
-                              ],
+                                );
+                              }),
                             ),
                           ],
                         ),
@@ -437,32 +451,22 @@ class StatsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Focus(
-      child: Builder(builder: (context) {
-        final hasFocus = Focus.of(context).hasPrimaryFocus;
-        print(hasFocus);
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              stat,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold),
-            ),
-            verticalSpaceSmall,
-            Text(
-              value,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w300),
-            ),
-            verticalSpaceLarge,
-          ],
-        );
-      }),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          stat,
+          style: const TextStyle(
+              color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
+        ),
+        verticalSpaceSmall,
+        Text(
+          value,
+          style: const TextStyle(
+              color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300),
+        ),
+      ],
     );
   }
 }

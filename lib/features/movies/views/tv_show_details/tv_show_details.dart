@@ -58,7 +58,7 @@ class TvShowDetailsView extends HookConsumerWidget {
 
           // Iterate over the crew members and merge their jobs for duplicate names
           for (final crewMember in mainCrew) {
-             if (uniqueNames.length == 5) break;
+            if (uniqueNames.length == 5) break;
             final name = crewMember.name!;
             final job = crewMember.job ?? "N/A";
 
@@ -274,109 +274,96 @@ class TvShowDetailsView extends HookConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               verticalSpaceMedium,
-                              Row(
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Cast",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    verticalSpaceMedium,
+                                    SizedBox(
+                                      height: 230,
+                                      child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: min(
+                                                show.credits?.cast?.length ??
+                                                    10,
+                                                10) +
+                                            1,
+                                        clipBehavior: Clip.none,
+                                        itemBuilder: (context, index) {
+                                          //if item is last
+                                          if (index ==
+                                              min(
+                                                  show.credits?.cast?.length ??
+                                                      10,
+                                                  10)) {
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: TextButton.icon(
+                                                  onPressed: () {
+                                                    AppRouter.navigateToPage(
+                                                        Routes
+                                                            .allMovieCastAndCrew,
+                                                        arguments:
+                                                            AllClassAndCrewArgs(
+                                                                credits: show
+                                                                    .credits!,
+                                                                backdropPath: show
+                                                                    .backdropPath!));
+                                                  },
+                                                  style: TextButton.styleFrom(
+                                                    foregroundColor:
+                                                        Colors.white,
+                                                  ),
+                                                  icon: const Icon(
+                                                      Icons.arrow_forward),
+                                                  label:
+                                                      const Text("View all")),
+                                            );
+                                          }
+                                          final cast =
+                                              show.credits?.cast?[index];
+                                          return md.CastTile(
+                                              name: cast?.name,
+                                              character: cast?.character,
+                                              profilePath: cast?.profilePath);
+                                        },
+                                      ),
+                                    ),
+                                  ]),
+                              verticalSpaceMedium,
+
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Expanded(
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          const Text(
-                                            "Cast",
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          verticalSpaceMedium,
-                                          SizedBox(
-                                            height: 230,
-                                            child: ListView.builder(
-                                              scrollDirection: Axis.horizontal,
-                                              itemCount: min(
-                                                      show.credits?.cast
-                                                              ?.length ??
-                                                          10,
-                                                      10) +
-                                                  1,
-                                              clipBehavior: Clip.none,
-                                              itemBuilder: (context, index) {
-                                                //if item is last
-                                                if (index ==
-                                                    min(
-                                                        show.credits?.cast
-                                                                ?.length ??
-                                                            10,
-                                                        10)) {
-                                                  return Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            16.0),
-                                                    child: TextButton.icon(
-                                                        onPressed: () {
-                                                          AppRouter.navigateToPage(
-                                                              Routes
-                                                                  .allMovieCastAndCrew,
-                                                              arguments: AllClassAndCrewArgs(
-                                                                  credits: show
-                                                                      .credits!,
-                                                                  backdropPath:
-                                                                      show.backdropPath!));
-                                                        },
-                                                        style: TextButton
-                                                            .styleFrom(
-                                                          foregroundColor:
-                                                              Colors.white,
-                                                        ),
-                                                        icon: const Icon(Icons
-                                                            .arrow_forward),
-                                                        label: const Text(
-                                                            "View all")),
-                                                  );
-                                                }
-                                                final cast =
-                                                    show.credits?.cast?[index];
-                                                return md.CastTile(
-                                                    name: cast?.name,
-                                                    character: cast?.character,
-                                                    profilePath:
-                                                        cast?.profilePath);
-                                              },
-                                            ),
-                                          ),
-                                        ]),
+                                  const Text(
+                                    "Stats",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                  horizontalSpaceLarge,
-                                  SizedBox(
-                                    width: 200,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          "Stats",
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        verticalSpaceMedium,
-                                        Container(
+                                  verticalSpaceMedium,
+                                  Focus(
+                                    child: Builder(
+                                      builder: (context) {
+                                        return Container(
                                           padding: const EdgeInsets.all(14.0),
                                           decoration: BoxDecoration(
-                                            color: kPrimaryAccentColor
-                                                .withOpacity(.2),
-                                            borderRadius:
-                                                BorderRadius.circular(4),
+                                            color:
+                                                kPrimaryAccentColor.withOpacity(.2),
+                                            borderRadius: BorderRadius.circular(4),
                                           ),
                                           width: double.infinity,
-                                          height: 230,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                          child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               md.StatsItem(
                                                 stat: "Status",
@@ -385,9 +372,8 @@ class TvShowDetailsView extends HookConsumerWidget {
                                               verticalSpaceRegular,
                                               md.StatsItem(
                                                 stat: "Network",
-                                                value:
-                                                    show.networks?.first.name ??
-                                                        "N/A",
+                                                value: show.networks?.first.name ??
+                                                    "N/A",
                                               ),
                                               verticalSpaceRegular,
                                               md.StatsItem(
@@ -395,25 +381,35 @@ class TvShowDetailsView extends HookConsumerWidget {
                                                 value: show.spokenLanguages
                                                         ?.firstWhere(
                                                             (element) =>
-                                                                element
-                                                                    .iso6391 ==
-                                                                show
-                                                                    .originalLanguage,
+                                                                element.iso6391 ==
+                                                                show.originalLanguage,
                                                             orElse: () =>
                                                                 const SpokenLanguage(
-                                                                    name:
-                                                                        "English"))
+                                                                    name: "English"))
                                                         .name ??
                                                     "N/A",
                                               ),
                                             ],
                                           ),
-                                        )
-                                      ],
+                                        );
+                                      }
                                     ),
-                                  ),
+                                  )
                                 ],
                               ),
+
+                              // Row(
+                              //   crossAxisAlignment: CrossAxisAlignment.start,
+                              //   children: [
+                              //     Expanded(
+                              //       child:,
+                              //     ),
+                              //     horizontalSpaceLarge,
+                              //     SizedBox(
+                              //       width: 200,
+                              //       child:   ),
+                              //   ],
+                              // ),
                               verticalSpaceMedium,
                             ],
                           ),
