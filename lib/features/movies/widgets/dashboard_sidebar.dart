@@ -30,6 +30,9 @@ class DashboardSideBar extends HookConsumerWidget {
     final shouldHide = ref.watch(dashboardSidebarStatusProvider) ==
         DashboardSidebarStatus.collapsed;
 
+    final topMostItemNode = useFocusNode();
+    final bottomMostItemNode = useFocusNode();
+
     return SizedBox(
       height: double.infinity,
       child: Ink(
@@ -50,6 +53,22 @@ class DashboardSideBar extends HookConsumerWidget {
                     DashboardSidebarStatus.collapsed;
               }
             },
+            onKey: (node, RawKeyEvent event) {
+              if (event.runtimeType == RawKeyDownEvent &&
+                  (event.isKeyPressed(LogicalKeyboardKey.arrowUp) ||
+                      event.isKeyPressed(LogicalKeyboardKey.arrowDown))) {
+                if (event.isKeyPressed(LogicalKeyboardKey.arrowDown) &&
+                    bottomMostItemNode.hasPrimaryFocus) {
+                  return KeyEventResult.handled;
+                }
+                if (event.isKeyPressed(LogicalKeyboardKey.arrowUp) &&
+                    topMostItemNode.hasPrimaryFocus) {
+                  return KeyEventResult.handled;
+                }
+                return KeyEventResult.ignored;
+              }
+              return KeyEventResult.ignored;
+            },
             child: ListView(
               key: listViewKey,
               shrinkWrap: true,
@@ -58,6 +77,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   title: 'Movies',
                   iconData: Icons.home_outlined,
                   selectedIconData: Icons.home,
+                  focusNode: topMostItemNode,
                   isSelected:
                       sidebarState.sidebarOptions == SidebarOptions.home,
                   onlyIcon: shouldHide,
@@ -214,6 +234,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   selectedIconData: Icons.refresh,
                   isSelected: false,
                   onlyIcon: shouldHide,
+                  focusNode: bottomMostItemNode,
                   onTap: () async {
                     Future.wait([
                       ref
@@ -277,6 +298,7 @@ class DrawerItem extends StatelessWidget {
     required this.title,
     required this.iconData,
     required this.selectedIconData,
+    this.focusNode,
     this.onlyIcon = false,
   }) : super(key: key);
 
@@ -286,10 +308,12 @@ class DrawerItem extends StatelessWidget {
   final IconData iconData;
   final IconData selectedIconData;
   final bool onlyIcon;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      focusNode: focusNode,
       leading: Icon(isSelected ? selectedIconData : iconData, size: 20),
       title: onlyIcon ? null : Text(title),
       horizontalTitleGap: onlyIcon ? 0 : 5,
