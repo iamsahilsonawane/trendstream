@@ -48,7 +48,7 @@ class Movie extends Equatable {
   final double? voteAverage;
   @JsonKey(name: 'vote_count')
   final int? voteCount;
-  final Credits? credits; 
+  final Credits? credits;
 
   const Movie({
     this.adult,

@@ -362,7 +362,7 @@ class MovieDetailsView extends HookConsumerWidget {
                                       padding: const EdgeInsets.all(14.0),
                                       decoration: BoxDecoration(
                                         color:
-                                            kPrimaryAccentColor.withOpacity (.2),
+                                            kPrimaryAccentColor.withOpacity(.2),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       width: double.infinity,

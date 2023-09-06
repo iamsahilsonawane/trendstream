@@ -52,7 +52,7 @@ class RawLiveChannelItem extends HookConsumerWidget {
       splashColor: Colors.transparent,
       onTap: () {},
       onFocusChange: (isFocused) {
-        if (isFocused ) {
+        if (isFocused) {
           ref.read(currentSelectedLiveChannelProvider.notifier).state = channel;
         }
       },

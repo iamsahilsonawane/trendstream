@@ -25,7 +25,7 @@ class MoviesGrid extends HookConsumerWidget {
               'preserve_movies_grid_scroll_and_focus'),
           itemCount: asyncData.value,
           crossAxisCount: ResponsiveWidget.isMediumScreen(context)
-              ?  4
+              ? 4
               : ResponsiveWidget.isSmallScreen(context)
                   ? 2
                   : 6,

@@ -9,6 +9,7 @@ class GuideActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         AndroidThreeTen.init(this)
         setContentView(R.layout.activity_guide)
+        supportActionBar?.hide()
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, EpgFragment())
             .commit()

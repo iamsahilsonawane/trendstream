@@ -351,49 +351,51 @@ class TvShowDetailsView extends HookConsumerWidget {
                                   ),
                                   verticalSpaceMedium,
                                   Focus(
-                                    child: Builder(
-                                      builder: (context) {
-                                        return Container(
-                                          padding: const EdgeInsets.all(14.0),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                kPrimaryAccentColor.withOpacity(.2),
-                                            borderRadius: BorderRadius.circular(4),
-                                          ),
-                                          width: double.infinity,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              md.StatsItem(
-                                                stat: "Status",
-                                                value: show.status ?? "N/A",
-                                              ),
-                                              verticalSpaceRegular,
-                                              md.StatsItem(
-                                                stat: "Network",
-                                                value: show.networks?.first.name ??
-                                                    "N/A",
-                                              ),
-                                              verticalSpaceRegular,
-                                              md.StatsItem(
-                                                stat: "Original Language",
-                                                value: show.spokenLanguages
-                                                        ?.firstWhere(
-                                                            (element) =>
-                                                                element.iso6391 ==
-                                                                show.originalLanguage,
-                                                            orElse: () =>
-                                                                const SpokenLanguage(
-                                                                    name: "English"))
-                                                        .name ??
-                                                    "N/A",
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }
-                                    ),
+                                    child: Builder(builder: (context) {
+                                      return Container(
+                                        padding: const EdgeInsets.all(14.0),
+                                        decoration: BoxDecoration(
+                                          color: kPrimaryAccentColor
+                                              .withOpacity(.2),
+                                          borderRadius:
+                                              BorderRadius.circular(4),
+                                        ),
+                                        width: double.infinity,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            md.StatsItem(
+                                              stat: "Status",
+                                              value: show.status ?? "N/A",
+                                            ),
+                                            verticalSpaceRegular,
+                                            md.StatsItem(
+                                              stat: "Network",
+                                              value:
+                                                  show.networks?.first.name ??
+                                                      "N/A",
+                                            ),
+                                            verticalSpaceRegular,
+                                            md.StatsItem(
+                                              stat: "Original Language",
+                                              value: show.spokenLanguages
+                                                      ?.firstWhere(
+                                                          (element) =>
+                                                              element.iso6391 ==
+                                                              show
+                                                                  .originalLanguage,
+                                                          orElse: () =>
+                                                              const SpokenLanguage(
+                                                                  name:
+                                                                      "English"))
+                                                      .name ??
+                                                  "N/A",
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }),
                                   )
                                 ],
                               ),
