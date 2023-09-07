@@ -17,7 +17,6 @@ import 'controls_notifier.dart';
 
 import 'dart:async';
 
-
 class Debouncer {
   final int milliseconds;
   Timer? _timer;

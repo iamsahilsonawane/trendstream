@@ -229,6 +229,18 @@ class DashboardSideBar extends HookConsumerWidget {
                   onTap: () {},
                 ),
                 DrawerItem(
+                  title: 'API V2 Movies',
+                  iconData: Icons.movie_outlined,
+                  selectedIconData: Icons.movie,
+                  focusNode: topMostItemNode,
+                  isSelected:
+                      sidebarState.sidebarOptions == SidebarOptions.apiMovies,
+                  onlyIcon: shouldHide,
+                  onTap: () {
+                    sidebarStateNotifier.setSidebarOption(SidebarOptions.apiMovies);
+                  },
+                ),
+                DrawerItem(
                   title: 'Reset',
                   iconData: Icons.refresh,
                   selectedIconData: Icons.refresh,

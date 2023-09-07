@@ -10,4 +10,5 @@ enum SidebarOptions {
   sports,
   favorites,
   watchlist,
+  apiMovies,
 }

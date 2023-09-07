@@ -20,6 +20,7 @@ import '../../controllers/side_bar_controller.dart';
 import '../../controllers/update_dowload_providers/update_download_manager_provider.dart';
 import '../../widgets/adult_grid.dart';
 import '../../widgets/dashboard_sidebar.dart';
+import '../../widgets/movies_v2_grid.dart';
 
 class HomeView extends HookConsumerWidget {
   const HomeView({super.key});
@@ -126,6 +127,8 @@ class HomeView extends HookConsumerWidget {
                       return const LiveChannelSearchPage();
                     case SidebarOptions.sports:
                       return const SportsPage();
+                    case SidebarOptions.apiMovies:
+                      return const MoviesV2Grid();
                     default:
                       return const MoviesGrid();
                   }
