@@ -232,7 +232,6 @@ class DashboardSideBar extends HookConsumerWidget {
                   title: 'API V2 Movies',
                   iconData: Icons.movie_outlined,
                   selectedIconData: Icons.movie,
-                  focusNode: topMostItemNode,
                   isSelected:
                       sidebarState.sidebarOptions == SidebarOptions.apiMovies,
                   onlyIcon: shouldHide,
