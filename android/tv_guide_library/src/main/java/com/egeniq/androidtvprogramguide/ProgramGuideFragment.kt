@@ -37,6 +37,9 @@ import androidx.fragment.app.Fragment
 import androidx.leanback.widget.BaseGridView
 import androidx.leanback.widget.setFocusOutAllowed
 import androidx.leanback.widget.setFocusOutSideAllowed
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.egeniq.androidtvprogramguide.entity.ProgramGuideChannel
@@ -84,6 +87,9 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
 
         private val TAG: String = ProgramGuideFragment::class.java.name
     }
+
+    private var player: ExoPlayer? = null
+    private var playerView: PlayerView? = null
 
     protected val FILTER_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE
 
@@ -223,16 +229,19 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
                         FILTER_DATE_FORMATTER.format(now.plusDays(indexLong)),
                         false
                     )
+
                     USE_HUMAN_DATES && dayIndex == 0 -> FilterOption(
                         getString(R.string.programguide_day_today),
                         FILTER_DATE_FORMATTER.format(now.plusDays(indexLong)),
                         true
                     )
+
                     USE_HUMAN_DATES && dayIndex == 1 -> FilterOption(
                         getString(R.string.programguide_day_tomorrow),
                         FILTER_DATE_FORMATTER.format(now.plusDays(indexLong)),
                         false
                     )
+
                     else -> FilterOption(
                         DATE_WITH_DAY_FORMATTER.format(now.plusDays(indexLong)),
                         FILTER_DATE_FORMATTER.format(now.plusDays(indexLong)),
@@ -410,6 +419,22 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         }
         val jumpToLive = view.findViewById<View>(R.id.programguide_jump_to_live)!!
         jumpToLive.setOnClickListener { autoScrollToBestProgramme() }
+
+
+        playerView = view.findViewById(R.id.idExoPlayerVIew)
+
+        // Instantiate the player.
+        player = context?.let { ExoPlayer.Builder(it).build() }
+        // Attach player to the view.
+        playerView?.player = player
+        // Set the media item to be played.
+        player?.setMediaItem(MediaItem.fromUri("https://storage.googleapis.com/exoplayer-test-media-0/BigBuckBunny_320x180.mp4"))
+        // Prepare the player.
+        player?.prepare()
+        // Start the playback.
+        player?.play()
+        // Hide the play/pause button.
+        playerView?.hideController()
     }
 
     /**
@@ -572,6 +597,12 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         programGuideManager.listeners.remove(this)
         programGuideGrid.scheduleSelectionListener = null
         programGuideGrid.childFocusListener = null
+
+        if (player != null) {
+            if (player?.isCommandAvailable(ExoPlayer.COMMAND_RELEASE) == true) {
+                player?.release()
+            }
+        }
         super.onDestroyView()
     }
 
@@ -743,6 +774,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
                 alpha = 1f
                 contentAnimator?.displayedChild = 2
             }
+
             is State.Error -> {
                 alpha = 0f
                 if (state.errorMessage == null) {
@@ -752,6 +784,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
                 }
                 contentAnimator?.displayedChild = 1
             }
+
             else -> {
                 alpha = 0f
                 contentAnimator?.displayedChild = 0
