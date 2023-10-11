@@ -153,7 +153,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
-                                      "${(movie.adult ?? false) ? "18+ | " : ""}${movie.genres?.map((e) => e.name).join(" / ")} | ${movie.releaseDate?.split("-").first}",
+                                      "${(movie.adult ?? false) ? "18+ | " : ""}${movie.genres?.map((e) => e.name).join(" / ")} | ${movie.year}",
                                       style: TextStyle(
                                         fontSize: 14.0,
                                         color: Colors.grey[500],
@@ -177,7 +177,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                           text: "Watch Now",
                                           onTap: () {
                                             AppRouter.navigateToPage(
-                                                Routes.playerView);
+                                                Routes.playerView, arguments: "http://23.237.117.10/test.mkv");
                                           },
                                           prefix: const Icon(
                                             Icons.play_circle,

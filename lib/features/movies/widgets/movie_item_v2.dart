@@ -1,5 +1,4 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/features/movies/controllers/current_movie_v2_provider.dart';
@@ -110,11 +109,7 @@ class RawMovieTileV2 extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                validString(
-                    movie.releaseDate != null && movie.releaseDate!.isNotEmpty
-                        ? DateFormat("dd MMM yyyy").format(
-                            DateFormat("yyyy-MM-dd").parse(movie.releaseDate!))
-                        : null),
+                validString(movie.year),
                 style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[700],

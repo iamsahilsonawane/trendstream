@@ -8,16 +8,16 @@ import '../../../../core/services/shared_preferences_service.dart';
 
 final authVMProvider = ChangeNotifierProvider<AuthViewModel>(
   (ref) => AuthViewModel(
-    ref.read,
+    ref,
     auth: ref.read<FirebaseAuth>(firebaseAuthProvider),
     authService: ref.read<FirebaseAuthService>(firebaseAuthServiceProvider),
   ),
 );
 
 class AuthViewModel with ChangeNotifier {
-  AuthViewModel(this.read, {required this.auth, required this.authService});
+  AuthViewModel(this.ref, {required this.auth, required this.authService});
 
-  final Reader read;
+  final Ref ref;
   final FirebaseAuth auth;
   final FirebaseAuthService authService;
 
@@ -81,6 +81,6 @@ class AuthViewModel with ChangeNotifier {
     await auth.signOut();
 
     AppRouter.navigateAndRemoveUntil(Routes.loginView);
-    await read(sharedPreferencesServiceProvider).clear();
+    await ref.read(sharedPreferencesServiceProvider).clear();
   }
 }

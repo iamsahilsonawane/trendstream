@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:stack_trace/stack_trace.dart' as stack_trace;
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -56,6 +58,12 @@ void main() async {
       child: const MyApp(),
     ),
   );
+
+  FlutterError.demangleStackTrace = (StackTrace stack) {
+    if (stack is stack_trace.Trace) return stack.vmTrace;
+    if (stack is stack_trace.Chain) return stack.toTrace().vmTrace;
+    return stack;
+  };
 }
 
 class MyApp extends StatelessWidget {

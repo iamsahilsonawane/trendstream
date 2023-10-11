@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
 import 'controls/controls.dart';
 
-class PlayerView extends StatefulWidget {
+class PlayerView extends ConsumerStatefulWidget {
   const PlayerView({Key? key}) : super(key: key);
 
   @override
-  State<PlayerView> createState() => _PlayerViewState();
+  ConsumerState<PlayerView> createState() => _PlayerViewState();
 }
 
-class _PlayerViewState extends State<PlayerView> {
+class _PlayerViewState extends ConsumerState<PlayerView> {
   late VlcPlayerController _videoPlayerController;
   final uuid = const Uuid();
 
@@ -22,10 +23,28 @@ class _PlayerViewState extends State<PlayerView> {
     super.initState();
 
     key = uuid.v4();
+  }
+
+  dynamic argUrl;
+
+  bool isLiveStream(url) {
+    if (url is! String) return false;
+    if (url.contains('m3u8') || url.contains('mpd')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    argUrl = ModalRoute.of(context)?.settings.arguments;
 
     _videoPlayerController = VlcPlayerController.network(
       // 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-      'https://media.w3.org/2010/05/sintel/trailer.mp4',
+      argUrl is String
+          ? argUrl
+          : 'https://media.w3.org/2010/05/sintel/trailer.mp4',
       hwAcc: HwAcc.full,
       autoPlay: true,
       options: VlcPlayerOptions(
@@ -48,6 +67,7 @@ class _PlayerViewState extends State<PlayerView> {
         ]),
       ),
     );
+    super.didChangeDependencies();
   }
 
   @override
@@ -80,6 +100,7 @@ class _PlayerViewState extends State<PlayerView> {
           Positioned.fill(
             child: PlayerControls(
               key: ValueKey(key),
+              isLiveView: isLiveStream(argUrl),
               vlcPlayerController: _videoPlayerController,
               onControllerChanged: (VlcPlayerController currentCtrl) async {
                 final playbackSpeed = await currentCtrl.getPlaybackSpeed();
@@ -88,7 +109,9 @@ class _PlayerViewState extends State<PlayerView> {
                 final ct = currentCtrl.value.position;
 
                 _videoPlayerController = VlcPlayerController.network(
-                  'https://media.w3.org/2010/05/sintel/trailer.mp4',
+                  argUrl is String
+                      ? argUrl
+                      : 'https://media.w3.org/2010/05/sintel/trailer.mp4',
                   hwAcc: HwAcc.full,
                   autoPlay: true,
                   autoInitialize: true,

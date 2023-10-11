@@ -7,7 +7,6 @@ import 'package:latest_movies/features/sports/widgtes/sports_program_channel_til
 import 'package:latest_movies/features/sports/widgtes/sports_program_list_tile.dart';
 
 import '../../../core/router/router.dart';
-import '../../tv_guide/views/tv_guide/tv_guide.dart';
 
 class SportsPage extends StatefulWidget {
   const SportsPage({super.key});
@@ -62,7 +61,7 @@ class _SportsPageState extends State<SportsPage> {
                   if (previewController.value.isPlaying) {
                     previewController.pause();
                   }
-                  await AppRouter.navigateToPage(Routes.playerView);
+                  await AppRouter.navigateToPage(Routes.playerView, arguments: "http://x.lamtv.tv:8080/live/test/test/130.m3u8");
                   // previewController.play();
                 },
               );
@@ -110,13 +109,85 @@ class _SportsPageState extends State<SportsPage> {
           //     child: ColoredBox(color: Colors.black),
           //   ),
           // ),
-          child: PreviewPlayer(
+          child: LivePreviewPlayer(
             onControllerInitialized: (controller) {
               previewController = controller;
             },
           ),
         ),
       ],
+    );
+  }
+}
+
+
+class LivePreviewPlayer extends StatefulWidget {
+  const LivePreviewPlayer({super.key, this.onControllerInitialized});
+
+  final Function(VlcPlayerController controller)? onControllerInitialized;
+
+  @override
+  State<LivePreviewPlayer> createState() => _LivePreviewPlayerState();
+}
+
+class _LivePreviewPlayerState extends State<LivePreviewPlayer> {
+  late VlcPlayerController _videoPlayerController;
+
+  void initListener() {
+    if (_videoPlayerController.value.isInitialized) {
+      _videoPlayerController.setVolume(0);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _videoPlayerController = VlcPlayerController.network(
+      'http://x.lamtv.tv:8080/live/test/test/130.m3u8',
+      // 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+      hwAcc: HwAcc.full,
+      autoPlay: true,
+      options: VlcPlayerOptions(
+        advanced: VlcAdvancedOptions([
+          VlcAdvancedOptions.networkCaching(2000),
+        ]),
+        subtitle: VlcSubtitleOptions([
+          VlcSubtitleOptions.boldStyle(true),
+          VlcSubtitleOptions.fontSize(30),
+          VlcSubtitleOptions.color(VlcSubtitleColor.white),
+        ]),
+        http: VlcHttpOptions([
+          VlcHttpOptions.httpReconnect(true),
+        ]),
+        rtp: VlcRtpOptions([
+          VlcRtpOptions.rtpOverRtsp(true),
+        ]),
+      ),
+    );
+    widget.onControllerInitialized?.call(_videoPlayerController);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _videoPlayerController.addOnInitListener(initListener);
+    });
+  }
+
+  @override
+  void dispose() async {
+    super.dispose();
+    await _videoPlayerController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black,
+        border: Border.all(color: kPrimaryColor, width: 3),
+      ),
+      child: VlcPlayer(
+        controller: _videoPlayerController,
+        aspectRatio: 16 / 9,
+        placeholder: const Center(child: CircularProgressIndicator()),
+      ),
     );
   }
 }

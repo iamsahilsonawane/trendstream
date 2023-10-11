@@ -37,10 +37,12 @@ class PlayerControls extends HookConsumerWidget {
     Key? key,
     required this.vlcPlayerController,
     required this.onControllerChanged,
+    this.isLiveView = false,
   }) : super(key: key);
 
   final VlcPlayerController vlcPlayerController;
   final ValueChanged<VlcPlayerController> onControllerChanged;
+  final bool isLiveView;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,13 +62,13 @@ class PlayerControls extends HookConsumerWidget {
     final isSubtitlesAdded = useRef(false);
 
     useEffect(() {
-      subtitlesInitListener() async {
-        await vlcPlayerController.addSubtitleFromNetwork(
-            "https://gist.githubusercontent.com/iamsahilsonawane/7ea2c530d96dd4837f27527a6f31aed9/raw/9959e9e37d72195e642130bd0dcc6b8d81420ae5/test.srt");
-        await vlcPlayerController.setSpuTrack(0);
-      }
+      // subtitlesInitListener() async {
+      //   await vlcPlayerController.addSubtitleFromNetwork(
+      //       "https://gist.githubusercontent.com/iamsahilsonawane/7ea2c530d96dd4837f27527a6f31aed9/raw/9959e9e37d72195e642130bd0dcc6b8d81420ae5/test.srt");
+      //   await vlcPlayerController.setSpuTrack(0);
+      // }
 
-      vlcPlayerController.addOnInitListener(subtitlesInitListener);
+      // vlcPlayerController.addOnInitListener(subtitlesInitListener);
       focusScopeNode.addListener(() {
         if (focusScopeNode.hasFocus) {
           log("Focus Scope Node has focus");
@@ -87,7 +89,7 @@ class PlayerControls extends HookConsumerWidget {
       });
       return () {
         sliderFocusNode.dispose();
-        vlcPlayerController.removeOnInitListener(subtitlesInitListener);
+        // vlcPlayerController.removeOnInitListener(subtitlesInitListener);
       };
     }, [sliderFocusNode]);
 
@@ -145,19 +147,20 @@ class PlayerControls extends HookConsumerWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              FocusNotifier(
-                                key: const Key("seekBackward"),
-                                builder: (context, node) => IconButton(
-                                  focusNode: node,
-                                  iconSize: 30,
-                                  focusColor: Colors.white.withOpacity(0.2),
-                                  color: Colors.white,
-                                  onPressed: () {
-                                    controlsModel.seekBackward();
-                                  },
-                                  icon: const Icon(Icons.fast_rewind),
+                              if (!isLiveView)
+                                FocusNotifier(
+                                  key: const Key("seekBackward"),
+                                  builder: (context, node) => IconButton(
+                                    focusNode: node,
+                                    iconSize: 30,
+                                    focusColor: Colors.white.withOpacity(0.2),
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      controlsModel.seekBackward();
+                                    },
+                                    icon: const Icon(Icons.fast_rewind),
+                                  ),
                                 ),
-                              ),
                               FocusNotifier.customFocusNode(
                                 key: const Key("playPause"),
                                 focusNode: playPauseFocusNode,
@@ -167,195 +170,227 @@ class PlayerControls extends HookConsumerWidget {
                                         controlsModel,
                                         node),
                               ),
-                              FocusNotifier(
-                                key: const Key("seekForward"),
-                                builder: (context, node) => IconButton(
-                                  iconSize: 30,
-                                  focusNode: node,
-                                  focusColor: Colors.white.withOpacity(0.2),
-                                  color: Colors.white,
-                                  onPressed: () {
-                                    controlsModel.seekForward();
-                                  },
-                                  icon: const Icon(Icons.fast_forward),
+                              if (!isLiveView)
+                                FocusNotifier(
+                                  key: const Key("seekForward"),
+                                  builder: (context, node) => IconButton(
+                                    iconSize: 30,
+                                    focusNode: node,
+                                    focusColor: Colors.white.withOpacity(0.2),
+                                    color: Colors.white,
+                                    onPressed: () {
+                                      controlsModel.seekForward();
+                                    },
+                                    icon: const Icon(Icons.fast_forward),
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: SliderTheme(
-                                  data: Theme.of(context)
-                                      .sliderTheme
-                                      .copyWith(trackHeight: 5),
-                                  child: Focus(
-                                    descendantsAreFocusable: true,
-                                    descendantsAreTraversable: true,
-                                    canRequestFocus: false,
-                                    child: RawKeyboardListener(
-                                      focusNode: sliderControllerFocusNode,
-                                      onKey: (e) {
-                                        if (e.isKeyPressed(
-                                            LogicalKeyboardKey.arrowRight)) {
-                                          if (sliderFocusNode.hasPrimaryFocus) {
-                                            controlsModel.seekForward(
-                                                seconds: 5);
+                          if (!isLiveView)
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: SliderTheme(
+                                    data: Theme.of(context)
+                                        .sliderTheme
+                                        .copyWith(trackHeight: 5),
+                                    child: Focus(
+                                      descendantsAreFocusable: true,
+                                      descendantsAreTraversable: true,
+                                      canRequestFocus: false,
+                                      child: RawKeyboardListener(
+                                        focusNode: sliderControllerFocusNode,
+                                        onKey: (e) {
+                                          if (e.isKeyPressed(
+                                              LogicalKeyboardKey.arrowRight)) {
+                                            if (sliderFocusNode
+                                                .hasPrimaryFocus) {
+                                              controlsModel.seekForward(
+                                                  seconds: 5);
+                                            }
+                                          } else if (e.isKeyPressed(
+                                              LogicalKeyboardKey.arrowLeft)) {
+                                            if (sliderFocusNode
+                                                .hasPrimaryFocus) {
+                                              controlsModel.seekBackward(
+                                                  seconds: 5);
+                                            }
                                           }
-                                        } else if (e.isKeyPressed(
-                                            LogicalKeyboardKey.arrowLeft)) {
-                                          if (sliderFocusNode.hasPrimaryFocus) {
-                                            controlsModel.seekBackward(
-                                                seconds: 5);
-                                          }
-                                        }
-                                      },
-                                      child: MediaQuery(
-                                        data: MediaQuery.of(context).copyWith(
-                                          navigationMode:
-                                              NavigationMode.directional,
-                                        ),
-                                        child: Slider(
-                                          autofocus: true,
-                                          focusNode: sliderFocusNode,
-                                          activeColor: Colors.redAccent,
-                                          inactiveColor: Colors.white70,
-                                          value: controlsModel
-                                              .playbackPosition.inSeconds
-                                              .toDouble(),
-                                          min: 0.0,
-                                          max: vlcPlayerController
-                                              .value.duration.inSeconds
-                                              .toDouble(),
-                                          onChanged: (_) {},
+                                        },
+                                        child: MediaQuery(
+                                          data: MediaQuery.of(context).copyWith(
+                                            navigationMode:
+                                                NavigationMode.directional,
+                                          ),
+                                          child: Slider(
+                                            autofocus: true,
+                                            focusNode: sliderFocusNode,
+                                            activeColor: Colors.redAccent,
+                                            inactiveColor: Colors.white70,
+                                            value: controlsModel
+                                                .playbackPosition.inSeconds
+                                                .toDouble(),
+                                            min: 0.0,
+                                            max: vlcPlayerController
+                                                .value.duration.inSeconds
+                                                .toDouble(),
+                                            onChanged: (_) {},
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              // horizontalSpaceSmall,
-                              ValueListenableBuilder(
-                                valueListenable:
-                                    controlsModel.vlcPlayerController,
-                                builder: (context, VlcPlayerValue controller,
-                                    child) {
-                                  return Text(
-                                    "${controlsModel.formatDurationToString(controller.position)} / ${controlsModel.duration}",
-                                    style: const TextStyle(color: Colors.white),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              IconButton(
-                                tooltip: 'Get Subtitle Tracks',
-                                icon: const Icon(Icons.closed_caption),
-                                color: Colors.white,
-                                onPressed: () => _getSubtitleTracks(
-                                    context, isSubtitlesAdded.value,
-                                    playerController: controlsModel),
-                              ),
-                              IconButton(
-                                tooltip: 'Get Audio Tracks',
-                                icon: const Icon(Icons.audiotrack),
-                                color: Colors.white,
-                                onPressed: () => _getAudioTracks(context,
-                                    playerController: controlsModel),
-                              ),
-                              IconButton(
-                                tooltip: 'Subtitle Options',
-                                icon: const Icon(Icons.settings),
-                                color: Colors.white,
-                                onPressed: () async {
-                                  controlsModel.stopTimer();
-                                  controlsModel.pause();
-                                  controlsModel.forceStopped = true;
-
-                                  final result =
-                                      await _setCaptionStyle(controlsModel);
-
-                                  controlsModel.forceStopped = false;
-                                  if (result == null) return;
-
-                                  //only remove the subtitle options where the value is not null in result
-                                  vlcPlayerController.options?.subtitle?.options
-                                      .removeWhere(
-                                    (opt) {
-                                      if (opt
-                                          .contains("--freetype-fontsize=")) {
-                                        return result.containsKey("fontSize");
-                                      } else if (opt
-                                          .contains("--freetype-color=")) {
-                                        return result.containsKey("fontColor");
-                                      } else if (opt.contains(
-                                          "--freetype-background-color=")) {
-                                        return result.containsKey("fontColor");
-                                      }
-                                      return false;
-                                    },
-                                  );
-
-                                  vlcPlayerController.options?.subtitle?.options
-                                      .addAll(
-                                    [
-                                      if (result.containsKey("fontSize"))
-                                        VlcSubtitleOptions.fontSize(
-                                            result["fontSize"]),
-                                      if (result.containsKey("fontColor"))
-                                        VlcSubtitleOptions.color(
-                                            result["fontColor"]),
-                                      if (result.containsKey("backgroundColor"))
-                                        VlcSubtitleOptions.backgroundColor(
-                                            result["backgroundColor"]),
-                                      if (result.containsKey("backgroundColor"))
-                                        VlcSubtitleOptions.backgroundOpacity(
-                                            255),
-                                      if (result.containsKey("backgroundColor"))
-                                        VlcSubtitleOptions.shadowOpacity(0),
-                                      if (result.containsKey("backgroundColor"))
-                                        VlcSubtitleOptions.boldStyle(false),
-                                    ],
-                                  );
-
-                                  if (result.containsKey("fontSize")) {
-                                    controlsModel.selectedCaptionSize =
-                                        result["fontSize"];
-                                  }
-                                  if (result.containsKey("fontColor")) {
-                                    controlsModel.selectedCaptionColor =
-                                        SubtitleColor(
-                                      color: AppUtils.decimalToColor(
-                                          result["fontColor"].value),
-                                      backgroundColor: (result
-                                              .containsKey("backgroundColor"))
-                                          ? AppUtils.decimalToColor(
-                                              result["backgroundColor"].value)
-                                          : null,
-                                    );
-                                  }
-
-                                  onControllerChanged.call(vlcPlayerController);
-                                },
-                              ),
-                              Row(
-                                children: [
-                                  IconButton(
-                                    tooltip: 'Get Playback Speeds',
-                                    icon: const Icon(Icons.speed),
-                                    color: Colors.white,
-                                    onPressed: () => _getPlaybackSpeeds(context,
-                                        controlsModel: controlsModel),
-                                  ),
-                                  Text("${controlsModel.currentPlaybackSpeed}x",
+                                // horizontalSpaceSmall,
+                                ValueListenableBuilder(
+                                  valueListenable:
+                                      controlsModel.vlcPlayerController,
+                                  builder: (context, VlcPlayerValue controller,
+                                      child) {
+                                    return Text(
+                                      "${controlsModel.formatDurationToString(controller.position)} / ${controlsModel.duration}",
                                       style:
-                                          const TextStyle(color: Colors.white)),
-                                ],
+                                          const TextStyle(color: Colors.white),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          if (!isLiveView)
+                            Row(
+                              children: [
+                                IconButton(
+                                  tooltip: 'Get Subtitle Tracks',
+                                  icon: const Icon(Icons.closed_caption),
+                                  color: Colors.white,
+                                  onPressed: () => _getSubtitleTracks(
+                                      context, isSubtitlesAdded.value,
+                                      playerController: controlsModel),
+                                ),
+                                IconButton(
+                                  tooltip: 'Get Audio Tracks',
+                                  icon: const Icon(Icons.audiotrack),
+                                  color: Colors.white,
+                                  onPressed: () => _getAudioTracks(context,
+                                      playerController: controlsModel),
+                                ),
+                                IconButton(
+                                  tooltip: 'Subtitle Options',
+                                  icon: const Icon(Icons.settings),
+                                  color: Colors.white,
+                                  onPressed: () async {
+                                    controlsModel.stopTimer();
+                                    controlsModel.pause();
+                                    controlsModel.forceStopped = true;
+
+                                    final result =
+                                        await _setCaptionStyle(controlsModel);
+
+                                    controlsModel.forceStopped = false;
+                                    if (result == null) return;
+
+                                    //only remove the subtitle options where the value is not null in result
+                                    vlcPlayerController
+                                        .options?.subtitle?.options
+                                        .removeWhere(
+                                      (opt) {
+                                        if (opt
+                                            .contains("--freetype-fontsize=")) {
+                                          return result.containsKey("fontSize");
+                                        } else if (opt
+                                            .contains("--freetype-color=")) {
+                                          return result
+                                              .containsKey("fontColor");
+                                        } else if (opt.contains(
+                                            "--freetype-background-color=")) {
+                                          return result
+                                              .containsKey("fontColor");
+                                        }
+                                        return false;
+                                      },
+                                    );
+
+                                    vlcPlayerController
+                                        .options?.subtitle?.options
+                                        .addAll(
+                                      [
+                                        if (result.containsKey("fontSize"))
+                                          VlcSubtitleOptions.fontSize(
+                                              result["fontSize"]),
+                                        if (result.containsKey("fontColor"))
+                                          VlcSubtitleOptions.color(
+                                              result["fontColor"]),
+                                        if (result
+                                            .containsKey("backgroundColor"))
+                                          VlcSubtitleOptions.backgroundColor(
+                                              result["backgroundColor"]),
+                                        if (result
+                                            .containsKey("backgroundColor"))
+                                          VlcSubtitleOptions.backgroundOpacity(
+                                              255),
+                                        if (result
+                                            .containsKey("backgroundColor"))
+                                          VlcSubtitleOptions.shadowOpacity(0),
+                                        if (result
+                                            .containsKey("backgroundColor"))
+                                          VlcSubtitleOptions.boldStyle(false),
+                                      ],
+                                    );
+
+                                    if (result.containsKey("fontSize")) {
+                                      controlsModel.selectedCaptionSize =
+                                          result["fontSize"];
+                                    }
+                                    if (result.containsKey("fontColor")) {
+                                      controlsModel.selectedCaptionColor =
+                                          SubtitleColor(
+                                        color: AppUtils.decimalToColor(
+                                            result["fontColor"].value),
+                                        backgroundColor: (result
+                                                .containsKey("backgroundColor"))
+                                            ? AppUtils.decimalToColor(
+                                                result["backgroundColor"].value)
+                                            : null,
+                                      );
+                                    }
+
+                                    onControllerChanged
+                                        .call(vlcPlayerController);
+                                  },
+                                ),
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      tooltip: 'Get Playback Speeds',
+                                      icon: const Icon(Icons.speed),
+                                      color: Colors.white,
+                                      onPressed: () => _getPlaybackSpeeds(
+                                          context,
+                                          controlsModel: controlsModel),
+                                    ),
+                                    Text(
+                                        "${controlsModel.currentPlaybackSpeed}x",
+                                        style: const TextStyle(
+                                            color: Colors.white)),
+                                  ],
+                                ),
+                              ],
+                            )
+                          else
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                padding: const EdgeInsets.all(4.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                child: const Text(
+                                  "Live",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                            ],
-                          )
+                            ),
                         ],
                       ),
                     ),
