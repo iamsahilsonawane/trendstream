@@ -49,4 +49,8 @@
     <color name="programguide_title_text_color_focused">#FFFFFF</color>
     <color name="programguide_title_text_color_in_past">#D0D0D0</color>
     <color name="programguide_title_text_color_default">#F0F0F0</color>
+
+
+    <color name="focused_button_color">#2196F3</color> <!-- Focused state: Blue -->
+    <color name="default_button_color">#757575</color> <!-- Default state: Muted Gray -->
 </resources>

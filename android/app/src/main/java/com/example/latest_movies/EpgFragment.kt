@@ -1,6 +1,7 @@
 package com.example.latest_movies
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.text.Spanned
 import android.text.SpannedString
 import android.util.Log
@@ -58,11 +59,23 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
         }
         if (programGuideSchedule.isCurrentProgram) {
             Toast.makeText(context, "Open live player", Toast.LENGTH_LONG).show()
+            val intent = Intent(context, LivePreviewActivity::class.java)
+            intent.putExtra("url", "http://x.lamtv.tv:8080/live/test/test/130.m3u8")
+            startActivity(intent)
         } else {
             Toast.makeText(context, "Open detail page", Toast.LENGTH_LONG).show()
+            val intent = Intent(context, LivePreviewActivity::class.java)
+            intent.putExtra("url", "http://x.lamtv.tv:8080/live/test/test/130.m3u8")
+            startActivity(intent)
         }
         // Example of how a program can be updated. You could also change the underlying program.
         updateProgram(programGuideSchedule.copy(displayTitle = programGuideSchedule.displayTitle + " [clicked]"))
+    }
+
+    override fun onTestVideoButtonClicked() {
+        val intent = Intent(context, LivePreviewActivity::class.java)
+        intent.putExtra("url", "http://23.237.117.10/test.mkv")
+        startActivity(intent)
     }
 
     override fun onScheduleSelected(programGuideSchedule: ProgramGuideSchedule<SimpleProgram>?) {

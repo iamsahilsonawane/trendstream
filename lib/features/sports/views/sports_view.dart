@@ -58,11 +58,16 @@ class _SportsPageState extends State<SportsPage> {
                 icon: Icons.sports_football,
                 autofocus: index == 0,
                 onTap: () async {
-                  if (previewController.value.isPlaying) {
+                  if (previewController.value.isBuffering ||
+                      previewController.value.isPlaying) {
                     previewController.pause();
                   }
-                  await AppRouter.navigateToPage(Routes.playerView, arguments: "http://x.lamtv.tv:8080/live/test/test/130.m3u8");
-                  // previewController.play();
+                  await AppRouter.navigateToPage(Routes.playerView,
+                      arguments:
+                          "http://x.lamtv.tv:8080/live/test/test/130.m3u8");
+                  if (mounted) {
+                    previewController..seekTo(const Duration(days: 3))..play();
+                  }
                 },
               );
             },
@@ -119,7 +124,6 @@ class _SportsPageState extends State<SportsPage> {
     );
   }
 }
-
 
 class LivePreviewPlayer extends StatefulWidget {
   const LivePreviewPlayer({super.key, this.onControllerInitialized});

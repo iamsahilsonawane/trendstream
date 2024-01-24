@@ -145,8 +145,10 @@
         android:outAnimation="@android:anim/fade_out"
         app:layout_constraintBottom_toBottomOf="@id/background"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/background">
+        app:layout_constraintTop_toTopOf="@id/background"
+        app:layout_constraintVertical_bias="0.0">
 
         <!-- Loading state -->
         <ProgressBar
@@ -255,6 +257,18 @@
 <!--        app:layout_constraintBottom_toTopOf="@id/programguide_time_row"-->
 <!--        app:layout_constraintTop_toTopOf="@id/programguide_top_margin"-->
 <!--        />-->
+    <Button
+        android:id="@+id/testVideoButton"
+        android:text="Test Video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:background="@drawable/livepreview_focus_background"
+        android:layout_marginLeft="30dp"
+        app:layout_constraintBottom_toTopOf="@id/programguide_time_row"
+        app:layout_constraintStart_toEndOf="@id/programguide_time_of_day_filter"
+        app:layout_constraintTop_toTopOf="@id/programguide_top_margin" />
+
 
     <!--Widget for exoplayer view-->
     <androidx.media3.ui.PlayerView
@@ -262,22 +276,14 @@
         android:layout_width="106.66666667dp"
         android:layout_height="60dp"
         app:show_buffering="never"
+        app:use_controller="false"
         android:layout_marginEnd="@dimen/programguide_page_left_padding"
-        app:layout_constraintLeft_toRightOf="@id/programguide_time_of_day_filter"
+        app:layout_constraintLeft_toRightOf="@id/testVideoButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/programguide_time_row"
         app:layout_constraintTop_toTopOf="@id/programguide_top_margin"
     />
 
 
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Live Preview"-->
-<!--        android:textColor="#fff"-->
-<!--        app:layout_constraintStart_toStartOf="@id/live_preview"-->
-<!--        app:layout_constraintEnd_toEndOf="@id/live_preview"-->
-<!--        app:layout_constraintBottom_toBottomOf="@id/live_preview"-->
-<!--        app:layout_constraintTop_toTopOf="@id/live_preview"/>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

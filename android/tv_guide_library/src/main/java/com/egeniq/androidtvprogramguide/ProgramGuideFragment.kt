@@ -17,6 +17,7 @@
 package com.egeniq.androidtvprogramguide
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.Handler
@@ -25,6 +26,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.ViewAnimator
@@ -452,7 +454,14 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         player?.play()
         // Hide the play/pause button.
         playerView?.hideController()
+
+
+        view.findViewById<Button>(R.id.testVideoButton)?.let {
+            it.setOnClickListener { onTestVideoButtonClicked() }
+        }
     }
+
+    abstract fun onTestVideoButtonClicked()
 
     /**
      * Called when the fragment view has been created. We initialize some of our views here.
@@ -595,6 +604,9 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             progressUpdateHandler.removeCallbacks(progressUpdateRunnable)
             progressUpdateHandler.post(progressUpdateRunnable)
         }
+        //seek to the latest position in the live stream
+        player?.seekToDefaultPosition()
+        player?.play()
     }
 
     /**
@@ -605,6 +617,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         if (DISPLAY_SHOW_PROGRESS) {
             progressUpdateHandler.removeCallbacks(progressUpdateRunnable)
         }
+        player?.pause()
     }
 
     /**
