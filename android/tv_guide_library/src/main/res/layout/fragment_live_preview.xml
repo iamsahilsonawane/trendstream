@@ -10,31 +10,31 @@
         android:id="@+id/idExoPlayerLiveView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:show_subtitle_button="false"
+        app:show_subtitle_button="true"
         app:show_buffering="never" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#88000000"
-        android:orientation="vertical"
-        tools:ignore="MissingConstraints">
-        <!-- This is a container LinearLayout that serves as the root of the control UI. -->
-        <!-- It is placed underneath the player_view and has a transparent black background (#88000000). -->
-        <!-- The height is set to wrap_content, so it will take up only as much height as needed for its contents. -->
-        <!-- The tools:ignore attribute is used for design-time rendering and can be ignored in actual implementation. -->
-        <LinearLayout
-            android:id="@+id/controls_root"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-            <!-- This is another LinearLayout nested within the controls_root LinearLayout. -->
-            <!-- It is used to hold the playback control buttons, such as play/pause and seek buttons. -->
-            <!-- The width is set to match_parent, so it takes up the full width of its parent LinearLayout. -->
-            <!-- The height is set to wrap_content, so it takes up only as much height as needed for its contents. -->
-            <!-- The orientation is set to horizontal, so the control buttons are laid out horizontally within the LinearLayout. -->
-            <!-- The visibility is initially set to gone, which means the control buttons are not visible. -->
-        </LinearLayout>
-    </LinearLayout>
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:background="#88000000"-->
+<!--        android:orientation="vertical"-->
+<!--        tools:ignore="MissingConstraints">-->
+<!--        &lt;!&ndash; This is a container LinearLayout that serves as the root of the control UI. &ndash;&gt;-->
+<!--        &lt;!&ndash; It is placed underneath the player_view and has a transparent black background (#88000000). &ndash;&gt;-->
+<!--        &lt;!&ndash; The height is set to wrap_content, so it will take up only as much height as needed for its contents. &ndash;&gt;-->
+<!--        &lt;!&ndash; The tools:ignore attribute is used for design-time rendering and can be ignored in actual implementation. &ndash;&gt;-->
+<!--        <LinearLayout-->
+<!--            android:id="@+id/controls_root"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="horizontal"-->
+<!--            >-->
+<!--            &lt;!&ndash; This is another LinearLayout nested within the controls_root LinearLayout. &ndash;&gt;-->
+<!--            &lt;!&ndash; It is used to hold the playback control buttons, such as play/pause and seek buttons. &ndash;&gt;-->
+<!--            &lt;!&ndash; The width is set to match_parent, so it takes up the full width of its parent LinearLayout. &ndash;&gt;-->
+<!--            &lt;!&ndash; The height is set to wrap_content, so it takes up only as much height as needed for its contents. &ndash;&gt;-->
+<!--            &lt;!&ndash; The orientation is set to horizontal, so the control buttons are laid out horizontally within the LinearLayout. &ndash;&gt;-->
+<!--            &lt;!&ndash; The visibility is initially set to gone, which means the control buttons are not visible. &ndash;&gt;-->
+<!--        </LinearLayout>-->
+<!--    </LinearLayout>-->
 </FrameLayout>

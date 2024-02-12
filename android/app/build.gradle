@@ -35,7 +35,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -101,6 +101,7 @@ flutter {
 }
 
 dependencies {
+    implementation files('libs/lib-decoder-ffmpeg-release.aar')
     implementation project(":tv_guide_library")
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -116,7 +117,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.12.0'
 }
 
-android.applicationVariants.all { variant ->
+android.applicationVariants.configureEach { variant ->
   variant.outputs.each { output ->
    output.versionCodeOverride =
               variant.versionCode

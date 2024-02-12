@@ -1,5 +1,6 @@
 package com.egeniq.androidtvprogramguide
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +22,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.TrackGroupArray
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector
+import androidx.media3.exoplayer.util.EventLogger
 import androidx.media3.ui.PlayerView
 import androidx.media3.ui.TrackSelectionDialogBuilder
 import java.util.Objects
@@ -34,7 +36,6 @@ import java.util.Objects
 class LivePreviewFragment : Fragment() {
     private var player: ExoPlayer? = null
     private var playerView: PlayerView? = null
-    private var debugRootView: LinearLayout? = null
     private var trackSelector: DefaultTrackSelector? = null;
 
     companion object {
@@ -54,23 +55,23 @@ class LivePreviewFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_live_preview, container, false)
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         Log.d("TRACKSTUFF", "onViewCreated: new changes updated")
 
         // Create a player for playing m3u8 file.
-//        player = context?.let { ExoPlayer.Builder(it).build() }
+        // player = context?.let { ExoPlayer.Builder(it).build() }
         trackSelector = DefaultTrackSelector(requireContext())
-        player = ExoPlayer.Builder(requireContext(), DefaultRenderersFactory(requireContext()).setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON))
+        player = ExoPlayer.Builder(requireContext(), DefaultRenderersFactory(requireContext()).setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER))
                 .setTrackSelector(trackSelector!!)
                 .build()
 
         playerView = view.findViewById(R.id.idExoPlayerLiveView)
 
         // Find and initialize views related to ExoPlayer
-        debugRootView = view.findViewById<LinearLayout>(R.id.controls_root)
-
+//        debugRootView = view.findViewById<LinearLayout>(R.id.controls_root)
 
         // Attach player to the view.
         playerView?.player = player
@@ -99,13 +100,11 @@ class LivePreviewFragment : Fragment() {
 
         player?.addListener(object : Player.Listener {
             override fun onPlaybackStateChanged(playbackState: Int) {
-                updateButtonVisibilities();
+                //updateButtonVisibilities();
                 super.onPlaybackStateChanged(playbackState)
             }
             override fun onTracksChanged(tracks: Tracks) {
-                // Update UI using current tracks.
-                Log.d("TRACKSTUFF", "onViewCreated: ${trackSelector!!.currentMappedTrackInfo?.getTrackGroups(0).toString()}");
-                updateButtonVisibilities();
+                //updateButtonVisibilities();
                 super.onTracksChanged(tracks);
             }
 
@@ -132,6 +131,8 @@ class LivePreviewFragment : Fragment() {
             }
         })
 
+        player?.addAnalyticsListener(EventLogger())
+
         // Start the playback.
         player?.play()
 
@@ -139,10 +140,11 @@ class LivePreviewFragment : Fragment() {
         playerView?.hideController()
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
     private fun updateButtonVisibilities() {
 
         // Remove all views from the debugRootView. This is typically done to clear any previously added views for debugging purposes.
-        debugRootView?.removeAllViews()
+//        debugRootView?.removeAllViews()
 
         // Check if the player object is null. If it is null, there is nothing to do, so return from the method.
         if (player == null) {
@@ -191,7 +193,7 @@ class LivePreviewFragment : Fragment() {
                         return@OnClickListener;
                     }
                         // Check if the view's parent is the debugRootView
-                        if (it.parent === debugRootView) {
+                        if (true) {//it.parent ===debugRootView) {
                             // Get the current mapped track information from the track selector
                             val mappedTrackInfo: MappingTrackSelector.MappedTrackInfo? = trackSelector!!.currentMappedTrackInfo
                             if (mappedTrackInfo != null) {
@@ -231,7 +233,7 @@ class LivePreviewFragment : Fragment() {
                     }
                 }
                 // Add the button to the debugRootView, which is a container for the debug views.
-                debugRootView?.addView(button)
+//                debugRootView?.addView(button)
             }
         }
     }

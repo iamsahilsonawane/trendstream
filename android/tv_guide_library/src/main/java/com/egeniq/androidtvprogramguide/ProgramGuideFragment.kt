@@ -41,8 +41,6 @@ import androidx.leanback.widget.setFocusOutAllowed
 import androidx.leanback.widget.setFocusOutSideAllowed
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.hls.HlsMediaSource
-import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.ui.PlayerView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -359,7 +357,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
      * Sets up all the components to be used by the fragment.
      */
     @Suppress("ObjectLiteralToLambda", "DEPRECATION")
-    @SuppressLint("RestrictedApi")
+    @SuppressLint("RestrictedApi", "UnsafeOptInUsageError")
     private fun setupComponents(view: View) {
         selectionRow = resources.getInteger(R.integer.programguide_selection_row)
         rowHeight =
@@ -433,27 +431,27 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
 //            .setMediaSourceFactory(HlsMediaSource.setLiveTargetOffsetMs(5000))
 //            .build()}
         //create a player for playing m3u8 file
-        player = context?.let { ExoPlayer.Builder(it).build() }
-
-        // Attach player to the view.
-        playerView?.player = player
-        // Set the media item to be played.
-//        player?.setMediaItem(MediaItem.fromUri("https://storage.googleapis.com/exoplayer-test-media-0/BigBuckBunny_320x180.mp4"))
-        val mediaItem =
-            MediaItem.Builder()
-                .setUri("http://x.lamtv.tv:8080/live/test/test/130.m3u8")
-                .setLiveConfiguration(
-                    MediaItem.LiveConfiguration.Builder().setMaxPlaybackSpeed(1.02f).build()
-                )
-                .build()
-
-        player?.setMediaItem(mediaItem)
-        // Prepare the player.
-        player?.prepare()
-        // Start the playback.
-        player?.play()
-        // Hide the play/pause button.
-        playerView?.hideController()
+//        player = context?.let { ExoPlayer.Builder(it).build() }
+//
+//        // Attach player to the view.
+//        playerView?.player = player
+//        // Set the media item to be played.
+////        player?.setMediaItem(MediaItem.fromUri("https://storage.googleapis.com/exoplayer-test-media-0/BigBuckBunny_320x180.mp4"))
+//        val mediaItem =
+//            MediaItem.Builder()
+//                .setUri("http://x.lamtv.tv:8080/live/test/test/130.m3u8")
+//                .setLiveConfiguration(
+//                    MediaItem.LiveConfiguration.Builder().setMaxPlaybackSpeed(1.02f).build()
+//                )
+//                .build()
+//
+//        player?.setMediaItem(mediaItem)
+//        // Prepare the player.
+//        player?.prepare()
+//        // Start the playback.
+//        player?.play()
+//        // Hide the play/pause button.
+//        playerView?.hideController()
 
 
         view.findViewById<Button>(R.id.testVideoButton)?.let {
