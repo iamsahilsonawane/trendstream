@@ -42,9 +42,10 @@ class _PlayerViewState extends ConsumerState<PlayerView> {
 
     _videoPlayerController = VlcPlayerController.network(
       // 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-      argUrl is String
-          ? argUrl
-          : 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+      // argUrl is String
+      //     ? argUrl
+      //     : 'https://media.w3.org/2010/05/sintel/trailer.mp4',
+      "http://23.237.117.10/test-am-1080.mkv",
       hwAcc: HwAcc.full,
       autoPlay: true,
       options: VlcPlayerOptions(

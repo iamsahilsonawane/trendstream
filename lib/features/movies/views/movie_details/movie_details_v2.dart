@@ -177,7 +177,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                           text: "Watch Now",
                                           onTap: () {
                                             AppRouter.navigateToPage(
-                                                Routes.playerView, arguments: "http://23.237.117.10/test.mkv");
+                                                Routes.playerView, arguments: "https://mazwai.com/videvo_files/video/free/2016-01/small_watermarked/rio_from_above_preview.webm");
                                           },
                                           prefix: const Icon(
                                             Icons.play_circle,

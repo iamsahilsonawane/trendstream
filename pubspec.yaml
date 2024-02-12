@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: "none"
 
-version: 1.2.26+42
+version: 1.2.28+45
 
 environment:
   sdk: ">=3.0.5 <4.0.0"
@@ -61,3 +61,4 @@ flutter:
     - assets/images/
     - assets/images/2.0x/
     - assets/images/3.0x/
+    - shorebird.yaml

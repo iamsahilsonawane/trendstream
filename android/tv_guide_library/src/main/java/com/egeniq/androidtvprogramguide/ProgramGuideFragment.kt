@@ -457,11 +457,23 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
 
 
         view.findViewById<Button>(R.id.testVideoButton)?.let {
-            it.setOnClickListener { onTestVideoButtonClicked() }
+            it.setOnClickListener { onTestVideoButtonClicked("http://23.237.117.10/test-am-1080.mkv") }
+        }
+        view.findViewById<Button>(R.id.testVideoButton2)?.let {
+            it.setOnClickListener { onTestVideoButtonClicked("http://23.237.117.10/test-app-4k-hdr.mkv") }
+        }
+        view.findViewById<Button>(R.id.testVideoButton3)?.let {
+            it.setOnClickListener { onTestVideoButtonClicked("http://23.237.117.10/testmax1080.mkv") }
+        }
+        view.findViewById<Button>(R.id.testVideoButton4)?.let {
+            it.setOnClickListener { onTestVideoButtonClicked("https://mazwai.com/videvo_files/video/free/2016-01/small_watermarked/rio_from_above_preview.webm") }
+        }
+        view.findViewById<Button>(R.id.testVideoButton5)?.let {
+            it.setOnClickListener { onTestVideoButtonClicked("https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4") }
         }
     }
 
-    abstract fun onTestVideoButtonClicked()
+    abstract fun onTestVideoButtonClicked(url: String)
 
     /**
      * Called when the fragment view has been created. We initialize some of our views here.

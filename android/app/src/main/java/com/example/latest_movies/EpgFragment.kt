@@ -72,9 +72,10 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
         updateProgram(programGuideSchedule.copy(displayTitle = programGuideSchedule.displayTitle + " [clicked]"))
     }
 
-    override fun onTestVideoButtonClicked() {
+    override fun onTestVideoButtonClicked(url: String) {
         val intent = Intent(context, LivePreviewActivity::class.java)
-        intent.putExtra("url", "http://23.237.117.10/test.mkv")
+//        intent.putExtra("url", "http://23.237.117.10/test.mkv")
+        intent.putExtra("url", url)
         startActivity(intent)
     }
 

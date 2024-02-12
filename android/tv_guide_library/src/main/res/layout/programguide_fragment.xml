@@ -269,6 +269,56 @@
         app:layout_constraintStart_toEndOf="@id/programguide_time_of_day_filter"
         app:layout_constraintTop_toTopOf="@id/programguide_top_margin" />
 
+    <Button
+        android:id="@+id/testVideoButton2"
+        android:text="Test Video 2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:background="@drawable/livepreview_focus_background"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBottom_toTopOf="@id/programguide_time_row"
+        app:layout_constraintStart_toEndOf="@id/testVideoButton"
+        app:layout_constraintTop_toTopOf="@id/programguide_top_margin"
+         />
+    <Button
+        android:id="@+id/testVideoButton3"
+        android:text="Test Video 3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:background="@drawable/livepreview_focus_background"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBottom_toTopOf="@id/programguide_time_row"
+        app:layout_constraintStart_toEndOf="@id/testVideoButton2"
+        app:layout_constraintTop_toTopOf="@id/programguide_top_margin"
+        />
+    <Button
+        android:id="@+id/testVideoButton4"
+        android:text="Test Video 4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:background="@drawable/livepreview_focus_background"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBottom_toTopOf="@id/programguide_time_row"
+        app:layout_constraintStart_toEndOf="@id/testVideoButton3"
+        app:layout_constraintTop_toTopOf="@id/programguide_top_margin"
+        />
+    <Button
+        android:id="@+id/testVideoButton5"
+        android:text="Test Video 5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#fff"
+        android:background="@drawable/livepreview_focus_background"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBottom_toTopOf="@id/programguide_time_row"
+        app:layout_constraintStart_toEndOf="@id/testVideoButton4"
+        app:layout_constraintTop_toTopOf="@id/programguide_top_margin"
+        />
+
+
 
     <!--Widget for exoplayer view-->
     <androidx.media3.ui.PlayerView

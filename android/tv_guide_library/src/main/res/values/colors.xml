@@ -53,4 +53,8 @@
 
     <color name="focused_button_color">#2196F3</color> <!-- Focused state: Blue -->
     <color name="default_button_color">#757575</color> <!-- Default state: Muted Gray -->
+
+    <color name="transparent">#7F000000</color>
+    <color name="default_card_background_color">#263238</color>
+
 </resources>
