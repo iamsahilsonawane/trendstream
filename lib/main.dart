@@ -35,6 +35,8 @@ void main() async {
     DeviceOrientation.landscapeLeft,
   ]);
 
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

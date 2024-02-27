@@ -45,7 +45,6 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
             ),
             height: double.infinity,
             child: BackdropFilter(
-
               filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
               child: ColoredBox(
                 color: Colors.black.withOpacity(.8),
@@ -64,7 +63,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                             children: [
                               SizedBox(
                                 height: posterContainerHeight,
-                                width: 250,
+                                // width: 250,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
                                   child: DecoratedBox(
@@ -106,14 +105,15 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                       ),
                                     ),
                                     const SizedBox(height: 5),
-                                    Text(
-                                      validString(movie.tagline),
-                                      style: const TextStyle(
-                                        fontSize: 14.0,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300,
+                                    if (movie.tagline?.isNotEmpty ?? false)
+                                      Text(
+                                        validString(movie.tagline),
+                                        style: const TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w300,
+                                        ),
                                       ),
-                                    ),
                                     const SizedBox(height: 20),
                                     Row(
                                       crossAxisAlignment:
@@ -161,12 +161,73 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                       ),
                                     ),
                                     const SizedBox(height: 20),
-                                    Text(
-                                      validString(movie.overview),
-                                      style: const TextStyle(
-                                        fontSize: 14.0,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300,
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                backgroundColor:
+                                                    kBackgroundColor,
+                                                title: const Text(
+                                                  "Overview",
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                content: SingleChildScrollView(
+                                                  child: Text(
+                                                    validString(movie.overview),
+                                                    style: const TextStyle(
+                                                      fontSize: 14.0,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                    ),
+                                                  ),
+                                                ),
+                                                actions: [
+                                                  AppButton(
+                                                    text: "Close",
+                                                    onTap: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        child: Builder(
+                                          builder: (context) {
+                                            final hasPrimaryFocus =
+                                                Focus.of(context)
+                                                    .hasPrimaryFocus;
+                                            return Container(
+                                              decoration: hasPrimaryFocus
+                                                  ? BoxDecoration(
+                                                      color: kPrimaryAccentColor
+                                                          .withOpacity(.2),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4),
+                                                    )
+                                                  : null,
+                                              child: Text(
+                                                validString(movie.overview),
+                                                style: const TextStyle(
+                                                  fontSize: 14.0,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w300,
+                                                  overflow: TextOverflow.fade,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
                                     const Expanded(child: SizedBox()),
@@ -177,7 +238,9 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                           text: "Watch Now",
                                           onTap: () {
                                             AppRouter.navigateToPage(
-                                                Routes.playerView, arguments: "https://mazwai.com/videvo_files/video/free/2016-01/small_watermarked/rio_from_above_preview.webm");
+                                                Routes.playerView,
+                                                arguments:
+                                                    "https://mazwai.com/videvo_files/video/free/2016-01/small_watermarked/rio_from_above_preview.webm");
                                           },
                                           prefix: const Icon(
                                             Icons.play_circle,

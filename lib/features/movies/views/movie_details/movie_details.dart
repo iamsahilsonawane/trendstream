@@ -101,7 +101,7 @@ class MovieDetailsView extends HookConsumerWidget {
                           children: [
                             SizedBox(
                               height: posterContainerHeight,
-                              width: 250,
+                              // width: 250,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: DecoratedBox(
@@ -136,14 +136,15 @@ class MovieDetailsView extends HookConsumerWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 5),
-                                  Text(
-                                    validString(movie.tagline),
-                                    style: const TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w300,
+                                  if (movie.tagline?.isNotEmpty ?? false)
+                                    Text(
+                                      validString(movie.tagline),
+                                      style: const TextStyle(
+                                        fontSize: 14.0,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w300,
+                                      ),
                                     ),
-                                  ),
                                   const SizedBox(height: 20),
                                   Row(
                                     crossAxisAlignment:
@@ -191,12 +192,70 @@ class MovieDetailsView extends HookConsumerWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 20),
-                                  Text(
-                                    validString(movie.overview),
-                                    style: const TextStyle(
-                                      fontSize: 14.0,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w300,
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              backgroundColor: kBackgroundColor,
+                                              title: const Text(
+                                                "Overview",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              content: SingleChildScrollView(
+                                                child: Text(
+                                                  validString(movie.overview),
+                                                  style: const TextStyle(
+                                                    fontSize: 14.0,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w300,
+                                                  ),
+                                                ),
+                                              ),
+                                              actions: [
+                                                AppButton(
+                                                  text: "Close",
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      },
+                                      child: Builder(
+                                        builder: (context) {
+                                          final hasPrimaryFocus =
+                                              Focus.of(context).hasPrimaryFocus;
+                                          return Container(
+                                            decoration: hasPrimaryFocus
+                                                ? BoxDecoration(
+                                                    color: kPrimaryAccentColor
+                                                        .withOpacity(.2),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4),
+                                                  )
+                                                : null,
+                                            child: Text(
+                                              validString(movie.overview),
+                                              style: const TextStyle(
+                                                fontSize: 14.0,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w300,
+                                                overflow: TextOverflow.fade,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: 20),
