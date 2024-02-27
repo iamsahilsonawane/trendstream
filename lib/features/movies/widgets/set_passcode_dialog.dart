@@ -29,7 +29,6 @@ class SetPasscodeDialog extends HookConsumerWidget {
             children: [
               const Text("Set a passcode to access adult content"),
               verticalSpaceRegular,
-
               Center(
                 child: PinCodeTextField(
                   appContext: context,
@@ -63,34 +62,37 @@ class SetPasscodeDialog extends HookConsumerWidget {
                   onChanged: (String value) {},
                 ),
               ),
-              Center(
-                child: NumericKeyboard(
-                  autofocus: true,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  maxLength: 4,
-                  onValueChanged: (newVal) {
-                    passcodeCtrl.text = newVal;
-                  },
-                  onDoneTap: () async {
-                    if (passcodeCtrl.text.isEmpty) {
-                      return;
-                    }
+              Expanded(
+                child: FittedBox(
+                  child: NumericKeyboard(
+                    autofocus: true,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    maxLength: 4,
+                    onValueChanged: (newVal) {
+                      passcodeCtrl.text = newVal;
+                    },
+                    onDoneTap: () async {
+                      if (passcodeCtrl.text.isEmpty) {
+                        return;
+                      }
 
-                    final navigator = Navigator.of(context);
+                      final navigator = Navigator.of(context);
 
-                    await ref
-                        .read(sharedPreferencesServiceProvider)
-                        .sharedPreferences
-                        .setString(
-                            SharedPreferencesService.adultContentPasscode,
-                            passcodeCtrl.text);
-                    await ref
-                        .read(sharedPreferencesServiceProvider)
-                        .sharedPreferences
-                        .setBool(SharedPreferencesService.isPasscodeSet, true);
+                      await ref
+                          .read(sharedPreferencesServiceProvider)
+                          .sharedPreferences
+                          .setString(
+                              SharedPreferencesService.adultContentPasscode,
+                              passcodeCtrl.text);
+                      await ref
+                          .read(sharedPreferencesServiceProvider)
+                          .sharedPreferences
+                          .setBool(
+                              SharedPreferencesService.isPasscodeSet, true);
 
-                    navigator.pop(true);
-                  },
+                      navigator.pop(true);
+                    },
+                  ),
                 ),
               ),
               // AppButton(

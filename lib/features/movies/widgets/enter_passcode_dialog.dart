@@ -106,32 +106,35 @@ class _EnterPasscodeDialogState extends ConsumerState<EnterPasscodeDialog> {
                 ),
                 verticalSpaceSmall,
               ],
-              Center(
-                child: NumericKeyboard(
-                  autofocus: true,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  maxLength: 4,
-                  onValueChanged: (newVal) {
-                    passcodeCtrl.text = newVal;
-                    isPasscodeCorrect = false;
-                    if (passcodeCtrl.text.length == 4) {
-                      String passcode = ref
-                              .read(sharedPreferencesServiceProvider)
-                              .sharedPreferences
-                              .getString(SharedPreferencesService
-                                  .adultContentPasscode) ??
-                          "";
-                      if (passcodeCtrl.text == passcode) {
-                        isPasscodeCorrect = true;
-                      } else {
-                        errorAnimationController.add(ErrorAnimationType.shake);
+              Expanded(
+                child: FittedBox(
+                  child: NumericKeyboard(
+                    autofocus: true,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    maxLength: 4,
+                    onValueChanged: (newVal) {
+                      passcodeCtrl.text = newVal;
+                      isPasscodeCorrect = false;
+                      if (passcodeCtrl.text.length == 4) {
+                        String passcode = ref
+                                .read(sharedPreferencesServiceProvider)
+                                .sharedPreferences
+                                .getString(SharedPreferencesService
+                                    .adultContentPasscode) ??
+                            "";
+                        if (passcodeCtrl.text == passcode) {
+                          isPasscodeCorrect = true;
+                        } else {
+                          errorAnimationController
+                              .add(ErrorAnimationType.shake);
+                        }
                       }
-                    }
-                    setState(() {});
-                    if (isPasscodeCorrect) {
-                      Navigator.pop(context, true);
-                    }
-                  },
+                      setState(() {});
+                      if (isPasscodeCorrect) {
+                        Navigator.pop(context, true);
+                      }
+                    },
+                  ),
                 ),
               ),
             ],
