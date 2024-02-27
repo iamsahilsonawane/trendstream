@@ -74,6 +74,19 @@ class DashboardSideBar extends HookConsumerWidget {
               shrinkWrap: true,
               children: <Widget>[
                 DrawerItem(
+                  title: shouldHide ? '' : 'Collapse',
+                  iconData: shouldHide ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+                  selectedIconData: shouldHide ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
+                  isSelected: false, 
+                  onlyIcon: false, 
+                  onTap: () {
+                    ref.read(dashboardSidebarStatusProvider.notifier).state =
+                        shouldHide
+                            ? DashboardSidebarStatus.expanded
+                            : DashboardSidebarStatus.collapsed;
+                  },
+                ),
+                DrawerItem(
                   title: 'Movies',
                   iconData: Icons.home_outlined,
                   selectedIconData: Icons.home,
