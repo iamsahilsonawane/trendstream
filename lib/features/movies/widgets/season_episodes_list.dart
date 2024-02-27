@@ -10,6 +10,7 @@ import 'package:latest_movies/features/movies/models/season_details/episode.dart
 import 'package:latest_movies/features/movies/models/tv_show/tv_show.dart';
 
 import '../../../core/config/config.dart';
+import '../../../core/shared_widgets/image.dart';
 import '../../../core/utilities/design_utility.dart';
 import '../models/tv_show_details/tv_show_details.dart';
 
@@ -160,7 +161,7 @@ class EpisodeTile extends StatelessWidget {
                         color: hasFocus ? Colors.white : Colors.transparent,
                         width: 3),
                   ),
-                  child: CachedNetworkImage(
+                  child: AppImage(
                     imageUrl:
                         "${Configs.mediumBaseImagePath}${episode.stillPath}",
                     fit: BoxFit.cover,

@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/router/router.dart';
+import 'package:latest_movies/core/shared_providers/device_details_provider.dart';
 import 'package:latest_movies/core/shared_widgets/app_loader.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/core/shared_widgets/image.dart';
@@ -507,7 +508,7 @@ class CreatorItem extends StatelessWidget {
   }
 }
 
-class CastTile extends StatelessWidget {
+class CastTile extends ConsumerWidget {
   const CastTile({
     super.key,
     required this.name,
@@ -520,11 +521,13 @@ class CastTile extends StatelessWidget {
   final String? profilePath;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () {},
       child: Builder(builder: (context) {
-        final hasFocus = Focus.of(context).hasPrimaryFocus;
+        final hasFocus = Focus.of(context).hasPrimaryFocus ||
+            (!ref.watch(androidDeviceInfoProvider).isTv);
+        //second condition will help not showing the dull cast details
 
         return Container(
           width: 120,

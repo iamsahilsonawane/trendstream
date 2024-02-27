@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:latest_movies/core/constants/colors.dart';
 
 import '../../../../core/config/config.dart';
 import '../../../../core/router/router.dart';
@@ -160,6 +161,8 @@ class TvShowSeasons extends HookConsumerWidget {
                                                     seasonText: s.name ?? "N/A",
                                                     totalNumberOfEpisodes:
                                                         s.episodeCount ?? 0,
+                                                    isSelected: currentSeason.value ==
+                                                          s.seasonNumber,
                                                     onTap: () {
                                                       currentSeason.value =
                                                           s.seasonNumber!;
@@ -230,11 +233,13 @@ class SeasonSelectionButton extends StatelessWidget {
     required this.seasonText,
     required this.totalNumberOfEpisodes,
     required this.onTap,
+    required this.isSelected,
     this.autofocus = false,
   });
 
   final String seasonText;
   final int totalNumberOfEpisodes;
+  final bool isSelected;
   final VoidCallback onTap;
   final bool autofocus;
 
@@ -247,13 +252,13 @@ class SeasonSelectionButton extends StatelessWidget {
       autofocus: autofocus,
       child: Builder(
         builder: (context) {
-          final isFocused = Focus.of(context).hasPrimaryFocus;
+          final isFocused = Focus.of(context).hasPrimaryFocus || isSelected;
 
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
               border: Border.all(
-                  color: isFocused ? Colors.grey : Colors.transparent,
+                  color: isFocused ? isSelected ? kPrimaryAccentColor : Colors.grey : Colors.transparent,
                   width: 2),
               borderRadius: BorderRadius.circular(5),
             ),
@@ -267,7 +272,7 @@ class SeasonSelectionButton extends StatelessWidget {
                     style: TextStyle(
                       fontWeight:
                           isFocused ? FontWeight.bold : FontWeight.normal,
-                      color: isFocused ? Colors.white : Colors.grey,
+                      color: isFocused ? isSelected ? kPrimaryAccentColor : Colors.white : Colors.grey,
                     ),
                   ),
                 ),

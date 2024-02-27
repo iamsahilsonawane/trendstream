@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:latest_movies/core/shared_providers/device_details_provider.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
 import 'package:firebase_core/firebase_core.dart';
@@ -49,6 +51,9 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
 
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
   if (kDebugMode) {
     HttpOverrides.global = MyHttpOverrides();
   }
@@ -59,6 +64,7 @@ void main() async {
         sharedPreferencesServiceProvider.overrideWithValue(
           SharedPreferencesService(prefs),
         ),
+        androidDeviceInfoProvider.overrideWithValue(androidInfo),
       ],
       child: const MyApp(),
     ),
