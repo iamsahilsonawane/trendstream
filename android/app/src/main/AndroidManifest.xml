@@ -20,6 +20,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".GuideActivity"
+            android:screenOrientation="landscape"
             android:theme="@style/Theme.AppCompat"
             android:exported="false">
             <meta-data
