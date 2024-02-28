@@ -46,6 +46,7 @@ dependencies:
   shimmer: ^3.0.0
   flutter_blurhash: ^0.8.2
   octo_image: ^2.0.0
+  device_info_plus: 
 
 dev_dependencies:
   flutter_test:
