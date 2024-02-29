@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="programguide_table_width_per_hour">300dp</dimen>
     <dimen name="programguide_program_row_height">32dp</dimen>
     <dimen name="programguide_program_row_height_with_empty_space">36dp</dimen>
@@ -32,4 +32,17 @@
     <dimen name="programguide_page_top_margin_menu_visible">8dp</dimen>
     <dimen name="programguide_button_corner_radius">4dp</dimen>
     <dimen name="programguide_bottom_detail_height">100dp</dimen>
+
+    <!-- Player -->
+    <dimen name="exo_error_message_margin_bottom" tools:keep="@dimen/exo_error_message_margin_bottom">84dp</dimen>
+    <dimen name="exo_error_message_text_size" tools:keep="@dimen/exo_error_message_text_size">20sp</dimen>
+    <dimen name="exo_error_message_text_padding_vertical" tools:keep="@dimen/exo_error_message_text_padding_vertical">6sp</dimen>
+    <dimen name="exo_icon_size" tools:keep="@dimen/exo_icon_size">90dp</dimen>
+    <dimen name="controls_padding">170sp</dimen>
+
+    <dimen name="exo_styled_progress_enabled_thumb_size" tools:keep="@dimen/exo_styled_progress_enabled_thumb_size">12dp</dimen>
+    <dimen name="exo_styled_progress_dragged_thumb_size" tools:keep="@dimen/exo_styled_progress_dragged_thumb_size">18dp</dimen>
+    <dimen name="exo_styled_progress_margin_bottom" tools:keep="@dimen/exo_styled_progress_margin_bottom">51dp</dimen>
+
+    <dimen name="marker_width">3dp</dimen>
 </resources>

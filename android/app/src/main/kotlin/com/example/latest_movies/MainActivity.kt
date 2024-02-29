@@ -23,7 +23,7 @@ class MainActivity : FlutterActivity() {
                 val intent = Intent(this, GuideActivity::class.java)
                 startActivity(intent)
                 result.success(null)
-            }  else {
+            } else {
                 result.notImplemented()
             }
         }

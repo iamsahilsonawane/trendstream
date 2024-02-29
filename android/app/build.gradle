@@ -37,6 +37,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     compileSdkVersion 34
     ndkVersion "26.2.11394342"
+    namespace 'com.example.latest_movies'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -105,7 +106,8 @@ flutter {
 }
 
 dependencies {
-    implementation files('libs/lib-decoder-ffmpeg-release.aar')
+    // implementation files('libs/lib-decoder-ffmpeg-release.aar')
+    implementation fileTree(dir: "libs", include: ["lib-*.aar"])
     implementation project(":tv_guide_library")
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

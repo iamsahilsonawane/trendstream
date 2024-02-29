@@ -14,6 +14,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import com.egeniq.androidtvprogramguide.ProgramGuideFragment
 import com.egeniq.androidtvprogramguide.entity.ProgramGuideChannel
 import com.egeniq.androidtvprogramguide.entity.ProgramGuideSchedule
+import com.egeniq.androidtvprogramguide.player.PlayerActivity
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -73,7 +74,8 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
     }
 
     override fun onTestVideoButtonClicked(url: String) {
-        val intent = Intent(context, LivePreviewActivity::class.java)
+//        val intent = Intent(context, LivePreviewActivity::class.java)
+        val intent = Intent(context, PlayerActivity::class.java)
 //        intent.putExtra("url", "http://23.237.117.10/test.mkv")
         intent.putExtra("url", url)
         startActivity(intent)

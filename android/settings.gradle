@@ -1,5 +1,8 @@
 include ':app'
 include ':tv_guide_library'
+include ':doubletapplayerview'
+include ':android-file-chooser'
+//include ':decoder-libs'
 gradle.ext.androidxMediaModulePrefix = 'media-'
 apply from: file("/Users/iamsahilsonawane/Projects/FlutterNest/dependencies/tvapp/media/core_settings.gradle")
 
