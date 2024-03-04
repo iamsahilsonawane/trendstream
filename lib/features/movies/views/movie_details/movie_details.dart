@@ -29,7 +29,7 @@ class MovieDetailsView extends HookConsumerWidget {
         useMemoized(() => ModalRoute.of(context)!.settings.arguments as int);
     final movieDetailsAsync = ref.watch(movieDetailsProvider(movieId));
     final movieVideosAsync = ref.watch(movieVideosProvider(movieId));
-    final posterContainerHeight = MediaQuery.of(context).size.height * 0.7;
+    final posterContainerHeight = MediaQuery.of(context).size.height * 0.85;
 
     // States
     final uniqueMainCrew = useState(<String, String>{});
@@ -88,7 +88,7 @@ class MovieDetailsView extends HookConsumerWidget {
               color: Colors.black.withOpacity(.8),
               child: SingleChildScrollView(
                 child: FocusTraversalGroup(
-                  policy: WidgetOrderTraversalPolicy(),
+                  policy: OrderedTraversalPolicy(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -127,12 +127,14 @@ class MovieDetailsView extends HookConsumerWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    validString(movie.originalTitle),
-                                    style: const TextStyle(
-                                      fontSize: 24.0,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
+                                  FittedBox(
+                                    child: Text(
+                                      validString(movie.originalTitle),
+                                      style: const TextStyle(
+                                        fontSize: 24.0,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: 5),
@@ -192,6 +194,23 @@ class MovieDetailsView extends HookConsumerWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 20),
+                                  const Row(
+                                    children: [
+                                      Icon(Icons.info_outline, color: Colors.grey, size: 14),
+                                      SizedBox(width: 4),
+                                      Expanded(
+                                        child: Text(
+                                          "Click on the overview text to read more",
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w300,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  verticalSpaceTiny,
                                   Expanded(
                                     child: InkWell(
                                       onTap: () {
@@ -269,7 +288,7 @@ class MovieDetailsView extends HookConsumerWidget {
                                               job: entry.value)),
                                     ],
                                   ),
-                                  const Expanded(child: SizedBox()),
+                                  verticalSpaceSmall,
                                   Row(
                                     children: [
                                       AppButton(
@@ -405,7 +424,8 @@ class MovieDetailsView extends HookConsumerWidget {
                                   ),
                                 ]),
                             verticalSpaceMedium,
-                            Focus(
+                            InkWell(
+                              onTap: () {},
                               child: Builder(builder: (context) {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -483,7 +503,7 @@ class MovieDetailsView extends HookConsumerWidget {
 
   Padding _buildBackButton() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: TextButton.icon(
           onPressed: () {
             Debouncer(delay: const Duration(milliseconds: 500)).call(() {

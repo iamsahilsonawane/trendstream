@@ -182,31 +182,19 @@ class TvShowSeasons extends HookConsumerWidget {
                             Expanded(
                               flex: 8,
                               child: currentSeason.value != -1
-                                  ? SingleChildScrollView(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          verticalSpaceMedium,
-                                          if (currentSeason.value != -1)
-                                            ProviderScope(
-                                              overrides: [
-                                                currentSeasonDetailsProvider
-                                                    .overrideWithValue(
-                                                  ref.watch(
-                                                      seasonDetailsProvider(
-                                                          SeasonDetailsArgs(
-                                                    show.id!,
-                                                    currentSeason.value,
-                                                  ))),
-                                                ),
-                                              ],
-                                              child: const SeasonEpisodesList(
-                                                  showSeasonNumber: true),
-                                            )
-                                        ],
-                                      ),
+                                  ? ProviderScope(
+                                      overrides: [
+                                        currentSeasonDetailsProvider
+                                            .overrideWithValue(
+                                          ref.watch(seasonDetailsProvider(
+                                              SeasonDetailsArgs(
+                                            show.id!,
+                                            currentSeason.value,
+                                          ))),
+                                        ),
+                                      ],
+                                      child: const SeasonEpisodesList(
+                                          showSeasonNumber: true),
                                     )
                                   : AllSeasonEpisodesList(show: show),
                             ),

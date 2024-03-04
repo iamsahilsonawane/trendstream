@@ -27,8 +27,8 @@ class SeasonEpisodesList extends HookConsumerWidget {
       data: (seasonDetails) {
         return ListView.builder(
           key: const Key('seasonEpisodesList'),
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
+          // shrinkWrap: true,
+          // physics: const NeverScrollableScrollPhysics(),
           itemCount: seasonDetails.episodes?.length ?? 0,
           itemBuilder: (context, index) {
             final episode = seasonDetails.episodes![index];
@@ -89,40 +89,47 @@ class _AllSeasonEpisodesListState extends ConsumerState<AllSeasonEpisodesList> {
   @override
   Widget build(BuildContext context) {
     final seasons = ref.watch(allSeasonDetailsProvider(widget.show));
+    final allEpisodes = seasons.expand((e) => e.episodes ?? []).toList();
 
     return ListView.builder(
       key: const Key('allSeasonsList'),
       controller: _scrollController,
-      itemCount: seasons.length + 1,
+      itemCount: allEpisodes.length,
       itemBuilder: (context, index) {
-        if (index == seasons.length) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final season = seasons[index];
-
-        return Column(
-          children: [
-            ListTile(
-              title: Text('Season ${season.seasonNumber}'),
-            ),
-            ListView.builder(
-              key: Key('season${season.seasonNumber}EpisodesList'),
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: season.episodes!.length,
-              itemBuilder: (context, index) {
-                final episode = season.episodes![index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12.0),
-                  child: EpisodeTile(
-                    episode: episode,
-                    showSeasonNumber: true,
-                  ),
-                );
-              },
-            ),
-          ],
+        final episode = allEpisodes[index];
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12.0),
+          child: EpisodeTile(
+            episode: episode,
+            showSeasonNumber: true,
+          ),
         );
+
+        // final season = seasons[index];
+
+        // return Column(
+        //   children: [
+        //     ListTile(
+        //       title: Text('Season ${season.seasonNumber}'),
+        //     ),
+        //     ListView.builder(
+        //       key: Key('season${season.seasonNumber}EpisodesList'),
+        //       shrinkWrap: true,
+        //       physics: const NeverScrollableScrollPhysics(),
+        //       itemCount: season.episodes!.length,
+        //       itemBuilder: (context, index) {
+        //         final episode = season.episodes![index];
+        //         return Padding(
+        //           padding: const EdgeInsets.only(bottom: 12.0),
+        //           child: EpisodeTile(
+        //             episode: episode,
+        //             showSeasonNumber: true,
+        //           ),
+        //         );
+        //       },
+        //     ),
+        //   ],
+        // );
       },
     );
   }

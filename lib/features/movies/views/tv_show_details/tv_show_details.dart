@@ -35,7 +35,7 @@ class TvShowDetailsView extends HookConsumerWidget {
         useMemoized(() => ModalRoute.of(context)!.settings.arguments as int);
     final tvShowDetailsAsync = ref.watch(tvShowDetailsProvider(showId));
 
-    final posterContainerHeight = MediaQuery.of(context).size.height * 0.7;
+    final posterContainerHeight = MediaQuery.of(context).size.height * 0.85;
 
     // States
     final uniqueMainCrew = useState(<String, String>{});
@@ -99,8 +99,7 @@ class TvShowDetailsView extends HookConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 16.0, horizontal: 40.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 40.0),
                           child: TextButton.icon(
                               onPressed: () {
                                 Debouncer(
@@ -151,12 +150,14 @@ class TvShowDetailsView extends HookConsumerWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      validString(show.name),
-                                      style: const TextStyle(
-                                        fontSize: 24.0,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                    FittedBox(
+                                      child: Text(
+                                        validString(show.name),
+                                        style: const TextStyle(
+                                          fontSize: 24.0,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 5),
@@ -222,6 +223,24 @@ class TvShowDetailsView extends HookConsumerWidget {
                                       ],
                                     ),
                                     const SizedBox(height: 20),
+                                    const Row(
+                                      children: [
+                                        Icon(Icons.info_outline,
+                                            color: Colors.grey, size: 14),
+                                        SizedBox(width: 4),
+                                        Expanded(
+                                          child: Text(
+                                            "Click on the overview text to read more",
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    verticalSpaceTiny,
                                     Expanded(
                                       child: InkWell(
                                         onTap: () {
@@ -262,29 +281,30 @@ class TvShowDetailsView extends HookConsumerWidget {
                                             },
                                           );
                                         },
-                                        child: Builder(
-                                          builder: (context) {
-                                            final hasPrimaryFocus = Focus.of(context)
-                                                .hasPrimaryFocus;
-                                            return Container(
-                                              decoration: hasPrimaryFocus ?  BoxDecoration(
-                                                color: kPrimaryAccentColor
-                                                    .withOpacity(.2),
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                              ) : null,
-                                              child: Text(
-                                                validString(show.overview),
-                                                style: const TextStyle(
-                                                  fontSize: 14.0,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w300,
-                                                  overflow: TextOverflow.fade,
-                                                ),
+                                        child: Builder(builder: (context) {
+                                          final hasPrimaryFocus =
+                                              Focus.of(context).hasPrimaryFocus;
+                                          return Container(
+                                            decoration: hasPrimaryFocus
+                                                ? BoxDecoration(
+                                                    color: kPrimaryAccentColor
+                                                        .withOpacity(.2),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4),
+                                                  )
+                                                : null,
+                                            child: Text(
+                                              validString(show.overview),
+                                              style: const TextStyle(
+                                                fontSize: 14.0,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w300,
+                                                overflow: TextOverflow.fade,
                                               ),
-                                            );
-                                          }
-                                        ),
+                                            ),
+                                          );
+                                        }),
                                       ),
                                     ),
                                     const SizedBox(height: 20),
@@ -298,7 +318,6 @@ class TvShowDetailsView extends HookConsumerWidget {
                                                 job: entry.value)),
                                       ],
                                     ),
-                                    const Expanded(child: SizedBox()),
                                     Row(
                                       children: [
                                         Expanded(

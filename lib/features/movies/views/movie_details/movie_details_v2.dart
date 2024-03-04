@@ -25,7 +25,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
     final movieDetailsAsync = ref.watch(movieDetailsV2Provider(movieId));
 
     // final movieVideosAsync = ref.watch(movieVideosProvider(movieId));
-    final posterContainerHeight = MediaQuery.of(context).size.height * 0.7;
+    final posterContainerHeight = MediaQuery.of(context).size.height * 0.85;
 
     return Scaffold(
       body: movieDetailsAsync.when(
@@ -96,12 +96,14 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      validString(movie.originalTitle),
-                                      style: const TextStyle(
-                                        fontSize: 24.0,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+                                    FittedBox(
+                                      child: Text(
+                                        validString(movie.originalTitle),
+                                        style: const TextStyle(
+                                          fontSize: 24.0,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 5),
@@ -161,6 +163,24 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                       ),
                                     ),
                                     const SizedBox(height: 20),
+                                    const Row(
+                                      children: [
+                                        Icon(Icons.info_outline,
+                                            color: Colors.grey, size: 14),
+                                        SizedBox(width: 4),
+                                        Expanded(
+                                          child: Text(
+                                            "Click on the overview text to read more",
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    verticalSpaceTiny,
                                     Expanded(
                                       child: InkWell(
                                         onTap: () {
@@ -230,7 +250,6 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                         ),
                                       ),
                                     ),
-                                    const Expanded(child: SizedBox()),
                                     Row(
                                       children: [
                                         AppButton(
@@ -319,7 +338,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
 
   Padding _buildBackButton() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: TextButton.icon(
           onPressed: () {
             Debouncer(delay: const Duration(milliseconds: 500)).call(() {
