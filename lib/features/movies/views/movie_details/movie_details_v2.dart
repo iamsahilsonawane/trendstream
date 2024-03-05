@@ -211,6 +211,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                                 ),
                                                 actions: [
                                                   AppButton(
+                                                    autofocus: true,
                                                     text: "Close",
                                                     onTap: () {
                                                       Navigator.pop(context);

@@ -186,7 +186,7 @@ class MovieDetailsView extends HookConsumerWidget {
                                   ),
                                   const SizedBox(height: 10),
                                   Text(
-                                    "${(movie.adult ?? false) ? "18+ | " : ""}${movie.genres?.map((e) => e.name).join(" / ")} | ${movie.spokenLanguages?.map((e) => e.name).join(", ")} | ${movie.releaseDate?.split("-").first}",
+                                    "${(movie.adult ?? false) ? "18+ | " : ""}${movie.genres?.map((e) => e.name).join(" / ")} | ${movie.releaseDate?.split("-").first}",
                                     style: TextStyle(
                                       fontSize: 14.0,
                                       color: Colors.grey[500],
@@ -196,7 +196,8 @@ class MovieDetailsView extends HookConsumerWidget {
                                   const SizedBox(height: 20),
                                   const Row(
                                     children: [
-                                      Icon(Icons.info_outline, color: Colors.grey, size: 14),
+                                      Icon(Icons.info_outline,
+                                          color: Colors.grey, size: 14),
                                       SizedBox(width: 4),
                                       Expanded(
                                         child: Text(
@@ -239,6 +240,7 @@ class MovieDetailsView extends HookConsumerWidget {
                                               ),
                                               actions: [
                                                 AppButton(
+                                                  autofocus: true,
                                                   text: "Close",
                                                   onTap: () {
                                                     Navigator.pop(context);

@@ -213,7 +213,7 @@ class TvShowDetailsView extends HookConsumerWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "${show.genres?.map((e) => e.name).join(" / ")} | ${show.spokenLanguages?.map((e) => e.name).join(", ")} | ${show.numberOfSeasons} ${show.numberOfSeasons == 1 ? "Season" : "Seasons"}",
+                                          "${show.genres?.map((e) => e.name).join(" / ")} | ${show.numberOfSeasons} ${show.numberOfSeasons == 1 ? "Season" : "Seasons"}",
                                           style: TextStyle(
                                             fontSize: 14.0,
                                             color: Colors.grey[500],
@@ -271,6 +271,7 @@ class TvShowDetailsView extends HookConsumerWidget {
                                                 ),
                                                 actions: [
                                                   AppButton(
+                                                    autofocus: true,
                                                     text: "Close",
                                                     onTap: () {
                                                       Navigator.pop(context);
@@ -318,6 +319,7 @@ class TvShowDetailsView extends HookConsumerWidget {
                                                 job: entry.value)),
                                       ],
                                     ),
+                                    verticalSpaceSmall,
                                     Row(
                                       children: [
                                         Expanded(

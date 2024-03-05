@@ -12,7 +12,6 @@ import '../../../../core/router/router.dart';
 import '../../../../core/shared_widgets/app_loader.dart';
 import '../../../../core/shared_widgets/default_app_padding.dart';
 import '../../../../core/shared_widgets/error_view.dart';
-import '../../../../core/shared_widgets/image.dart';
 import '../../../../core/utilities/debouncer.dart';
 import '../../../../core/utilities/design_utility.dart';
 import '../../controllers/tv_show_season_details_provider.dart';
@@ -83,62 +82,34 @@ class TvShowSeasons extends HookConsumerWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   DefaultAppPadding.horizontal(
-                                    child: Row(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        CachedNetworkImage(
-                                          imageUrl:
-                                              "${Configs.largeBaseImagePath}${show.posterPath}",
-                                          height: 100,
-                                          maxHeightDiskCache: 100,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        horizontalSpaceSmall,
-                                        Expanded(
-                                            child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              show.name ?? "N/A",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleLarge!
-                                                  .copyWith(
-                                                    color: Colors.white,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                            ),
-                                            verticalSpaceRegular,
-                                            Text(
-                                              "${show.seasons!.length} Seasons",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyLarge!
-                                                  .copyWith(
-                                                    color: Colors.grey,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                            ),
-                                            verticalSpaceTiny,
-                                            if (show.firstAirDate != null &&
-                                                show.lastAirDate != null)
-                                              Text(
-                                                "${DateFormat("dd MMM, yyyy").format(DateTime.parse(show.firstAirDate!))} - ${DateFormat("dd MMM, yyyy").format(DateTime.parse(show.lastAirDate!))}",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyLarge!
-                                                    .copyWith(
-                                                      color: Colors.grey,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    ),
+                                        Text(
+                                          show.name ?? "N/A",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                          ],
-                                        ))
+                                        ),
+                                        verticalSpaceSmall,
+                                        Text(
+                                          "${show.seasons!.length} Seasons",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyLarge!
+                                              .copyWith(
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                        ),
                                       ],
                                     ),
                                   ),
-                                  verticalSpaceMedium,
                                   Expanded(
                                     child: SingleChildScrollView(
                                       child: DefaultAppPadding(
@@ -161,8 +132,9 @@ class TvShowSeasons extends HookConsumerWidget {
                                                     seasonText: s.name ?? "N/A",
                                                     totalNumberOfEpisodes:
                                                         s.episodeCount ?? 0,
-                                                    isSelected: currentSeason.value ==
-                                                          s.seasonNumber,
+                                                    isSelected:
+                                                        currentSeason.value ==
+                                                            s.seasonNumber,
                                                     onTap: () {
                                                       currentSeason.value =
                                                           s.seasonNumber!;
@@ -246,7 +218,11 @@ class SeasonSelectionButton extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
               border: Border.all(
-                  color: isFocused ? isSelected ? kPrimaryAccentColor : Colors.grey : Colors.transparent,
+                  color: isFocused
+                      ? isSelected
+                          ? kPrimaryAccentColor
+                          : Colors.grey
+                      : Colors.transparent,
                   width: 2),
               borderRadius: BorderRadius.circular(5),
             ),
@@ -260,7 +236,11 @@ class SeasonSelectionButton extends StatelessWidget {
                     style: TextStyle(
                       fontWeight:
                           isFocused ? FontWeight.bold : FontWeight.normal,
-                      color: isFocused ? isSelected ? kPrimaryAccentColor : Colors.white : Colors.grey,
+                      color: isFocused
+                          ? isSelected
+                              ? kPrimaryAccentColor
+                              : Colors.white
+                          : Colors.grey,
                     ),
                   ),
                 ),

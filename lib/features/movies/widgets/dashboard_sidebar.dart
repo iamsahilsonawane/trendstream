@@ -74,7 +74,7 @@ class DashboardSideBar extends HookConsumerWidget {
               shrinkWrap: true,
               children: <Widget>[
                 DrawerItem(
-                  title: shouldHide ? '' : 'Collapse',
+                  title: "",
                   iconData: shouldHide ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
                   selectedIconData: shouldHide ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
                   isSelected: false, 

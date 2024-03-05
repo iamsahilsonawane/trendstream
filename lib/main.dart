@@ -35,7 +35,12 @@ void main() async {
     DeviceOrientation.landscapeLeft,
   ]);
 
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+  SystemChrome.setSystemUIChangeCallback((systemOverlaysAreVisible) async {
+    if (systemOverlaysAreVisible) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+    }
+  });
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
