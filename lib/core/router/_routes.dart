@@ -1,7 +1,8 @@
 part of 'router.dart';
 
 class Routes {
-  static const String loginView = "/";
+  static const String splashView = "/";
+  static const String loginView = "/login";
   static const String signUpView = "/signup";
   static const String homeView = "/home";
   static const String detailsView = "/details";

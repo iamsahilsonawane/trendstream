@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:latest_movies/core/shared_providers/device_details_provider.dart';
+import 'package:latest_movies/features/auth/views/splash_page.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
 import 'package:firebase_core/firebase_core.dart';
@@ -102,7 +103,7 @@ class MyApp extends StatelessWidget {
               Theme.of(context).appBarTheme.copyWith(color: kBackgroundColor),
           scaffoldBackgroundColor: kBackgroundColor,
         ),
-        home: const HomeView(),
+        home: const SplashView(),
         // home: Consumer(
         //   builder: (context, ref, child) => AuthWidget(
         //     nonSignedInBuilder: (_) => const LoginView(),

@@ -39,6 +39,12 @@ class AppRouter {
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case Routes.splashView:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => const SplashView(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
       case Routes.loginView:
         return MaterialPageRoute<dynamic>(
           builder: (_) => const LoginView(),
