@@ -78,6 +78,10 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                       ],
                                     ),
                                     child: AppImage(
+                                      placeholder: (context, hash) => const SizedBox(
+                                        width: 230,
+                                        child: AppLoader()
+                                      ),
                                       imageUrl: movie.poster?.urlsImage
                                               ?.firstWhere(
                                                   (img) =>
@@ -155,7 +159,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
-                                      "${(movie.adult ?? false) ? "18+ | " : ""}${movie.genres?.map((e) => e.name).join(" / ")} | ${movie.year}",
+                                      "${(movie.adult ?? false) ? "18+ | " : ""}${movie.genres != null ? "${movie.genres?.map((e) => e.name).join(" / ")} | " : ""}${movie.year}",
                                       style: TextStyle(
                                         fontSize: 14.0,
                                         color: Colors.grey[500],

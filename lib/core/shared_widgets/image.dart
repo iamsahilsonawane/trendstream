@@ -9,12 +9,14 @@ class AppImage extends StatelessWidget {
     required this.imageUrl,
     this.fit = BoxFit.cover,
     this.errorWidget,
+    this.placeholder,
     this.height,
   });
 
   final String imageUrl;
   final BoxFit fit;
   final Widget Function(BuildContext, Object, dynamic)? errorWidget;
+  final Widget Function(BuildContext, String hash)? placeholder;
   final double? height;
 
   @override
@@ -33,7 +35,7 @@ class AppImage extends StatelessWidget {
 
   OctoPlaceholderBuilder blurHashPlaceholderBuilder(String hash,
       {BoxFit? fit}) {
-    return (context) => SizedBox.expand(
+    return (context) => placeholder?.call(context, hash) ?? SizedBox.expand(
           child: Image(
             image: BlurHashImage(hash),
             fit: fit ?? BoxFit.cover,
