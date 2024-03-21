@@ -60,12 +60,12 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
         }
         if (programGuideSchedule.isCurrentProgram) {
             Toast.makeText(context, "Open live player", Toast.LENGTH_LONG).show()
-            val intent = Intent(context, LivePreviewActivity::class.java)
+            val intent = Intent(context, PlayerActivity::class.java)
             intent.putExtra("url", "http://x.lamtv.tv:8080/live/test/test/130.m3u8")
             startActivity(intent)
         } else {
             Toast.makeText(context, "Open detail page", Toast.LENGTH_LONG).show()
-            val intent = Intent(context, LivePreviewActivity::class.java)
+            val intent = Intent(context, PlayerActivity::class.java)
             intent.putExtra("url", "http://x.lamtv.tv:8080/live/test/test/130.m3u8")
             startActivity(intent)
         }
