@@ -110,6 +110,7 @@ class TvShowSeasons extends HookConsumerWidget {
                                       ],
                                     ),
                                   ),
+                                  verticalSpaceMedium,
                                   Expanded(
                                     child: SingleChildScrollView(
                                       child: DefaultAppPadding(
