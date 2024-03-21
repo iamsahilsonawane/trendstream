@@ -596,8 +596,8 @@ public class PlayerActivity extends Activity {
 
         exoSettings.setOnLongClickListener(view -> {
             //askForScope(false, false);
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivityForResult(intent, REQUEST_SETTINGS);
+            //Intent intent = new Intent(this, SettingsActivity.class);
+            //startActivityForResult(intent, REQUEST_SETTINGS);
             return true;
         });
 
@@ -612,11 +612,11 @@ public class PlayerActivity extends Activity {
         final HorizontalScrollView horizontalScrollView = (HorizontalScrollView) getLayoutInflater().inflate(R.layout.controls, null);
         final LinearLayout controls = horizontalScrollView.findViewById(R.id.controls);
 
-        controls.addView(buttonOpen);
+        //controls.addView(buttonOpen);
         controls.addView(exoSubtitle);
-        controls.addView(buttonAspectRatio);
+        //controls.addView(buttonAspectRatio);
         if (Utils.isPiPSupported(this) && buttonPiP != null) {
-            controls.addView(buttonPiP);
+            //controls.addView(buttonPiP);
         }
         if (mPrefs.repeatToggle) {
             controls.addView(exoRepeat);
