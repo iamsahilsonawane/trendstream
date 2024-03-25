@@ -9,6 +9,7 @@ class Routes {
   static const String detailsViewV2 = "/details-v2";
   static const String detailsViewV3 = "/details-v3";
   static const String tvShowDetailsView = "/tv-show-details";
+  static const String tvShowDetailsV3View = "/tv-show-details-v3";
   static const String playerView = "/player-view";
   static const String tvGuide = "/tv-guide";
 
@@ -19,5 +20,7 @@ class Routes {
   static const String tvShowAllEpisodes = "/tv-show-all-episodes";
 
   static const String tvShowSeasons = "/tv-show-seasons";
+  static const String tvShowSeasonsV3 = "/tv-show-seasons-v3";
   static const String allMovieCastAndCrew = "/all-movie-cast-and-crew";
+  static const String allMovieCastAndCrewV3 = "/all-movie-cast-and-crew-v3";
 }

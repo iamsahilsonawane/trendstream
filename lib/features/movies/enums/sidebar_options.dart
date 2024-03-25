@@ -2,6 +2,7 @@
 enum SidebarOptions {
   home,
   tvShows,
+  tvShowsV3,
   tvGuide,
   tvGuideLegacy,
   adult,

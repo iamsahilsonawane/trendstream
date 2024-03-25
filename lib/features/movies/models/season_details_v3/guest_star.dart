@@ -1,124 +1,106 @@
 import 'package:equatable/equatable.dart';
 
-import 'character_name.dart';
-import 'person.dart';
 import 'urls_image.dart';
 
-class Cast extends Equatable {
+class GuestStar extends Equatable {
+  final int? id;
   final bool? adult;
-  final num? castId;
-  final List<CharacterName>? characterNames;
-  final String? characterName;
   final String? creditId;
-  final num? id;
-  final num? idPerson;
+  final int? idPerson;
   final String? knownForDepartment;
   final String? name;
-  final num? order;
   final String? originalName;
-  final Person? person;
-  final num? popularity;
+  final double? popularity;
   final String? profilePath;
   final String? registerDate;
+  final dynamic person;
+  final String? characterName;
+  final num? order;
   final List<UrlsImage>? urlsImage;
 
-  const Cast({
-    this.adult,
-    this.castId,
-    this.characterNames,
-    this.characterName,
-    this.creditId,
+  const GuestStar({
     this.id,
+    this.adult,
+    this.creditId,
     this.idPerson,
     this.knownForDepartment,
     this.name,
-    this.order,
     this.originalName,
-    this.person,
     this.popularity,
     this.profilePath,
     this.registerDate,
+    this.person,
+    this.characterName,
+    this.order,
     this.urlsImage,
   });
 
-  factory Cast.fromJson(Map<String, dynamic> json) => Cast(
+  factory GuestStar.fromJson(Map<String, dynamic> json) => GuestStar(
+        id: json['id'] as int?,
         adult: json['adult'] as bool?,
-        castId: json['cast_id'] as num?,
-        characterNames: (json['characterNames'] as List<dynamic>?)
-            ?.map((e) => CharacterName.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        characterName: json['character_name'] as String?,
         creditId: json['credit_id'] as String?,
-        id: json['id'] as num?,
-        idPerson: json['id_person'] as num?,
+        idPerson: json['id_person'] as int?,
         knownForDepartment: json['known_for_department'] as String?,
         name: json['name'] as String?,
-        order: json['order'] as num?,
         originalName: json['original_name'] as String?,
-        person: json['person'] == null
-            ? null
-            : Person.fromJson(json['person'] as Map<String, dynamic>),
-        popularity: json['popularity'] as num?,
+        popularity: (json['popularity'] as num?)?.toDouble(),
         profilePath: json['profile_path'] as String?,
         registerDate: json['register_date'] as String?,
+        person: json['person'] as dynamic,
+        characterName: json['character_name'] as String?,
+        order: json['order'] as num?,
         urlsImage: (json['urls_image'] as List<dynamic>?)
             ?.map((e) => UrlsImage.fromJson(e as Map<String, dynamic>))
             .toList(),
       );
 
   Map<String, dynamic> toJson() => {
-        'adult': adult,
-        'cast_id': castId,
-        'characterNames': characterNames?.map((e) => e.toJson()).toList(),
-        'character_name': characterName,
-        'credit_id': creditId,
         'id': id,
+        'adult': adult,
+        'credit_id': creditId,
         'id_person': idPerson,
         'known_for_department': knownForDepartment,
         'name': name,
-        'order': order,
         'original_name': originalName,
-        'person': person?.toJson(),
         'popularity': popularity,
         'profile_path': profilePath,
         'register_date': registerDate,
+        'person': person,
+        'character_name': characterName,
+        'order': order,
         'urls_image': urlsImage?.map((e) => e.toJson()).toList(),
       };
 
-  Cast copyWith({
+  GuestStar copyWith({
+    int? id,
     bool? adult,
-    num? castId,
-    List<CharacterName>? characterNames,
-    String? characterName,
     String? creditId,
-    num? id,
-    num? idPerson,
+    int? idPerson,
     String? knownForDepartment,
     String? name,
-    num? order,
     String? originalName,
-    Person? person,
-    num? popularity,
+    double? popularity,
     String? profilePath,
     String? registerDate,
+    dynamic person,
+    String? characterName,
+    num? order,
     List<UrlsImage>? urlsImage,
   }) {
-    return Cast(
-      adult: adult ?? this.adult,
-      castId: castId ?? this.castId,
-      characterNames: characterNames ?? this.characterNames,
-      characterName: characterName ?? this.characterName,
-      creditId: creditId ?? this.creditId,
+    return GuestStar(
       id: id ?? this.id,
+      adult: adult ?? this.adult,
+      creditId: creditId ?? this.creditId,
       idPerson: idPerson ?? this.idPerson,
       knownForDepartment: knownForDepartment ?? this.knownForDepartment,
       name: name ?? this.name,
-      order: order ?? this.order,
       originalName: originalName ?? this.originalName,
-      person: person ?? this.person,
       popularity: popularity ?? this.popularity,
       profilePath: profilePath ?? this.profilePath,
       registerDate: registerDate ?? this.registerDate,
+      person: person ?? this.person,
+      characterName: characterName ?? this.characterName,
+      order: order ?? this.order,
       urlsImage: urlsImage ?? this.urlsImage,
     );
   }
@@ -129,21 +111,19 @@ class Cast extends Equatable {
   @override
   List<Object?> get props {
     return [
-      adult,
-      castId,
-      characterNames,
-      characterName,
-      creditId,
       id,
+      adult,
+      creditId,
       idPerson,
       knownForDepartment,
       name,
-      order,
       originalName,
-      person,
       popularity,
       profilePath,
       registerDate,
+      person,
+      characterName,
+      order,
       urlsImage,
     ];
   }

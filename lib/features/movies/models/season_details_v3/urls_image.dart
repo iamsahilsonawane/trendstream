@@ -3,40 +3,40 @@ import 'package:equatable/equatable.dart';
 import 'size.dart';
 
 class UrlsImage extends Equatable {
-  final num? id;
-  final num? idUrlImage;
-  final Size? size;
+  final int? id;
   final String? url;
+  final Size? size;
+  final int? idUrlImage;
 
-  const UrlsImage({this.id, this.idUrlImage, this.size, this.url});
+  const UrlsImage({this.id, this.url, this.size, this.idUrlImage});
 
   factory UrlsImage.fromJson(Map<String, dynamic> json) => UrlsImage(
-        id: json['id'] as num?,
-        idUrlImage: json['id_url_image'] as num?,
+        id: json['id'] as int?,
+        url: json['url'] as String?,
         size: json['size'] == null
             ? null
             : Size.fromJson(json['size'] as Map<String, dynamic>),
-        url: json['url'] as String?,
+        idUrlImage: json['id_url_image'] as int?,
       );
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'id_url_image': idUrlImage,
-        'size': size?.toJson(),
         'url': url,
+        'size': size?.toJson(),
+        'id_url_image': idUrlImage,
       };
 
   UrlsImage copyWith({
-    num? id,
-    num? idUrlImage,
-    Size? size,
+    int? id,
     String? url,
+    Size? size,
+    int? idUrlImage,
   }) {
     return UrlsImage(
       id: id ?? this.id,
-      idUrlImage: idUrlImage ?? this.idUrlImage,
-      size: size ?? this.size,
       url: url ?? this.url,
+      size: size ?? this.size,
+      idUrlImage: idUrlImage ?? this.idUrlImage,
     );
   }
 
@@ -44,5 +44,5 @@ class UrlsImage extends Equatable {
   bool get stringify => true;
 
   @override
-  List<Object?> get props => [id, idUrlImage, size, url];
+  List<Object?> get props => [id, url, size, idUrlImage];
 }
