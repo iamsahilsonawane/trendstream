@@ -75,10 +75,14 @@ class DashboardSideBar extends HookConsumerWidget {
               children: <Widget>[
                 DrawerItem(
                   title: "",
-                  iconData: shouldHide ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                  selectedIconData: shouldHide ? Icons.arrow_forward_ios : Icons.arrow_back_ios,
-                  isSelected: false, 
-                  onlyIcon: false, 
+                  iconData: shouldHide
+                      ? Icons.arrow_forward_ios
+                      : Icons.arrow_back_ios,
+                  selectedIconData: shouldHide
+                      ? Icons.arrow_forward_ios
+                      : Icons.arrow_back_ios,
+                  isSelected: false,
+                  onlyIcon: false,
                   onTap: () {
                     ref.read(dashboardSidebarStatusProvider.notifier).state =
                         shouldHide
@@ -249,7 +253,20 @@ class DashboardSideBar extends HookConsumerWidget {
                       sidebarState.sidebarOptions == SidebarOptions.apiMovies,
                   onlyIcon: shouldHide,
                   onTap: () {
-                    sidebarStateNotifier.setSidebarOption(SidebarOptions.apiMovies);
+                    sidebarStateNotifier
+                        .setSidebarOption(SidebarOptions.apiMovies);
+                  },
+                ),
+                DrawerItem(
+                  title: 'API V3 Movies',
+                  iconData: Icons.movie_outlined,
+                  selectedIconData: Icons.movie,
+                  isSelected:
+                      sidebarState.sidebarOptions == SidebarOptions.apiMoviesV3,
+                  onlyIcon: shouldHide,
+                  onTap: () {
+                    sidebarStateNotifier
+                        .setSidebarOption(SidebarOptions.apiMoviesV3);
                   },
                 ),
                 DrawerItem(

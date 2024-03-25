@@ -11,4 +11,5 @@ enum SidebarOptions {
   favorites,
   watchlist,
   apiMovies,
+  apiMoviesV3,
 }

@@ -10,6 +10,7 @@ import 'package:latest_movies/features/tv_guide/views/player_view/player_view.da
 import 'package:latest_movies/features/tv_guide/views/tv_guide/tv_guide.dart';
 import '../../features/auth/views/splash_page.dart';
 import '../../features/movies/views/movie_details/movie_details.dart';
+import '../../features/movies/views/movie_details/movie_details_v3.dart';
 import '../../features/movies/views/player_view/player_view.dart';
 import 'dart:developer';
 

@@ -75,6 +75,12 @@ class AppRouter {
           settings: settings,
           fullscreenDialog: false,
         );
+      case Routes.detailsViewV3:
+        return MaterialPageRoute<dynamic>(
+          builder: (_) => const MovieDetailsViewV3(),
+          settings: settings,
+          fullscreenDialog: false,
+        );
       case Routes.playerView:
         return MaterialPageRoute<dynamic>(
           builder: (_) => const PlayerView(),

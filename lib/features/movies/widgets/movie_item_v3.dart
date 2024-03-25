@@ -2,7 +2,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/features/movies/controllers/current_movie_v2_provider.dart';
-import 'package:latest_movies/features/movies/models/movie_v2/urls_image.dart';
+import 'package:latest_movies/features/movies/models/movie_v3/movie_v3.dart';
 
 import '../../../../core/utilities/design_utility.dart';
 import "package:flutter/material.dart";
@@ -10,10 +10,11 @@ import "package:flutter/material.dart";
 import '../../../core/shared_widgets/app_loader.dart';
 import '../../../core/shared_widgets/error_view.dart';
 import '../../../core/shared_widgets/image.dart';
-import '../models/movie_v2/movie_v2.dart';
+import '../models/movie_v3/urls_image.dart';
 
-class MovieTileV2 extends HookConsumerWidget {
-  const MovieTileV2({
+
+class MovieTileV3 extends HookConsumerWidget {
+  const MovieTileV3({
     this.autofocus = false,
     Key? key,
   }) : super(key: key);
@@ -22,12 +23,12 @@ class MovieTileV2 extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final AsyncValue<MovieV2> movieAsync = ref.watch(currentMovieV2Provider);
+    final AsyncValue<MovieV3> movieAsync = ref.watch(currentMovieV3Provider);
 
     return movieAsync.map(
       data: (asyncData) {
         final movie = asyncData.value;
-        return RawMovieTileV2(
+        return RawMovieTileV3(
           autofocus: autofocus,
           movie: movie,
         );
@@ -38,15 +39,15 @@ class MovieTileV2 extends HookConsumerWidget {
   }
 }
 
-class RawMovieTileV2 extends StatelessWidget {
-  const RawMovieTileV2({
+class RawMovieTileV3 extends StatelessWidget {
+  const RawMovieTileV3({
     super.key,
     required this.autofocus,
     required this.movie,
   });
 
   final bool autofocus;
-  final MovieV2 movie;
+  final MovieV3 movie;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,7 @@ class RawMovieTileV2 extends StatelessWidget {
       focusColor: Colors.transparent,
       splashColor: Colors.transparent,
       onTap: () {
-        AppRouter.navigateToPage(Routes.detailsViewV3, arguments: movie.id);
+        AppRouter.navigateToPage(Routes.detailsViewV2, arguments: movie.id);
       },
       child: Builder(builder: (context) {
         final bool hasFocus = Focus.of(context).hasPrimaryFocus;

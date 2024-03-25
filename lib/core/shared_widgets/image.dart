@@ -35,7 +35,9 @@ class AppImage extends StatelessWidget {
 
   OctoPlaceholderBuilder blurHashPlaceholderBuilder(String hash,
       {BoxFit? fit}) {
-    return (context) => placeholder?.call(context, hash) ?? SizedBox.expand(
+    return (context) =>
+        placeholder?.call(context, hash) ??
+        SizedBox.expand(
           child: Image(
             image: BlurHashImage(hash),
             fit: fit ?? BoxFit.cover,
