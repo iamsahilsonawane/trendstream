@@ -3,7 +3,7 @@ import 'package:latest_movies/features/movies/models/tv_show_v3/tv_show_v3.dart'
 import 'package:latest_movies/features/movies/repositories/tv_shows_repository.dart';
 import '../models/season_details_v3/season_details_v3.dart';
 
-final showsV3Provider = FutureProvider.autoDispose<List<TvShowV3>>((ref) async {
+final showsV3Provider = FutureProvider<List<TvShowV3>>((ref) async {
   return await ref.watch(tvShowsRepositoryProvider).getTvShowsV3();
 });
 

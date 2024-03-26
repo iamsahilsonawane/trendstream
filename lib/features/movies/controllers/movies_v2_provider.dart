@@ -8,6 +8,6 @@ final moviesV2Provider = FutureProvider<List<MovieV2>>((ref) async {
   return await ref.watch(moviesRepositoryProvider).fetchMoviesV2();
 });
 
-final moviesV3Provider = FutureProvider.autoDispose<List<MovieV3>>((ref) async {
+final moviesV3Provider = FutureProvider<List<MovieV3>>((ref) async {
   return await ref.watch(moviesRepositoryProvider).fetchMoviesV3();
 });
