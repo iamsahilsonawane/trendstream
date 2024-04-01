@@ -25,7 +25,7 @@ class AppButton extends StatelessWidget {
       autofocus: autofocus,
       focusNode: focusNode,
       onPressed: onTap,
-      style: ElevatedButton.styleFrom(primary: kPrimaryColor).copyWith(
+      style: ElevatedButton.styleFrom(backgroundColor: kPrimaryColor).copyWith(
         backgroundColor: MaterialStateProperty.resolveWith(
           (states) {
             if (states.contains(MaterialState.focused)) {

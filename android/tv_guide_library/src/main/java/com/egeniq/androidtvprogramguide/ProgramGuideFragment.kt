@@ -17,8 +17,10 @@
 package com.egeniq.androidtvprogramguide
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.res.Resources
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -455,7 +457,7 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
 
 
         view.findViewById<Button>(R.id.testVideoButton)?.let {
-            it.setOnClickListener { onTestVideoButtonClicked("http://23.237.117.10/test-am-1080.mkv") }
+            it.setOnClickListener { openYoutubeLink("YVI6SCtVu4c"); }
         }
         view.findViewById<Button>(R.id.testVideoButton2)?.let {
             it.setOnClickListener { onTestVideoButtonClicked("http://23.237.117.10/test-app-4k-hdr.mkv") }
@@ -468,6 +470,16 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         }
         view.findViewById<Button>(R.id.testVideoButton5)?.let {
             it.setOnClickListener { onTestVideoButtonClicked("https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4") }
+        }
+    }
+
+    fun openYoutubeLink(youtubeID: String) {
+        val intentApp = Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + youtubeID))
+        val intentBrowser = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + youtubeID))
+        try {
+            this.startActivity(intentApp)
+        } catch (ex: ActivityNotFoundException) {
+            this.startActivity(intentBrowser)
         }
     }
 

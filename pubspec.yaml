@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: "none"
 
-version: 1.2.38+55
+version: 1.2.40+57
 
 environment:
   sdk: ">=3.0.5 <4.0.0"
@@ -47,6 +47,7 @@ dependencies:
   flutter_blurhash: ^0.8.2
   octo_image: ^2.0.0
   device_info_plus: 
+  flutter_native_splash: 
 
 dev_dependencies:
   flutter_test:
