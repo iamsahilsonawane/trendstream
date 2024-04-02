@@ -101,7 +101,7 @@ class HttpTvShowsRepository implements TvShowsRepository {
   Future<TvShowV3> getTvShowDetailsV3(
       {required int tvShowId, bool forceRefresh = false}) async {
     final responseData = await httpService.get(
-      'http://15.235.12.125:8081/api-tv-movies/app/tv_shows/getDetailTvShow',
+      'http://15.235.12.125:8081/api-tv-movies/app/tv_shows/getTvShowDetail',
       forceRefresh: forceRefresh,
       queryParameters: {
         'id_tv_show': tvShowId,

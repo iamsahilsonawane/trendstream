@@ -57,7 +57,7 @@ class RawMovieTileV2 extends StatelessWidget {
       focusColor: Colors.transparent,
       splashColor: Colors.transparent,
       onTap: () {
-        AppRouter.navigateToPage(Routes.detailsViewV3, arguments: movie.id);
+        AppRouter.navigateToPage(Routes.detailsViewV2, arguments: movie.id);
       },
       child: Builder(builder: (context) {
         final bool hasFocus = Focus.of(context).hasPrimaryFocus;

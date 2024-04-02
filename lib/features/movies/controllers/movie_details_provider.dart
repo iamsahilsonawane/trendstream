@@ -13,14 +13,14 @@ final movieDetailsProvider =
 });
 
 final movieDetailsV2Provider =
-    FutureProvider.family<MovieV2, int>((ref, movieId) async {
+    FutureProvider.autoDispose.family<MovieV2, int>((ref, movieId) async {
   return ref
       .watch(moviesRepositoryProvider)
       .fetchMovieDetailsV2(movieId: movieId);
 });
 
 final movieDetailsV3Provider =
-    FutureProvider.family<MovieV3, int>((ref, movieId) async {
+    FutureProvider.autoDispose.family<MovieV3, int>((ref, movieId) async {
   return ref
       .watch(moviesRepositoryProvider)
       .fetchMovieDetailsV3(movieId: movieId);
