@@ -66,6 +66,7 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
         } else {
             Toast.makeText(context, "Open detail page", Toast.LENGTH_LONG).show()
             val intent = Intent(context, PlayerActivity::class.java)
+//            intent.putExtra("url", "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8")
             intent.putExtra("url", "http://x.lamtv.tv:8080/live/test/test/130.m3u8")
             startActivity(intent)
         }

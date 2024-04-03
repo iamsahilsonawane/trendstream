@@ -457,7 +457,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
 
 
         view.findViewById<Button>(R.id.testVideoButton)?.let {
-            it.setOnClickListener { openYoutubeLink("YVI6SCtVu4c"); }
+//            it.setOnClickListener { openYoutubeLink("YVI6SCtVu4c"); }
+            it.setOnClickListener { onTestVideoButtonClicked("http://23.237.117.10/test-am-1080.mkv") }
         }
         view.findViewById<Button>(R.id.testVideoButton2)?.let {
             it.setOnClickListener { onTestVideoButtonClicked("http://23.237.117.10/test-app-4k-hdr.mkv") }

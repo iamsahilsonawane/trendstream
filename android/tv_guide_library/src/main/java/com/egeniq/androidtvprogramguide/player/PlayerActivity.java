@@ -2,6 +2,8 @@ package com.egeniq.androidtvprogramguide.player;
 
 import static android.content.pm.PackageManager.FEATURE_EXPANDED_PICTURE_IN_PICTURE;
 
+import static com.obsez.android.lib.filechooser.permissions.PermissionsUtil.TAG;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
@@ -51,6 +53,7 @@ import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.accessibility.CaptioningManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -65,6 +68,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.leanback.animation.LogDecelerateInterpolator;
 import androidx.media3.common.AudioAttributes;
 import androidx.media3.common.C;
 import androidx.media3.common.Format;
@@ -341,8 +345,45 @@ public class PlayerActivity extends Activity {
 
         playerView.setShowNextButton(false);
         playerView.setShowPreviousButton(false);
-        playerView.setShowFastForwardButton(false);
-        playerView.setShowRewindButton(false);
+        playerView.setShowFastForwardButton(true);
+        playerView.setShowRewindButton(true);
+
+        final Button rewindBtn = findViewById(R.id.exo_rew_with_amount);
+        rewindBtn.setOnClickListener(v -> {
+            if (player == null)
+                return;
+            playerView.removeCallbacks(playerView.textClearRunnable);
+            long pos = player.getCurrentPosition();
+            if (playerView.keySeekStart == -1) {
+                playerView.keySeekStart = pos;
+            }
+            long seekTo = pos - 15_000;
+            if (seekTo < 0)
+                seekTo = 0;
+            player.setSeekParameters(SeekParameters.PREVIOUS_SYNC);
+            player.seekTo(seekTo);
+            final String message = Utils.formatMilisSign(seekTo - playerView.keySeekStart) + "\n" + Utils.formatMilis(seekTo);
+            playerView.setCustomErrorMessage(message);
+        });
+
+        final Button forwardBtn = findViewById(R.id.exo_ffwd_with_amount);
+        forwardBtn.setOnClickListener(v -> {
+            if (player == null)
+                return;
+            playerView.removeCallbacks(playerView.textClearRunnable);
+            long pos = player.getCurrentPosition();
+            if (playerView.keySeekStart == -1) {
+                playerView.keySeekStart = pos;
+            }
+            long seekTo = pos + 15_000;
+            long seekMax = player.getDuration();
+            if (seekMax != C.TIME_UNSET && seekTo > seekMax)
+                seekTo = seekMax;
+            PlayerActivity.player.setSeekParameters(SeekParameters.NEXT_SYNC);
+            player.seekTo(seekTo);
+            final String message = Utils.formatMilisSign(seekTo - playerView.keySeekStart) + "\n" + Utils.formatMilis(seekTo);
+            playerView.setCustomErrorMessage(message);
+        });
 
         playerView.setRepeatToggleModes(RepeatModeUtil.REPEAT_TOGGLE_MODE_ONE);
 
@@ -595,9 +636,9 @@ public class PlayerActivity extends Activity {
         //exoBasicControls.setVisibility(View.GONE);
 
         exoSettings.setOnLongClickListener(view -> {
-            //askForScope(false, false);
-            //Intent intent = new Intent(this, SettingsActivity.class);
-            //startActivityForResult(intent, REQUEST_SETTINGS);
+//            askForScope(false, false);
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivityForResult(intent, REQUEST_SETTINGS);
             return true;
         });
 
@@ -1361,6 +1402,8 @@ public class PlayerActivity extends Activity {
         player.addListener(playerListener);
         player.prepare();
 
+        player.setPlayWhenReady(true);
+
         if (restorePlayState) {
             restorePlayState = false;
             playerView.showController();
@@ -1437,7 +1480,18 @@ public class PlayerActivity extends Activity {
 
             if (Utils.isPiPSupported(PlayerActivity.this)) {
                 if (isPlaying) {
-                    updatePictureInPictureActions(R.drawable.ic_pause_24dp, R.string.exo_controls_pause_description, CONTROL_TYPE_PAUSE, REQUEST_PAUSE);
+                    Log.d(TAG, "onStart: isCurrentWindowLive: " + player.isCurrentWindowLive());
+                    Log.d(TAG, "onStart: playing url: " + mPrefs.mediaUri);
+                    //if live, then remove bottom controls
+                    if (player.isCurrentWindowLive()) {
+                        Log.d(TAG, "onStart: Fucking removing fucking progress fucking bar");
+                        findViewById(R.id.exo_bottom_bar).setVisibility(View.GONE);
+                        //remove progress bar
+                        findViewById(R.id.exo_progress).setVisibility(View.GONE);
+                        //remove rewind and forward buttons
+                        findViewById(R.id.exo_rew_with_amount).setVisibility(View.GONE);
+                        findViewById(R.id.exo_ffwd_with_amount).setVisibility(View.GONE);
+                    }                    updatePictureInPictureActions(R.drawable.ic_pause_24dp, R.string.exo_controls_pause_description, CONTROL_TYPE_PAUSE, REQUEST_PAUSE);
                 } else {
                     updatePictureInPictureActions(R.drawable.ic_play_arrow_24dp, R.string.exo_controls_play_description, CONTROL_TYPE_PLAY, REQUEST_PLAY);
                 }
