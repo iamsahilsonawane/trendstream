@@ -15,6 +15,7 @@ import com.egeniq.androidtvprogramguide.ProgramGuideFragment
 import com.egeniq.androidtvprogramguide.entity.ProgramGuideChannel
 import com.egeniq.androidtvprogramguide.entity.ProgramGuideSchedule
 import com.egeniq.androidtvprogramguide.player.PlayerActivity
+import com.egeniq.androidtvprogramguide.youtube_player.YoutubePlayerActivity
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -65,9 +66,10 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
             startActivity(intent)
         } else {
             Toast.makeText(context, "Open detail page", Toast.LENGTH_LONG).show()
-            val intent = Intent(context, PlayerActivity::class.java)
+//            val intent = Intent(context, PlayerActivity::class.java)
+            val intent = Intent(context, YoutubePlayerActivity::class.java)
 //            intent.putExtra("url", "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8")
-            intent.putExtra("url", "http://x.lamtv.tv:8080/live/test/test/130.m3u8")
+//            intent.putExtra("url", "http://x.lamtv.tv:8080/live/test/test/130.m3u8")
             startActivity(intent)
         }
         // Example of how a program can be updated. You could also change the underlying program.

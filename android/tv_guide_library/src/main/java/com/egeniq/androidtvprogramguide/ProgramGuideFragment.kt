@@ -56,6 +56,7 @@ import com.egeniq.androidtvprogramguide.util.FilterOption
 import com.egeniq.androidtvprogramguide.util.FixedLocalDateTime
 import com.egeniq.androidtvprogramguide.util.FixedZonedDateTime
 import com.egeniq.androidtvprogramguide.util.ProgramGuideUtil
+import com.egeniq.androidtvprogramguide.youtube_player.YoutubePlayerActivity
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneId
@@ -470,7 +471,10 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             it.setOnClickListener { onTestVideoButtonClicked("https://mazwai.com/videvo_files/video/free/2016-01/small_watermarked/rio_from_above_preview.webm") }
         }
         view.findViewById<Button>(R.id.testVideoButton5)?.let {
-            it.setOnClickListener { onTestVideoButtonClicked("https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4") }
+            it.setOnClickListener {
+                val intent = Intent(context, YoutubePlayerActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 

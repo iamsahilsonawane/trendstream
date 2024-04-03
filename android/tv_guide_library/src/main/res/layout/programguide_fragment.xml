@@ -307,7 +307,7 @@
         />
     <Button
         android:id="@+id/testVideoButton5"
-        android:text="Test Video 5"
+        android:text="Youtube Player"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#fff"
