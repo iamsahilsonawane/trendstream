@@ -1410,6 +1410,29 @@ public class PlayerActivity extends Activity {
             playerView.setControllerShowTimeoutMs(PlayerActivity.CONTROLLER_TIMEOUT);
             player.setPlayWhenReady(true);
         }
+
+        player.addListener(new Player.Listener() {
+           @Override
+           public void onEvents(Player player, Player.Events events) {
+               Player.Listener.super.onEvents(player, events);
+               hideControlsIfLive();
+           }
+        });
+    }
+
+    private void hideControlsIfLive() {
+        Log.d(TAG, "onStart: isCurrentWindowLive: " + player.isCurrentMediaItemLive());
+        Log.d(TAG, "onStart: playing url: " + mPrefs.mediaUri);
+        //if live, then remove bottom controls
+        if (player.isCurrentMediaItemLive()) {
+            Log.d(TAG, "onStart: Fucking removing fucking progress fucking bar");
+            findViewById(R.id.exo_bottom_bar).setVisibility(View.GONE);
+            //remove progress bar
+            findViewById(R.id.exo_progress).setVisibility(View.GONE);
+            //remove rewind and forward buttons
+            findViewById(R.id.exo_rew_with_amount).setVisibility(View.GONE);
+            findViewById(R.id.exo_ffwd_with_amount).setVisibility(View.GONE);
+        }
     }
 
     private void savePlayer() {
@@ -1480,18 +1503,7 @@ public class PlayerActivity extends Activity {
 
             if (Utils.isPiPSupported(PlayerActivity.this)) {
                 if (isPlaying) {
-                    Log.d(TAG, "onStart: isCurrentWindowLive: " + player.isCurrentWindowLive());
-                    Log.d(TAG, "onStart: playing url: " + mPrefs.mediaUri);
-                    //if live, then remove bottom controls
-                    if (player.isCurrentWindowLive()) {
-                        Log.d(TAG, "onStart: Fucking removing fucking progress fucking bar");
-                        findViewById(R.id.exo_bottom_bar).setVisibility(View.GONE);
-                        //remove progress bar
-                        findViewById(R.id.exo_progress).setVisibility(View.GONE);
-                        //remove rewind and forward buttons
-                        findViewById(R.id.exo_rew_with_amount).setVisibility(View.GONE);
-                        findViewById(R.id.exo_ffwd_with_amount).setVisibility(View.GONE);
-                    }                    updatePictureInPictureActions(R.drawable.ic_pause_24dp, R.string.exo_controls_pause_description, CONTROL_TYPE_PAUSE, REQUEST_PAUSE);
+                    updatePictureInPictureActions(R.drawable.ic_pause_24dp, R.string.exo_controls_pause_description, CONTROL_TYPE_PAUSE, REQUEST_PAUSE);
                 } else {
                     updatePictureInPictureActions(R.drawable.ic_play_arrow_24dp, R.string.exo_controls_play_description, CONTROL_TYPE_PLAY, REQUEST_PLAY);
                 }
