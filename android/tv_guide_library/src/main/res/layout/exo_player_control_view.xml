@@ -44,14 +44,17 @@
         android:layout_gravity="center_vertical|end"
         android:layoutDirection="ltr">
 
-      <ImageButton android:id="@+id/exo_vr"
-          style="@style/ExoStyledControls.Button.Bottom.VR"/>
+<!--      <ImageButton android:id="@+id/exo_vr"-->
+<!--          style="@style/ExoStyledControls.Button.Bottom.VR"/>-->
 
-      <ImageButton android:id="@+id/exo_shuffle"
-          style="@style/ExoStyledControls.Button.Bottom.Shuffle"/>
+<!--      <ImageButton android:id="@+id/exo_shuffle"-->
+<!--          style="@style/ExoStyledControls.Button.Bottom.Shuffle"/>-->
 
-      <ImageButton android:id="@+id/exo_repeat_toggle"
-          style="@style/ExoStyledControls.Button.Bottom.RepeatToggle"/>
+<!--      <ImageButton android:id="@+id/exo_repeat_toggle"-->
+<!--          style="@style/ExoStyledControls.Button.Bottom.RepeatToggle"/>-->
+
+      <ImageButton android:id="@+id/exo_audio_track"
+          style="@style/ExoStyledControls.Button.Bottom.AudioTrack"/>
 
       <ImageButton android:id="@+id/exo_subtitle"
           style="@style/ExoStyledControls.Button.Bottom.CC"/>
@@ -59,11 +62,11 @@
       <ImageButton android:id="@+id/exo_settings"
           style="@style/ExoStyledControls.Button.Bottom.Settings"/>
 
-      <ImageButton android:id="@+id/exo_fullscreen"
-          style="@style/ExoStyledControls.Button.Bottom.FullScreen"/>
+<!--      <ImageButton android:id="@+id/exo_fullscreen"-->
+<!--          style="@style/ExoStyledControls.Button.Bottom.FullScreen"/>-->
 
-      <ImageButton android:id="@+id/exo_overflow_show"
-          style="@style/ExoStyledControls.Button.Bottom.OverflowShow"/>
+<!--      <ImageButton android:id="@+id/exo_overflow_show"-->
+<!--          style="@style/ExoStyledControls.Button.Bottom.OverflowShow"/>-->
 
     </LinearLayout>
 
@@ -73,15 +76,15 @@
         android:layout_gravity="center_vertical|end"
         android:visibility="invisible">
 
-      <LinearLayout android:id="@+id/exo_extra_controls"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layoutDirection="ltr">
+<!--      <LinearLayout android:id="@+id/exo_extra_controls"-->
+<!--          android:layout_width="wrap_content"-->
+<!--          android:layout_height="wrap_content"-->
+<!--          android:layoutDirection="ltr">-->
 
-        <ImageButton android:id="@+id/exo_overflow_hide"
-            style="@style/ExoStyledControls.Button.Bottom.OverflowHide"/>
+<!--        <ImageButton android:id="@+id/exo_overflow_hide"-->
+<!--            style="@style/ExoStyledControls.Button.Bottom.OverflowHide"/>-->
 
-      </LinearLayout>
+<!--      </LinearLayout>-->
 
     </HorizontalScrollView>
 

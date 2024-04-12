@@ -629,6 +629,9 @@ public class PlayerActivity extends Activity {
         final ImageButton exoSubtitle = exoBasicControls.findViewById(R.id.exo_subtitle);
         exoBasicControls.removeView(exoSubtitle);
 
+        final ImageButton exoAudioTrack = exoBasicControls.findViewById(R.id.exo_audio_track);
+        exoBasicControls.removeView(exoAudioTrack);
+
         exoSettings = exoBasicControls.findViewById(R.id.exo_settings);
         exoBasicControls.removeView(exoSettings);
         final ImageButton exoRepeat = exoBasicControls.findViewById(R.id.exo_repeat_toggle);
@@ -640,6 +643,11 @@ public class PlayerActivity extends Activity {
             Intent intent = new Intent(this, SettingsActivity.class);
             startActivityForResult(intent, REQUEST_SETTINGS);
             return true;
+        });
+
+        exoSettings.setOnClickListener(view -> {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivityForResult(intent, REQUEST_SETTINGS);
         });
 
         exoSubtitle.setOnLongClickListener(v -> {
@@ -655,6 +663,7 @@ public class PlayerActivity extends Activity {
 
         //controls.addView(buttonOpen);
         controls.addView(exoSubtitle);
+        controls.addView(exoAudioTrack);
         //controls.addView(buttonAspectRatio);
         if (Utils.isPiPSupported(this) && buttonPiP != null) {
             //controls.addView(buttonPiP);
