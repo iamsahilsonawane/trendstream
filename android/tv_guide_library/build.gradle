@@ -89,6 +89,8 @@ dependencies {
     implementation project(path: ':doubletapplayerview')
     implementation project(path: ':android-file-chooser')
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0'
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:custom-ui:12.1.0'
+
 //    implementation fileTree(dir: "libs", include: ["lib-*.aar"])
 //    implementation project(path: ':decoder-libs', configuration: 'default')
 }
