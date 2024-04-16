@@ -56,6 +56,7 @@ import com.egeniq.androidtvprogramguide.util.FilterOption
 import com.egeniq.androidtvprogramguide.util.FixedLocalDateTime
 import com.egeniq.androidtvprogramguide.util.FixedZonedDateTime
 import com.egeniq.androidtvprogramguide.util.ProgramGuideUtil
+import com.egeniq.androidtvprogramguide.youtube_player.CustomUiActivity
 import com.egeniq.androidtvprogramguide.youtube_player.YoutubePlayerActivity
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -472,7 +473,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         }
         view.findViewById<Button>(R.id.testVideoButton5)?.let {
             it.setOnClickListener {
-                val intent = Intent(context, YoutubePlayerActivity::class.java)
+//                val intent = Intent(context, YoutubePlayerActivity::class.java)
+                val intent = Intent(context, CustomUiActivity::class.java)
                 startActivity(intent)
             }
         }
