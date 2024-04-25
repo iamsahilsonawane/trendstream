@@ -86,6 +86,10 @@ class RawAsyncTvShowTileV3 extends ConsumerWidget {
                                     orElse: () => const UrlsImage(url: ""))
                                 .url ??
                             "",
+                        blurHash: show.poster?.urlsImage
+                            ?.firstWhere((img) => img.size?.value == "original",
+                                orElse: () => const UrlsImage())
+                            .blurHash,
                       );
                     },
                     orElse: () => null,

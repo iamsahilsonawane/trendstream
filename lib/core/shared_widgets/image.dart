@@ -11,10 +11,12 @@ class AppImage extends StatelessWidget {
     this.errorWidget,
     this.placeholder,
     this.height,
+    this.blurHash,
   });
 
   final String imageUrl;
   final BoxFit fit;
+  final String? blurHash;
   final Widget Function(BuildContext, Object, dynamic)? errorWidget;
   final Widget Function(BuildContext, String hash)? placeholder;
   final double? height;
@@ -24,7 +26,7 @@ class AppImage extends StatelessWidget {
     return OctoImage(
       image: CachedNetworkImageProvider(imageUrl),
       placeholderBuilder: blurHashPlaceholderBuilder(
-        r"dOI.]h--}ln$]WNZIUWXI_I:ROof=|s=${R*R+$zNGbE",
+        blurHash ?? r"dOI.]h--}ln$]WNZIUWXI_I:ROof=|s=${R*R+$zNGbE",
       ),
       fit: fit,
       height: height,

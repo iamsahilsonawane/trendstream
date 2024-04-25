@@ -1,6 +1,7 @@
 import 'package:latest_movies/core/config/config.dart';
 import 'package:latest_movies/core/services/http/http_service.dart';
 import 'package:latest_movies/core/models/paginated_response.dart';
+import 'package:latest_movies/features/movies/models/season_details_v3/episode.dart';
 import 'package:latest_movies/features/movies/models/season_details_v3/season_details_v3.dart';
 import 'package:latest_movies/features/movies/models/tv_show/tv_show.dart';
 import 'package:latest_movies/features/movies/models/tv_show_details/tv_show_details.dart';
@@ -95,6 +96,25 @@ class HttpTvShowsRepository implements TvShowsRepository {
     );
 
     return SeasonDetails.fromJson(responseData);
+  }
+
+  @override
+  Future<List<Episode>> fetchEpisodesForSeasonV3(
+      {required int seasonId, bool forceRefresh = false}) async {
+    final responseData = await httpService.get(
+      'http://15.235.12.125:8081/api-tv-movies/app/tv_shows/getEpisodesBySeason',
+      forceRefresh: forceRefresh,
+      queryParameters: {
+        'id_season': seasonId,
+        'language': 'en',
+      },
+    );
+
+    return List<Episode>.from(
+      responseData.map(
+        (x) => Episode.fromJson(x),
+      ),
+    );
   }
 
   @override

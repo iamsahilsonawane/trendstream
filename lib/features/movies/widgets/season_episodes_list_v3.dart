@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/features/movies/controllers/tv_shows_provider_v3.dart';
 import 'package:latest_movies/features/movies/models/season_details_v3/season_details_v3.dart';
 import '../../../core/shared_widgets/image.dart';
 import '../../../core/utilities/design_utility.dart';
@@ -17,17 +18,45 @@ class SeasonEpisodesListV3 extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final episodesAsync =
+        ref.watch(episodesForSeasonProvider(seasonDetails.id!));
+
+    return episodesAsync.when(
+      data: buildEpisodesList,
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: buildErrorWidget,
+    );
+  }
+
+  Widget buildEpisodesList(List<Episode> episodes) {
     return ListView.builder(
       key: const Key('seasonEpisodesList'),
-      itemCount: seasonDetails.episodes?.length ?? 0,
+      itemCount: episodes.length,
       itemBuilder: (context, index) {
-        final episode = seasonDetails.episodes![index];
+        final episode = episodes[index];
         return Padding(
           padding: const EdgeInsets.only(bottom: 12.0),
           child: EpisodeTileV3(
               episode: episode, showSeasonNumber: showSeasonNumber),
         );
       },
+    );
+  }
+
+  Widget buildErrorWidget(Object error, StackTrace stackTrace) {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.error, color: Colors.white, size: 50),
+          verticalSpaceTiny,
+          Text(
+            'Cannot fetch episodes for this season.\nPlease try again later.',
+            style: TextStyle(color: Colors.white),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -119,11 +148,15 @@ class EpisodeTileV3 extends StatelessWidget {
                         width: 3),
                   ),
                   child: AppImage(
-                    imageUrl: "http://15.235.12.125:8081/${episode.still?.urlsImage
+                    imageUrl: episode.still?.urlsImage
                             ?.firstWhere((img) => img.size?.value == "original",
                                 orElse: () => const UrlsImage(url: ""))
                             .url ??
-                        ""}",
+                        "",
+                    blurHash: episode.still?.urlsImage
+                        ?.firstWhere((img) => img.size?.value == "original",
+                            orElse: () => const UrlsImage())
+                        .blurHash,
                     fit: BoxFit.cover,
                     errorWidget: (context, error, stackTrace) {
                       return const Center(

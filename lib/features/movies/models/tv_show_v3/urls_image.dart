@@ -7,8 +7,9 @@ class UrlsImage extends Equatable {
   final num? idUrlImage;
   final Size? size;
   final String? url;
+  final String? blurHash; 
 
-  const UrlsImage({this.id, this.idUrlImage, this.size, this.url});
+  const UrlsImage({this.id, this.idUrlImage, this.size, this.url, this.blurHash}); // Update this line
 
   factory UrlsImage.fromJson(Map<String, dynamic> json) => UrlsImage(
         id: json['id'] as num?,
@@ -17,6 +18,7 @@ class UrlsImage extends Equatable {
             ? null
             : Size.fromJson(json['size'] as Map<String, dynamic>),
         url: json['url'] as String?,
+        blurHash: json['blur_hash'] as String?,
       );
 
   Map<String, dynamic> toJson() => {
@@ -24,6 +26,7 @@ class UrlsImage extends Equatable {
         'id_url_image': idUrlImage,
         'size': size?.toJson(),
         'url': url,
+        'blur_hash': blurHash,
       };
 
   UrlsImage copyWith({
@@ -31,12 +34,14 @@ class UrlsImage extends Equatable {
     num? idUrlImage,
     Size? size,
     String? url,
+    String? blurHash,
   }) {
     return UrlsImage(
       id: id ?? this.id,
       idUrlImage: idUrlImage ?? this.idUrlImage,
       size: size ?? this.size,
       url: url ?? this.url,
+      blurHash: blurHash ?? this.blurHash
     );
   }
 
@@ -44,5 +49,5 @@ class UrlsImage extends Equatable {
   bool get stringify => true;
 
   @override
-  List<Object?> get props => [id, idUrlImage, size, url];
+  List<Object?> get props => [id, idUrlImage, size, url, blurHash]; 
 }
