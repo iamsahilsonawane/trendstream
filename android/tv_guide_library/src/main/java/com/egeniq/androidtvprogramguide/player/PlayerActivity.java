@@ -364,6 +364,10 @@ public class PlayerActivity extends Activity {
             player.seekTo(seekTo);
             final String message = Utils.formatMilisSign(seekTo - playerView.keySeekStart) + "\n" + Utils.formatMilis(seekTo);
             playerView.setCustomErrorMessage(message);
+
+            if (!isScrubbing) {
+                playerView.postDelayed(playerView.textClearRunnable, 1000);
+            }
         });
 
         final Button forwardBtn = findViewById(R.id.exo_ffwd_with_amount);
@@ -383,6 +387,10 @@ public class PlayerActivity extends Activity {
             player.seekTo(seekTo);
             final String message = Utils.formatMilisSign(seekTo - playerView.keySeekStart) + "\n" + Utils.formatMilis(seekTo);
             playerView.setCustomErrorMessage(message);
+
+            if (!isScrubbing) {
+                playerView.postDelayed(playerView.textClearRunnable, 1000);
+            }
         });
 
         playerView.setRepeatToggleModes(RepeatModeUtil.REPEAT_TOGGLE_MODE_ONE);
