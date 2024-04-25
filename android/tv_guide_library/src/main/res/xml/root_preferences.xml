@@ -62,10 +62,10 @@
             android:summaryOff="@string/pref_subtitle_style_bold_off"
             app:title="@string/pref_subtitle_style_bold" />
 
-        <Preference
-            app:title="@string/pref_captioning_preferences">
-            <intent android:action="android.settings.CAPTIONING_SETTINGS" />
-        </Preference>
+<!--        <Preference-->
+<!--            app:title="@string/pref_captioning_preferences">-->
+<!--            <intent android:action="android.settings.CAPTIONING_SETTINGS" />-->
+<!--        </Preference>-->
 
     </PreferenceCategory>
 
