@@ -67,7 +67,7 @@ class YoutubePlayerActivity : AppCompatActivity() {
 
         val onBackPressCallback = object:OnBackPressedCallback(true){
             override fun handleOnBackPressed() {
-                Log.d("BACKPRESS", "handleOnBackPressed: handled")
+                Log.d("YOUTUBEPLAYERACTIVITY", "handleOnBackPressed: handled")
                 finish()
             }
         }
@@ -83,24 +83,17 @@ class YoutubePlayerActivity : AppCompatActivity() {
 
     }
 
-    var currentVolume = 100
-
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        Log.d("TAG", "onKeyDown: $keyCode = before");
+        Log.d("YOUTUBEPLAYERACTIVITY", "onKeyDown: $keyCode = before");
         if (mYoutubePlayer != null && youTubePlayerTracker != null) {
-            Log.d("TAG", "onKeyDown: $keyCode = after");
+            Log.d("YOUTUBEPLAYERACTIVITY", "onKeyDown: $keyCode = after");
             when (keyCode) {
-                KeyEvent.KEYCODE_MEDIA_PLAY -> {
-                    mYoutubePlayer!!.play()
-                    return true
-                }
-
-                KeyEvent.KEYCODE_MEDIA_PAUSE -> {
-                    mYoutubePlayer!!.pause()
-                    return true
-                }
-
-                KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> {
+                KeyEvent.KEYCODE_MEDIA_PLAY,
+                KeyEvent.KEYCODE_MEDIA_PAUSE,
+                KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
+                KeyEvent.KEYCODE_DPAD_CENTER,
+                KeyEvent.KEYCODE_BUTTON_SELECT -> {
+                    Log.d("YOUTUBEPLAYERACTIVITY", "onKeyDown: play/pause");
                     if (youTubePlayerTracker.state !== PlayerState.PLAYING) {
                         mYoutubePlayer!!.play()
                     } else {
@@ -109,15 +102,25 @@ class YoutubePlayerActivity : AppCompatActivity() {
                     return true
                 }
 
-                KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                KeyEvent.KEYCODE_DPAD_RIGHT,
+                KeyEvent.KEYCODE_BUTTON_R2,
+                KeyEvent.KEYCODE_MEDIA_FAST_FORWARD -> {
+                    Log.d("YOUTUBEPLAYERACTIVITY", "onKeyDown: Forward");
                     mYoutubePlayer!!.seekTo(min((youTubePlayerTracker.currentSecond + 10.0).toFloat(),  youTubePlayerTracker.videoDuration));
                     return true
                 }
 
-                KeyEvent.KEYCODE_DPAD_LEFT -> {
+                KeyEvent.KEYCODE_DPAD_LEFT ,
+                KeyEvent.KEYCODE_BUTTON_L2,
+                KeyEvent.KEYCODE_MEDIA_REWIND -> {
+                    Log.d("YOUTUBEPLAYERACTIVITY", "onKeyDown: Rewind");
                     mYoutubePlayer!!.seekTo(max((youTubePlayerTracker.currentSecond - 10.0).toFloat(),  0.0.toFloat()));
                     return true
                 }
+
+                KeyEvent.KEYCODE_BACK ->
+                   onBackPressedDispatcher.run { onBackPressed() }
+
             }
         }
         return false

@@ -473,8 +473,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
         }
         view.findViewById<Button>(R.id.testVideoButton5)?.let {
             it.setOnClickListener {
-//                val intent = Intent(context, YoutubePlayerActivity::class.java)
-                val intent = Intent(context, CustomUiActivity::class.java)
+                val intent = Intent(context, YoutubePlayerActivity::class.java)
+//                val intent = Intent(context, CustomUiActivity::class.java)
                 startActivity(intent)
             }
         }
