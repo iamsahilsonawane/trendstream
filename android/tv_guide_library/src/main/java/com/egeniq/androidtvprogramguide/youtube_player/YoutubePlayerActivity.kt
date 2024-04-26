@@ -56,7 +56,9 @@ class YoutubePlayerActivity : AppCompatActivity() {
 
         youTubePlayerView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
-                val videoId = "4SCjXcBeW1E"
+                //list of videos
+                val listOfVids = listOf("4SCjXcBeW1E", "Jokpt_LJpbw", "73_1biulkYk", "NC0DNl82Cgg", "N6DmjhcSt8Q");
+                val videoId = listOfVids.random()
                 youTubePlayer.loadVideo(videoId, 0f)
                 mYoutubePlayer = youTubePlayer;
                 mYoutubePlayer?.addListener(youTubePlayerTracker);
