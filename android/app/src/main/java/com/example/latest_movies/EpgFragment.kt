@@ -42,7 +42,7 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
     data class SimpleChannel(
         override val id: String,
         override val name: Spanned?,
-        override val imageUrl: String?
+        override val imageUrl: String
     ) : ProgramGuideChannel
 
     // You can put your own data in the program class
@@ -66,8 +66,11 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
             startActivity(intent)
         } else {
             Toast.makeText(context, "Open detail page", Toast.LENGTH_LONG).show()
+            val intent = Intent(context, PlayerActivity::class.java)
+            intent.putExtra("url", "http://23.237.220.42:8080/live/pruebas/pruebas/150.m3u8")
+            startActivity(intent)
 //            val intent = Intent(context, PlayerActivity::class.java)
-            val intent = Intent(context, YoutubePlayerActivity::class.java)
+//            val intent = Intent(context, YoutubePlayerActivity::class.java)
 //            intent.putExtra("url", "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8")
 //            intent.putExtra("url", "http://x.lamtv.tv:8080/live/test/test/130.m3u8")
             startActivity(intent)
