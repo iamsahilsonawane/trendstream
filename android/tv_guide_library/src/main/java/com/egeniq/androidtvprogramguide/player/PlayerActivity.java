@@ -1568,6 +1568,7 @@ public class PlayerActivity extends Activity {
             setEndControlsVisible(haveMedia && (state == Player.STATE_ENDED || isNearEnd));
 
             if (state == Player.STATE_READY) {
+                Log.d(TAG, "onPlaybackStateChanged: Ready");
                 frameRendered = true;
 
                 if (videoLoading) {
@@ -1656,7 +1657,19 @@ public class PlayerActivity extends Activity {
                         setSelectedTracks(mPrefs.subtitleTrackId, mPrefs.audioTrackId);
                     }
                 }
-            } else if (state == Player.STATE_ENDED) {
+            } else if (state == Player.STATE_BUFFERING) {
+                Log.d(TAG, "onPlaybackStateChanged: Buffering");
+                videoLoading = true;
+                updateLoading(true);
+                playerView.setControllerShowTimeoutMs(-1);
+                playerView.showController();
+            } else if (state == Player.STATE_IDLE) {
+                Log.d(TAG, "onPlaybackStateChanged: Idle");
+                videoLoading = false;
+                updateLoading(false);
+            }
+            else if (state == Player.STATE_ENDED) {
+                Log.d(TAG, "onPlaybackStateChanged: Ended");
                 playbackFinished = true;
                 if (apiAccess) {
                     finish();

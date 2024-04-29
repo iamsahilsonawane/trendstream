@@ -68,12 +68,13 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
             Toast.makeText(context, "Open detail page", Toast.LENGTH_LONG).show()
             val intent = Intent(context, PlayerActivity::class.java)
             intent.putExtra("url", "http://23.237.220.42:8080/live/pruebas/pruebas/150.m3u8")
+//            intent.putExtra("url", "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8")
             startActivity(intent)
 //            val intent = Intent(context, PlayerActivity::class.java)
 //            val intent = Intent(context, YoutubePlayerActivity::class.java)
 //            intent.putExtra("url", "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8")
 //            intent.putExtra("url", "http://x.lamtv.tv:8080/live/test/test/130.m3u8")
-            startActivity(intent)
+//            startActivity(intent)
         }
         // Example of how a program can be updated. You could also change the underlying program.
         updateProgram(programGuideSchedule.copy(displayTitle = programGuideSchedule.displayTitle + " [clicked]"))
