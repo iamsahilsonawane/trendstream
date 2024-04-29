@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
@@ -528,15 +529,24 @@ class TvShowDetailsViewV3 extends HookConsumerWidget {
         AppButton(
           autofocus: true,
           text: "Watch Now",
-          onTap: () {
-            AppRouter.navigateToPage(Routes.playerView);
+          onTap: () async {
+            const platform = MethodChannel('com.example.latest_movies/channel');
+            await platform.invokeMethod("navigateToPlayer");
+            // AppRouter.navigateToPage(Routes.playerView);
           },
           prefix: const Icon(
             Icons.play_circle,
             color: Colors.white,
           ),
         ),
-        // horizontalSpaceRegular,
+        horizontalSpaceRegular,
+        AppButton(
+          text: "Watch Trailer",
+          onTap: () async {
+            const platform = MethodChannel('com.example.latest_movies/channel');
+            await platform.invokeMethod("navigateToYoutubePlayer");
+          },
+        ),
         // Builder(
         //   builder: (context) {
         //     final hasTrailer = (show.videos?.results?.any((element) =>

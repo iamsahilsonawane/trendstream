@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
@@ -515,8 +516,10 @@ class TvShowDetailsView extends HookConsumerWidget {
         AppButton(
           autofocus: true,
           text: "Watch Now",
-          onTap: () {
-            AppRouter.navigateToPage(Routes.playerView);
+          onTap: () async {
+            const platform = MethodChannel('com.example.latest_movies/channel');
+            await platform.invokeMethod("navigateToPlayer");
+            // AppRouter.navigateToPage(Routes.playerView);
           },
           prefix: const Icon(
             Icons.play_circle,
@@ -537,19 +540,23 @@ class TvShowDetailsView extends HookConsumerWidget {
               onTap: !hasTrailer
                   ? null
                   : () async {
-                      final firstTrailer = show.videos!.results!.firstWhere(
-                        (element) {
-                          return element.type == "Trailer" &&
-                              (element.official ?? false) &&
-                              element.site == "YouTube";
-                        },
-                      );
+                      const platform =
+                          MethodChannel('com.example.latest_movies/channel');
+                      await platform.invokeMethod("navigateToYoutubePlayer");
+                      // return;
+                      // final firstTrailer = show.videos!.results!.firstWhere(
+                      //   (element) {
+                      //     return element.type == "Trailer" &&
+                      //         (element.official ?? false) &&
+                      //         element.site == "YouTube";
+                      //   },
+                      // );
 
-                      if (!await launchUrl(Uri.parse(
-                          "https://youtube.com/watch?v=${firstTrailer.key}"))) {
-                        AppUtils.showSnackBar(null,
-                            message: "This TV does not support opening URLs");
-                      }
+                      // if (!await launchUrl(Uri.parse(
+                      //     "https://youtube.com/watch?v=${firstTrailer.key}"))) {
+                      //   AppUtils.showSnackBar(null,
+                      //       message: "This TV does not support opening URLs");
+                      // }
                     },
             );
           },

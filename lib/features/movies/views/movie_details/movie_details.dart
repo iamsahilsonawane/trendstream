@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -296,9 +297,13 @@ class MovieDetailsView extends HookConsumerWidget {
                                       AppButton(
                                         autofocus: true,
                                         text: "Watch Now",
-                                        onTap: () {
-                                          AppRouter.navigateToPage(
-                                              Routes.playerView);
+                                        onTap: () async {
+                                          // AppRouter.navigateToPage(
+                                          //     Routes.playerView);
+                                          const platform = MethodChannel(
+                                              'com.example.latest_movies/channel');
+                                          await platform
+                                              .invokeMethod("navigateToPlayer");
                                         },
                                         prefix: const Icon(
                                           Icons.play_circle,
@@ -319,16 +324,16 @@ class MovieDetailsView extends HookConsumerWidget {
                                             onTap: !hasTrailer
                                                 ? null
                                                 : () async {
-                                                    final firstTrailer =
-                                                        videos.firstWhere(
-                                                      (element) =>
-                                                          element.type ==
-                                                              "Trailer" &&
-                                                          (element.official ??
-                                                              false) &&
-                                                          element.site ==
-                                                              "YouTube",
-                                                    );
+                                                    // final firstTrailer =
+                                                    //     videos.firstWhere(
+                                                    //   (element) =>
+                                                    //       element.type ==
+                                                    //           "Trailer" &&
+                                                    //       (element.official ??
+                                                    //           false) &&
+                                                    //       element.site ==
+                                                    //           "YouTube",
+                                                    // );
 
                                                     // if (!await launchUrl(Uri.parse(
                                                     //     "https://youtube.com/watch?v=${firstTrailer.key}"))) {
@@ -337,11 +342,16 @@ class MovieDetailsView extends HookConsumerWidget {
                                                     //           "This TV does not support opening URLs");
                                                     // }
 
-                                                    AppRouter.navigateToPage(
-                                                        Routes
-                                                            .youtubePlayerView,
-                                                        arguments:
-                                                            firstTrailer.key);
+                                                    const platform = MethodChannel(
+                                                        'com.example.latest_movies/channel');
+                                                    await platform.invokeMethod(
+                                                        "navigateToYoutubePlayer");
+
+                                                    // AppRouter.navigateToPage(
+                                                    //     Routes
+                                                    //         .youtubePlayerView,
+                                                    //     arguments:
+                                                    //         firstTrailer.key);
                                                   },
                                           );
                                         },

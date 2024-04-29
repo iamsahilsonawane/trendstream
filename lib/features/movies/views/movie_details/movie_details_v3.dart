@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
@@ -78,10 +79,9 @@ class MovieDetailsViewV3 extends HookConsumerWidget {
                                       ],
                                     ),
                                     child: AppImage(
-                                      placeholder: (context, hash) => const SizedBox(
-                                        width: 230,
-                                        child: AppLoader()
-                                      ),
+                                      placeholder: (context, hash) =>
+                                          const SizedBox(
+                                              width: 230, child: AppLoader()),
                                       imageUrl: movie.poster?.urlsImage
                                               ?.firstWhere(
                                                   (img) =>
@@ -260,18 +260,31 @@ class MovieDetailsViewV3 extends HookConsumerWidget {
                                         AppButton(
                                           autofocus: true,
                                           text: "Watch Now",
-                                          onTap: () {
-                                            AppRouter.navigateToPage(
-                                                Routes.playerView,
-                                                arguments:
-                                                    "https://mazwai.com/videvo_files/video/free/2016-01/small_watermarked/rio_from_above_preview.webm");
+                                          onTap: () async {
+                                            const platform = MethodChannel(
+                                                'com.example.latest_movies/channel');
+                                            await platform.invokeMethod(
+                                                "navigateToPlayer");
+                                            // AppRouter.navigateToPage(
+                                            //     Routes.playerView,
+                                            //     arguments:
+                                            //         "https://mazwai.com/videvo_files/video/free/2016-01/small_watermarked/rio_from_above_preview.webm");
                                           },
                                           prefix: const Icon(
                                             Icons.play_circle,
                                             color: Colors.white,
                                           ),
                                         ),
-                                        // horizontalSpaceRegular,
+                                        horizontalSpaceRegular,
+                                        AppButton(
+                                          text: "Watch Trailer",
+                                          onTap: () async {
+                                            const platform = MethodChannel(
+                                                'com.example.latest_movies/channel');
+                                            await platform.invokeMethod(
+                                                "navigateToYoutubePlayer");
+                                          },
+                                        ),
                                         // movieVideosAsync.when(
                                         //   data: (videos) {
                                         //     final hasTrailer = videos.any(
