@@ -544,7 +544,9 @@ class TvShowDetailsViewV3 extends HookConsumerWidget {
           text: "Watch Trailer",
           onTap: () async {
             const platform = MethodChannel('com.example.latest_movies/channel');
-            await platform.invokeMethod("navigateToYoutubePlayer");
+            // await platform.invokeMethod("navigateToYoutubePlayer");
+            await platform.invokeMethod(
+                "navigateToYoutubePlayer", {'video_id': "tNcDHWpselE"});
           },
         ),
         // Builder(

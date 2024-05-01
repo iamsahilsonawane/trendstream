@@ -540,17 +540,18 @@ class TvShowDetailsView extends HookConsumerWidget {
               onTap: !hasTrailer
                   ? null
                   : () async {
+                      final firstTrailer = show.videos!.results!.firstWhere(
+                        (element) {
+                          return element.type == "Trailer" &&
+                              (element.official ?? false) &&
+                              element.site == "YouTube";
+                        },
+                      );
+
                       const platform =
                           MethodChannel('com.example.latest_movies/channel');
-                      await platform.invokeMethod("navigateToYoutubePlayer");
-                      // return;
-                      // final firstTrailer = show.videos!.results!.firstWhere(
-                      //   (element) {
-                      //     return element.type == "Trailer" &&
-                      //         (element.official ?? false) &&
-                      //         element.site == "YouTube";
-                      //   },
-                      // );
+                      await platform.invokeMethod("navigateToYoutubePlayer",
+                          {'video_id': firstTrailer.key});
 
                       // if (!await launchUrl(Uri.parse(
                       //     "https://youtube.com/watch?v=${firstTrailer.key}"))) {

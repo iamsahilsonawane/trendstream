@@ -282,7 +282,7 @@ class MovieDetailsViewV3 extends HookConsumerWidget {
                                             const platform = MethodChannel(
                                                 'com.example.latest_movies/channel');
                                             await platform.invokeMethod(
-                                                "navigateToYoutubePlayer");
+                                                "navigateToYoutubePlayer", {'video_id': 'lcjN7zkgELM'});
                                           },
                                         ),
                                         // movieVideosAsync.when(

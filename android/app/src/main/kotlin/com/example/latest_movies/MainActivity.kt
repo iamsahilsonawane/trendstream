@@ -4,6 +4,7 @@ import android.content.Intent
 import io.flutter.embedding.android.FlutterActivity
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
+import android.util.Log
 import com.egeniq.androidtvprogramguide.player.PlayerActivity
 import com.egeniq.androidtvprogramguide.youtube_player.YoutubePlayerActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -31,7 +32,14 @@ class MainActivity : FlutterActivity() {
                 startActivity(intent)
                 result.success(null)
             }  else  if (call.method == "navigateToYoutubePlayer") {
+                val args = call.arguments as Map<*, *>;
                 val intent = Intent(context, YoutubePlayerActivity::class.java)
+                if (args["video_id"] != null) {
+                    Log.d("MainActivity", "configureFlutterEngine: Video id received: ${args["video_id"]}")
+                    intent.putExtra("video_id", args["video_id"].toString())
+                } else {
+                    Log.d("MainActivity", "configureFlutterEngine: Video id not received")
+                }
                 startActivity(intent)
                 result.success(null)
             }  else {

@@ -1,28 +1,21 @@
 package com.egeniq.androidtvprogramguide.youtube_player
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
-import android.widget.Button
-import android.widget.TextView
-import android.content.pm.ActivityInfo
-import android.content.res.Configuration
-import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.egeniq.androidtvprogramguide.R
+import com.egeniq.androidtvprogramguide.player.PlayerActivity
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.customui.DefaultPlayerUiController
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants.PlayerState
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.loadOrCueVideo
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import kotlin.math.max
 import kotlin.math.min
@@ -32,6 +25,8 @@ class YoutubePlayerActivity : AppCompatActivity() {
     private var mYoutubePlayer: YouTubePlayer? = null
     private val youTubePlayerTracker = YouTubePlayerTracker()
 
+    private var videoId: String = "";
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +35,13 @@ class YoutubePlayerActivity : AppCompatActivity() {
 
         val youTubePlayerView = findViewById<YouTubePlayerView>(R.id.youtube_player_view)
         lifecycle.addObserver(youTubePlayerView)
+
+        val extras: Bundle = intent.extras!!
+        val extrasUrl: String = extras.getString("video_id", "--no-val--")
+
+        if (extrasUrl != "--no-val--" && extrasUrl != "") {
+            videoId = extrasUrl
+        }
 
         val listener: YouTubePlayerListener = object : AbstractYouTubePlayerListener() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
@@ -58,7 +60,7 @@ class YoutubePlayerActivity : AppCompatActivity() {
             override fun onReady(youTubePlayer: YouTubePlayer) {
                 //list of videos
                 val listOfVids = listOf("4SCjXcBeW1E", "Jokpt_LJpbw", "73_1biulkYk", "NC0DNl82Cgg", "N6DmjhcSt8Q");
-                val videoId = listOfVids.random()
+                val videoId = if (videoId != "") videoId else listOfVids.random()
                 youTubePlayer.loadVideo(videoId, 0f)
                 mYoutubePlayer = youTubePlayer;
                 mYoutubePlayer?.addListener(youTubePlayerTracker);

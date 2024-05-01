@@ -324,16 +324,17 @@ class MovieDetailsView extends HookConsumerWidget {
                                             onTap: !hasTrailer
                                                 ? null
                                                 : () async {
-                                                    // final firstTrailer =
-                                                    //     videos.firstWhere(
-                                                    //   (element) =>
-                                                    //       element.type ==
-                                                    //           "Trailer" &&
-                                                    //       (element.official ??
-                                                    //           false) &&
-                                                    //       element.site ==
-                                                    //           "YouTube",
-                                                    // );
+                                                    final firstTrailer =
+                                                        videos.firstWhere(
+                                                      (element) {
+                                                        return element.type ==
+                                                                "Trailer" &&
+                                                            (element.official ??
+                                                                false) &&
+                                                            element.site ==
+                                                                "YouTube";
+                                                      },
+                                                    );
 
                                                     // if (!await launchUrl(Uri.parse(
                                                     //     "https://youtube.com/watch?v=${firstTrailer.key}"))) {
@@ -345,7 +346,11 @@ class MovieDetailsView extends HookConsumerWidget {
                                                     const platform = MethodChannel(
                                                         'com.example.latest_movies/channel');
                                                     await platform.invokeMethod(
-                                                        "navigateToYoutubePlayer");
+                                                        "navigateToYoutubePlayer",
+                                                        {
+                                                          'video_id':
+                                                              firstTrailer.key
+                                                        });
 
                                                     // AppRouter.navigateToPage(
                                                     //     Routes
