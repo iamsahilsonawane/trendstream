@@ -365,78 +365,146 @@ class TvShowDetailsView extends HookConsumerWidget {
                                           fontWeight: FontWeight.bold),
                                     ),
                                     verticalSpaceMedium,
-                                    SizedBox(
-                                      height: 230,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: min(
-                                                show.credits?.cast?.length ??
-                                                    10,
-                                                10) +
-                                            1,
-                                        clipBehavior: Clip.none,
-                                        itemBuilder: (context, index) {
-                                          //if item is last
-                                          if (index ==
-                                              min(
-                                                  show.credits?.cast?.length ??
-                                                      10,
-                                                  10)) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(16.0),
-                                              child: TextButton.icon(
-                                                  onPressed: () {
-                                                    AppRouter.navigateToPage(
-                                                        Routes
-                                                            .allMovieCastAndCrew,
-                                                        arguments:
-                                                            AllClassAndCrewArgs(
-                                                                credits: show
-                                                                    .credits!,
-                                                                backdropPath: show
-                                                                    .backdropPath!));
-                                                  },
-                                                  style: TextButton.styleFrom(
-                                                    foregroundColor:
-                                                        Colors.white,
-                                                  ),
-                                                  icon: const Icon(
-                                                      Icons.arrow_forward),
-                                                  label:
-                                                      const Text("View all")),
-                                            );
-                                          }
-                                          final cast =
-                                              show.credits?.cast?[index];
-                                          return md.CastTile(
-                                              name: cast?.name,
-                                              character: cast?.character,
-                                              profilePath: cast?.profilePath);
-                                        },
-                                      ),
-                                    ),
+                                    Builder(builder: (context) {
+                                      // Get the screen width
+                                      double screenWidth =
+                                          MediaQuery.of(context).size.width;
+                                      double itemWidth =
+                                          150; // Replace this with the actual width of your items
+
+                                      int itemCount = min(
+                                          (show.credits?.cast?.length ?? 0) + 1,
+                                          screenWidth ~/ itemWidth);
+
+                                      return SizedBox(
+                                        height: 230,
+                                        child: Row(
+                                          children: List.generate(
+                                            itemCount,
+                                            (index) {
+                                              return Builder(
+                                                builder: (context) {
+                                                  if (index == itemCount - 1) {
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              16.0),
+                                                      child: TextButton.icon(
+                                                          onPressed: () {
+                                                            AppRouter.navigateToPage(
+                                                                Routes
+                                                                    .allMovieCastAndCrew,
+                                                                arguments: AllClassAndCrewArgs(
+                                                                    credits: show
+                                                                        .credits!,
+                                                                    backdropPath:
+                                                                        show.backdropPath!));
+                                                          },
+                                                          style: TextButton
+                                                              .styleFrom(
+                                                            foregroundColor:
+                                                                Colors.white,
+                                                          ),
+                                                          icon: const Icon(Icons
+                                                              .arrow_forward),
+                                                          label: const Text(
+                                                              "View all")),
+                                                    );
+                                                  }
+                                                  final cast = show
+                                                      .credits?.cast?[index];
+                                                  return md.CastTile(
+                                                      name: cast?.name,
+                                                      character:
+                                                          cast?.character,
+                                                      profilePath:
+                                                          cast?.profilePath);
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    }),
+
+                                    // SizedBox(
+                                    //   height: 230,
+                                    //   child: ListView.builder(
+                                    //     scrollDirection: Axis.horizontal,
+                                    //     itemCount: min(
+                                    //             show.credits?.cast?.length ??
+                                    //                 10,
+                                    //             10) +
+                                    //         1,
+                                    //     clipBehavior: Clip.none,
+                                    //     itemBuilder: (context, index) {
+                                    //       //if item is last
+                                    //       if (index ==
+                                    //           min(
+                                    //               show.credits?.cast?.length ??
+                                    //                   10,
+                                    //               10)) {
+                                    //         return Padding(
+                                    //           padding:
+                                    //               const EdgeInsets.all(16.0),
+                                    //           child: TextButton.icon(
+                                    //               onPressed: () {
+                                    //                 AppRouter.navigateToPage(
+                                    //                     Routes
+                                    //                         .allMovieCastAndCrew,
+                                    //                     arguments:
+                                    //                         AllClassAndCrewArgs(
+                                    //                             credits: show
+                                    //                                 .credits!,
+                                    //                             backdropPath: show
+                                    //                                 .backdropPath!));
+                                    //               },
+                                    //               style: TextButton.styleFrom(
+                                    //                 foregroundColor:
+                                    //                     Colors.white,
+                                    //               ),
+                                    //               icon: const Icon(
+                                    //                   Icons.arrow_forward),
+                                    //               label:
+                                    //                   const Text("View all")),
+                                    //         );
+                                    //       }
+                                    //       final cast =
+                                    //           show.credits?.cast?[index];
+                                    //       return md.CastTile(
+                                    //           name: cast?.name,
+                                    //           character: cast?.character,
+                                    //           profilePath: cast?.profilePath);
+                                    //     },
+                                    //   ),
+                                    // ),
                                   ]),
                               verticalSpaceMedium,
-
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Stats",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  verticalSpaceMedium,
-                                  Focus(
-                                    child: Builder(builder: (context) {
-                                      return Container(
+                              InkWell(
+                                onTap: () {},
+                                child: Builder(builder: (context) {
+                                  final hasFocus =
+                                      Focus.of(context).hasPrimaryFocus;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Stats",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      verticalSpaceMedium,
+                                      Container(
                                         padding: const EdgeInsets.all(14.0),
                                         decoration: BoxDecoration(
-                                          color: kPrimaryAccentColor
-                                              .withOpacity(.2),
+                                          color: hasFocus
+                                              ? kPrimaryAccentColor
+                                                  .withOpacity(.5)
+                                              : kPrimaryAccentColor
+                                                  .withOpacity(.2),
                                           borderRadius:
                                               BorderRadius.circular(4),
                                         ),
@@ -474,10 +542,11 @@ class TvShowDetailsView extends HookConsumerWidget {
                                             ),
                                           ],
                                         ),
-                                      );
-                                    }),
-                                  )
-                                ],
+                                      ),
+                                      verticalSpaceMedium
+                                    ],
+                                  );
+                                }),
                               ),
 
                               // Row(
@@ -492,7 +561,6 @@ class TvShowDetailsView extends HookConsumerWidget {
                               //       child:   ),
                               //   ],
                               // ),
-                              verticalSpaceMedium,
                             ],
                           ),
                         ),

@@ -1,15 +1,19 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/shared_widgets/app_loader.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/core/shared_widgets/image.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
+import 'package:latest_movies/features/movies/views/movie_details/all_cast_crew_v3_view.dart';
+import 'package:latest_movies/features/movies/views/movie_details/movie_details.dart';
 import '../../../../core/config/config.dart';
 import '../../../../core/shared_widgets/button.dart';
 import '../../../../core/utilities/debouncer.dart';
@@ -282,7 +286,8 @@ class MovieDetailsViewV3 extends HookConsumerWidget {
                                             const platform = MethodChannel(
                                                 'com.example.latest_movies/channel');
                                             await platform.invokeMethod(
-                                                "navigateToYoutubePlayer", {'video_id': 'lcjN7zkgELM'});
+                                                "navigateToYoutubePlayer",
+                                                {'video_id': 'lcjN7zkgELM'});
                                           },
                                         ),
                                         // movieVideosAsync.when(
@@ -338,6 +343,188 @@ class MovieDetailsViewV3 extends HookConsumerWidget {
                                 ),
                               )
                             ],
+                          ),
+                        ),
+                        FocusTraversalGroup(
+                          policy: WidgetOrderTraversalPolicy(),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                verticalSpaceMedium,
+                                Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Cast",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      verticalSpaceMedium,
+                                      Builder(builder: (context) {
+                                        // Get the screen width
+                                        double screenWidth =
+                                            MediaQuery.of(context).size.width;
+                                        double itemWidth =
+                                            150; // Replace this with the actual width of your items
+
+                                        int itemCount = min(
+                                            (movie.cast?.length ?? 0) + 1,
+                                            screenWidth ~/ itemWidth);
+
+                                        return SizedBox(
+                                          height: 230,
+                                          child: Row(
+                                            children: List.generate(
+                                              itemCount,
+                                              (index) {
+                                                return Builder(
+                                                  builder: (context) {
+                                                    if (index ==
+                                                        itemCount - 1) {
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(16.0),
+                                                        child: TextButton.icon(
+                                                            onPressed: () {
+                                                              final bgPath = movie
+                                                                      .backdrop
+                                                                      ?.urlsImage
+                                                                      ?.firstWhere(
+                                                                          (img) =>
+                                                                              img.size?.value ==
+                                                                              "original",
+                                                                          orElse: () =>
+                                                                              const UrlsImage(url: ""))
+                                                                      .url ??
+                                                                  "";
+
+                                                              AppRouter
+                                                                  .navigateToPage(
+                                                                Routes
+                                                                    .allMovieCastAndCrewV3,
+                                                                arguments:
+                                                                    AllClassAndCrewV3Args(
+                                                                  casts: movie
+                                                                          .cast ??
+                                                                      [],
+                                                                  backdropPath:
+                                                                      bgPath,
+                                                                ),
+                                                              );
+                                                            },
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              foregroundColor:
+                                                                  Colors.white,
+                                                            ),
+                                                            icon: const Icon(Icons
+                                                                .arrow_forward),
+                                                            label: const Text(
+                                                                "View all")),
+                                                      );
+                                                    }
+                                                    final cast =
+                                                        movie.cast?[index];
+                                                    return CastTile(
+                                                        name: cast?.name,
+                                                        character:
+                                                            cast?.characterName,
+                                                        profilePath:
+                                                            cast?.profilePath);
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    ]),
+                                verticalSpaceMedium,
+
+                                InkWell(
+                                  onTap: () {},
+                                  child: Builder(
+                                    builder: (context) {
+                                      final hasFocus =
+                                          Focus.of(context).hasPrimaryFocus;
+
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            "Stats",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          verticalSpaceMedium,
+                                          Container(
+                                            padding: const EdgeInsets.all(14.0),
+                                            decoration: BoxDecoration(
+                                              color: hasFocus
+                                                  ? kPrimaryAccentColor
+                                                      .withOpacity(.5)
+                                                  : kPrimaryAccentColor
+                                                      .withOpacity(.2),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                            width: double.infinity,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                StatsItem(
+                                                  stat: "Budget",
+                                                  value:
+                                                      "\$${NumberFormat.currency(name: "").format(movie.budget)}",
+                                                ),
+                                                verticalSpaceRegular,
+                                                StatsItem(
+                                                  stat: "Revenue",
+                                                  value:
+                                                      "\$${NumberFormat.currency(name: "").format(movie.revenue)}",
+                                                ),
+                                                verticalSpaceRegular,
+                                                StatsItem(
+                                                  stat: "Original Language",
+                                                  value: validString(
+                                                      movie.originalLanguage),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          verticalSpaceMedium
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
+
+                                // Row(
+                                //   crossAxisAlignment: CrossAxisAlignment.start,
+                                //   children: [
+                                //     Expanded(
+                                //       child:,
+                                //     ),
+                                //     horizontalSpaceLarge,
+                                //     SizedBox(
+                                //       width: 200,
+                                //       child:   ),
+                                //   ],
+                                // ),
+                                // verticalSpaceMedium,
+                              ],
+                            ),
                           ),
                         ),
                       ],
@@ -436,101 +623,6 @@ class CreatorItem extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class CastTile extends StatelessWidget {
-  const CastTile({
-    super.key,
-    required this.name,
-    required this.character,
-    required this.profilePath,
-  });
-
-  final String? name;
-  final String? character;
-  final String? profilePath;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      child: Builder(builder: (context) {
-        final hasFocus = Focus.of(context).hasPrimaryFocus;
-
-        return Container(
-          width: 120,
-          margin: const EdgeInsets.only(right: 10),
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(4),
-            // boxShadow: hasFocus
-            //     ? [
-            //         BoxShadow(
-            //           color: Colors.white.withOpacity(.5),
-            //           blurRadius: 10,
-            //           spreadRadius: 5,
-            //           offset: const Offset(0, 0),
-            //         ),
-            //       ]
-            //     : null,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                height: 150,
-                width: 150,
-                decoration: BoxDecoration(
-                  color: profilePath == null ? Colors.grey[300] : null,
-                  boxShadow: hasFocus
-                      ? [
-                          BoxShadow(
-                            color: kPrimaryAccentColor.withOpacity(.5),
-                            blurRadius: 10,
-                            spreadRadius: 5,
-                            offset: const Offset(0, 0),
-                          ),
-                        ]
-                      : null,
-                  shape: BoxShape.circle,
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: AppImage(
-                  imageUrl: "${Configs.mediumBaseImagePath}$profilePath",
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 5),
-                    Text(
-                      name ?? "N/A",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: hasFocus ? Colors.white : Colors.grey[800],
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      character ?? "N/A",
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        color: hasFocus ? Colors.white : Colors.grey[800],
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
-      }),
     );
   }
 }

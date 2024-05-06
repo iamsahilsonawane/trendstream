@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:latest_movies/features/movies/models/tv_show_v3/cast.dart';
 
 import 'backdrop.dart';
 import 'cast.dart';

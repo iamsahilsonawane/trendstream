@@ -392,58 +392,123 @@ class MovieDetailsView extends HookConsumerWidget {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   verticalSpaceMedium,
-                                  SizedBox(
-                                    height: 220,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: min(
-                                              movie.credits?.cast?.length ?? 10,
-                                              10) +
-                                          1,
-                                      clipBehavior: Clip.none,
-                                      itemBuilder: (context, index) {
-                                        //if item is last
-                                        if (index ==
-                                            min(
-                                                movie.credits?.cast?.length ??
-                                                    10,
-                                                10)) {
-                                          return Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: TextButton.icon(
-                                                onPressed: () {
-                                                  AppRouter.navigateToPage(
-                                                      Routes
-                                                          .allMovieCastAndCrew,
-                                                      arguments:
-                                                          AllClassAndCrewArgs(
-                                                              credits: movie
-                                                                  .credits!,
-                                                              backdropPath: movie
-                                                                  .backdropPath!));
-                                                },
-                                                style: TextButton.styleFrom(
-                                                  foregroundColor: Colors.white,
-                                                ),
-                                                icon: const Icon(
-                                                    Icons.arrow_forward),
-                                                label: const Text("View all")),
-                                          );
-                                        }
-                                        final cast =
-                                            movie.credits?.cast?[index];
-                                        return CastTile(
-                                            name: cast?.name,
-                                            character: cast?.character,
-                                            profilePath: cast?.profilePath);
-                                      },
-                                    ),
-                                  ),
+                                  Builder(builder: (context) {
+                                    // Get the screen width
+                                    double screenWidth =
+                                        MediaQuery.of(context).size.width;
+                                    double itemWidth =
+                                        150; // Replace this with the actual width of your items
+
+                                    int itemCount = min(
+                                        (movie.credits?.cast?.length ?? 0) + 1,
+                                        screenWidth ~/ itemWidth);
+
+                                    return SizedBox(
+                                      height: 230,
+                                      child: Row(
+                                        children: List.generate(
+                                          itemCount,
+                                          (index) {
+                                            return Builder(
+                                              builder: (context) {
+                                                if (index == itemCount - 1) {
+                                                  return Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            16.0),
+                                                    child: TextButton.icon(
+                                                        onPressed: () {
+                                                          AppRouter.navigateToPage(
+                                                              Routes
+                                                                  .allMovieCastAndCrew,
+                                                              arguments: AllClassAndCrewArgs(
+                                                                  credits: movie
+                                                                      .credits!,
+                                                                  backdropPath:
+                                                                      movie
+                                                                          .backdropPath!));
+                                                        },
+                                                        style: TextButton
+                                                            .styleFrom(
+                                                          foregroundColor:
+                                                              Colors.white,
+                                                        ),
+                                                        icon: const Icon(Icons
+                                                            .arrow_forward),
+                                                        label: const Text(
+                                                            "View all")),
+                                                  );
+                                                }
+                                                final cast =
+                                                    movie.credits?.cast?[index];
+                                                return CastTile(
+                                                    name: cast?.name,
+                                                    character: cast?.character,
+                                                    profilePath:
+                                                        cast?.profilePath);
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  }),
+
+                                  // SizedBox(
+                                  //   height: 220,
+                                  //   child: ListView.builder(
+                                  //     scrollDirection: Axis.horizontal,
+                                  //     itemCount: min(
+                                  //             movie.credits?.cast?.length ?? 10,
+                                  //             10) +
+                                  //         1,
+                                  //     clipBehavior: Clip.none,
+                                  //     itemBuilder: (context, index) {
+                                  //       //if item is last
+                                  //       if (index ==
+                                  //           min(
+                                  //               movie.credits?.cast?.length ??
+                                  //                   10,
+                                  //               10)) {
+                                  //         return Padding(
+                                  //           padding: const EdgeInsets.all(16.0),
+                                  //           child: TextButton.icon(
+                                  //               onPressed: () {
+                                  //                 AppRouter.navigateToPage(
+                                  //                     Routes
+                                  //                         .allMovieCastAndCrew,
+                                  //                     arguments:
+                                  //                         AllClassAndCrewArgs(
+                                  //                             credits: movie
+                                  //                                 .credits!,
+                                  //                             backdropPath: movie
+                                  //                                 .backdropPath!));
+                                  //               },
+                                  //               style: TextButton.styleFrom(
+                                  //                 foregroundColor: Colors.white,
+                                  //               ),
+                                  //               icon: const Icon(
+                                  //                   Icons.arrow_forward),
+                                  //               label: const Text("View all")),
+                                  //         );
+                                  //       }
+                                  //       final cast =
+                                  //           movie.credits?.cast?[index];
+                                  //       return CastTile(
+                                  //           name: cast?.name,
+                                  //           character: cast?.character,
+                                  //           profilePath: cast?.profilePath);
+                                  //     },
+                                  //   ),
+                                  // ),
                                 ]),
                             verticalSpaceMedium,
                             InkWell(
                               onTap: () {},
                               child: Builder(builder: (context) {
+                                final hasFocus =
+                                    Focus.of(context).hasPrimaryFocus;
+
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -458,8 +523,11 @@ class MovieDetailsView extends HookConsumerWidget {
                                     Container(
                                       padding: const EdgeInsets.all(14.0),
                                       decoration: BoxDecoration(
-                                        color:
-                                            kPrimaryAccentColor.withOpacity(.2),
+                                        color: hasFocus
+                                            ? kPrimaryAccentColor
+                                                .withOpacity(.5)
+                                            : kPrimaryAccentColor
+                                                .withOpacity(.2),
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       width: double.infinity,
@@ -620,6 +688,7 @@ class CastTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () {},
+      autofocus: false,
       child: Builder(builder: (context) {
         final hasFocus = Focus.of(context).hasPrimaryFocus ||
             (!ref.watch(androidDeviceInfoProvider).isTv);
@@ -680,6 +749,8 @@ class CastTile extends ConsumerWidget {
                         color: hasFocus ? Colors.white : Colors.grey[800],
                         fontWeight: FontWeight.w700,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 5),
                     Text(
@@ -689,6 +760,8 @@ class CastTile extends ConsumerWidget {
                         color: hasFocus ? Colors.white : Colors.grey[800],
                         fontWeight: FontWeight.w300,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),

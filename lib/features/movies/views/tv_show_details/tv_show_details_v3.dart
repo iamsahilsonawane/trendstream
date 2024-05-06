@@ -1,8 +1,11 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:ensure_visible_when_focused/ensure_visible_when_focused.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
@@ -354,159 +357,290 @@ class TvShowDetailsViewV3 extends HookConsumerWidget {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 40),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              verticalSpaceMedium,
-                              Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      "Cast",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    verticalSpaceMedium,
-                                    SizedBox(
-                                      height: 230,
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount:
-                                            min(show.casts?.length ?? 10, 10) +
-                                                1,
-                                        clipBehavior: Clip.none,
-                                        itemBuilder: (context, index) {
-                                          //if item is last
-                                          if (index ==
-                                              min(show.casts?.length ?? 10,
-                                                  10)) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(16.0),
-                                              child: TextButton.icon(
-                                                  onPressed: () {
-                                                    final bgPath = show
-                                                            .backdrop?.urlsImage
-                                                            ?.firstWhere(
-                                                                (img) =>
-                                                                    img.size
-                                                                        ?.value ==
-                                                                    "original",
-                                                                orElse: () =>
-                                                                    const UrlsImage(
-                                                                        url:
-                                                                            ""))
-                                                            .url ??
-                                                        "";
-
-                                                    AppRouter.navigateToPage(
-                                                      Routes
-                                                          .allMovieCastAndCrewV3,
-                                                      arguments:
-                                                          AllClassAndCrewV3Args(
-                                                        casts: show.casts ?? [],
-                                                        backdropPath: bgPath,
-                                                      ),
-                                                    );
-                                                  },
-                                                  style: TextButton.styleFrom(
-                                                    foregroundColor:
-                                                        Colors.white,
-                                                  ),
-                                                  icon: const Icon(
-                                                      Icons.arrow_forward),
-                                                  label:
-                                                      const Text("View all")),
-                                            );
-                                          }
-                                          final cast = show.casts?[index];
-                                          return md.CastTile(
-                                              name: cast?.name,
-                                              character: cast?.characterName,
-                                              profilePath: cast?.profilePath);
-                                        },
+                        FocusTraversalGroup(
+                          policy: WidgetOrderTraversalPolicy(),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                verticalSpaceMedium,
+                                Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        "Cast",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ),
-                                  ]),
-                              verticalSpaceMedium,
+                                      verticalSpaceMedium,
+                                      Builder(builder: (context) {
+                                        // Get the screen width
+                                        double screenWidth =
+                                            MediaQuery.of(context).size.width;
+                                        double itemWidth =
+                                            150; // Replace this with the actual width of your items
 
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "Stats",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  verticalSpaceMedium,
-                                  Focus(
-                                    child: Builder(builder: (context) {
-                                      return Container(
-                                        padding: const EdgeInsets.all(14.0),
-                                        decoration: BoxDecoration(
-                                          color: kPrimaryAccentColor
-                                              .withOpacity(.2),
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                        width: double.infinity,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            md.StatsItem(
-                                              stat: "Status",
-                                              value: show.status ?? "N/A",
+                                        int itemCount = min(
+                                            (show.casts?.length ?? 0) + 1,
+                                            screenWidth ~/ itemWidth);
+
+                                        return SizedBox(
+                                          height: 230,
+                                          child: Row(
+                                            children: List.generate(
+                                              itemCount,
+                                              (index) {
+                                                return Builder(
+                                                  builder: (context) {
+                                                    if (index ==
+                                                        itemCount - 1) {
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(16.0),
+                                                        child: TextButton.icon(
+                                                            onPressed: () {
+                                                              final bgPath = show
+                                                                      .backdrop
+                                                                      ?.urlsImage
+                                                                      ?.firstWhere(
+                                                                          (img) =>
+                                                                              img.size?.value ==
+                                                                              "original",
+                                                                          orElse: () =>
+                                                                              const UrlsImage(url: ""))
+                                                                      .url ??
+                                                                  "";
+
+                                                              AppRouter
+                                                                  .navigateToPage(
+                                                                Routes
+                                                                    .allMovieCastAndCrewV3,
+                                                                arguments:
+                                                                    AllClassAndCrewV3Args(
+                                                                  casts:
+                                                                      show.casts ??
+                                                                          [],
+                                                                  backdropPath:
+                                                                      bgPath,
+                                                                ),
+                                                              );
+                                                            },
+                                                            style: TextButton
+                                                                .styleFrom(
+                                                              foregroundColor:
+                                                                  Colors.white,
+                                                            ),
+                                                            icon: const Icon(Icons
+                                                                .arrow_forward),
+                                                            label: const Text(
+                                                                "View all")),
+                                                      );
+                                                    }
+                                                    final cast =
+                                                        show.casts?[index];
+                                                    return md.CastTile(
+                                                        name: cast?.name,
+                                                        character:
+                                                            cast?.characterName,
+                                                        profilePath:
+                                                            cast?.profilePath);
+                                                  },
+                                                );
+                                              },
                                             ),
-                                            verticalSpaceRegular,
-                                            md.StatsItem(
-                                              stat: "Network",
-                                              value: show.network ?? "N/A",
+                                            // itemCount:
+                                            //     min(show.casts?.length ?? 10, 10) +
+                                            //         1,
+                                            // clipBehavior: Clip.none,
+                                            // itemBuilder: (context, index) {
+                                            //   //if item is last
+                                            //   if (index ==
+                                            //       min(show.casts?.length ?? 10,
+                                            //           10)) {
+                                            //     return Padding(
+                                            //       padding:
+                                            //           const EdgeInsets.all(16.0),
+                                            //       child: TextButton.icon(
+                                            //           onPressed: () {
+                                            //             final bgPath = show
+                                            //                     .backdrop?.urlsImage
+                                            //                     ?.firstWhere(
+                                            //                         (img) =>
+                                            //                             img.size
+                                            //                                 ?.value ==
+                                            //                             "original",
+                                            //                         orElse: () =>
+                                            //                             const UrlsImage(
+                                            //                                 url:
+                                            //                                     ""))
+                                            //                     .url ??
+                                            //                 "";
+
+                                            //             AppRouter.navigateToPage(
+                                            //               Routes
+                                            //                   .allMovieCastAndCrewV3,
+                                            //               arguments:
+                                            //                   AllClassAndCrewV3Args(
+                                            //                 casts: show.casts ?? [],
+                                            //                 backdropPath: bgPath,
+                                            //               ),
+                                            //             );
+                                            //           },
+                                            //           style: TextButton.styleFrom(
+                                            //             foregroundColor:
+                                            //                 Colors.white,
+                                            //           ),
+                                            //           icon: const Icon(
+                                            //               Icons.arrow_forward),
+                                            //           label:
+                                            //               const Text("View all")),
+                                            //     );
+                                            //   }
+                                            //   final cast = show.casts?[index];
+                                            //   return md.CastTile(
+                                            //       name: cast?.name,
+                                            //       character: cast?.characterName,
+                                            //       profilePath: cast?.profilePath);
+                                            // },
+                                          ),
+                                        );
+                                      }),
+                                    ]),
+                                verticalSpaceMedium,
+
+                                // Column(
+                                //   crossAxisAlignment: CrossAxisAlignment.start,
+                                //   children: [
+                                //     const Text(
+                                //       "Stats",
+                                //       style: TextStyle(
+                                //           color: Colors.white,
+                                //           fontSize: 20,
+                                //           fontWeight: FontWeight.bold),
+                                //     ),
+                                //     verticalSpaceMedium,
+                                //     Focus(
+                                //       child: Builder(builder: (context) {
+                                //         return Container(
+                                //           padding: const EdgeInsets.all(14.0),
+                                //           decoration: BoxDecoration(
+                                //             color: kPrimaryAccentColor
+                                //                 .withOpacity(.2),
+                                //             borderRadius:
+                                //                 BorderRadius.circular(4),
+                                //           ),
+                                //           width: double.infinity,
+                                //           child: Row(
+                                //             mainAxisAlignment:
+                                //                 MainAxisAlignment.spaceBetween,
+                                //             children: [
+                                //               md.StatsItem(
+                                //                 stat: "Status",
+                                //                 value: show.status ?? "N/A",
+                                //               ),
+                                //               verticalSpaceRegular,
+                                //               md.StatsItem(
+                                //                 stat: "Network",
+                                //                 value: show.network ?? "N/A",
+                                //               ),
+                                //               //     verticalSpaceRegular,
+                                //               //     md.StatsItem(
+                                //               //       stat: "Original Language",
+                                //               //       value: show.spokenLanguages
+                                //               //               ?.firstWhere(
+                                //               //                   (element) =>
+                                //               //                       element.iso6391 ==
+                                //               //                       show
+                                //               //                           .originalLanguage,
+                                //               //                   orElse: () =>
+                                //               //                       const SpokenLanguage(
+                                //               //                           name:
+                                //               //                               "English"))
+                                //               //               .name ??
+                                //               //           "N/A",
+                                //               //     ),
+                                //             ],
+                                //           ),
+                                //         );
+                                //       }),
+                                //     )
+                                //   ],
+                                // ),
+                                InkWell(
+                                  onTap: () {},
+                                  child: Builder(
+                                    builder: (context) {
+                                      final hasFocus =
+                                          Focus.of(context).hasPrimaryFocus;
+
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            "Stats",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          verticalSpaceMedium,
+                                          Container(
+                                            padding: const EdgeInsets.all(14.0),
+                                            decoration: BoxDecoration(
+                                              color: hasFocus
+                                                  ? kPrimaryAccentColor
+                                                      .withOpacity(.5)
+                                                  : kPrimaryAccentColor
+                                                      .withOpacity(.2),
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
                                             ),
-                                            //     verticalSpaceRegular,
-                                            //     md.StatsItem(
-                                            //       stat: "Original Language",
-                                            //       value: show.spokenLanguages
-                                            //               ?.firstWhere(
-                                            //                   (element) =>
-                                            //                       element.iso6391 ==
-                                            //                       show
-                                            //                           .originalLanguage,
-                                            //                   orElse: () =>
-                                            //                       const SpokenLanguage(
-                                            //                           name:
-                                            //                               "English"))
-                                            //               .name ??
-                                            //           "N/A",
-                                            //     ),
-                                          ],
-                                        ),
+                                            width: double.infinity,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                md.StatsItem(
+                                                  stat: "Status",
+                                                  value: show.status ?? "N/A",
+                                                ),
+                                                verticalSpaceRegular,
+                                                md.StatsItem(
+                                                  stat: "Network",
+                                                  value: show.network ?? "N/A",
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          verticalSpaceMedium
+                                        ],
                                       );
-                                    }),
-                                  )
-                                ],
-                              ),
+                                    },
+                                  ),
+                                ),
 
-                              // Row(
-                              //   crossAxisAlignment: CrossAxisAlignment.start,
-                              //   children: [
-                              //     Expanded(
-                              //       child:,
-                              //     ),
-                              //     horizontalSpaceLarge,
-                              //     SizedBox(
-                              //       width: 200,
-                              //       child:   ),
-                              //   ],
-                              // ),
-                              verticalSpaceMedium,
-                            ],
+                                // Row(
+                                //   crossAxisAlignment: CrossAxisAlignment.start,
+                                //   children: [
+                                //     Expanded(
+                                //       child:,
+                                //     ),
+                                //     horizontalSpaceLarge,
+                                //     SizedBox(
+                                //       width: 200,
+                                //       child:   ),
+                                //   ],
+                                // ),
+                                // verticalSpaceMedium,
+                              ],
+                            ),
                           ),
                         ),
                       ],
