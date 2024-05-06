@@ -427,6 +427,8 @@ class TvShowDetailsViewV3 extends HookConsumerWidget {
                                                                           [],
                                                                   backdropPath:
                                                                       bgPath,
+                                                                  includeProfilePathPrefix:
+                                                                      true,
                                                                 ),
                                                               );
                                                             },
@@ -441,14 +443,32 @@ class TvShowDetailsViewV3 extends HookConsumerWidget {
                                                                 "View all")),
                                                       );
                                                     }
+
                                                     final cast =
                                                         show.casts?[index];
-                                                    return md.CastTile(
-                                                        name: cast?.name,
-                                                        character:
-                                                            cast?.characterName,
-                                                        profilePath:
-                                                            cast?.profilePath);
+
+                                                    final profileImage = cast
+                                                        ?.urlsImage
+                                                        ?.firstWhere(
+                                                            (element) =>
+                                                                element.size
+                                                                    ?.value ==
+                                                                "original",
+                                                            orElse: () => cast
+                                                                .urlsImage!
+                                                                .first);
+
+                                                    return md.CastTileV3(
+                                                      name: cast?.name,
+                                                      character:
+                                                          cast?.characterName,
+                                                      profilePath:
+                                                          profileImage?.url,
+                                                      blurHash: profileImage
+                                                          ?.blurHash,
+                                                      includeProfilePathPrefix:
+                                                          true,
+                                                    );
                                                   },
                                                 );
                                               },

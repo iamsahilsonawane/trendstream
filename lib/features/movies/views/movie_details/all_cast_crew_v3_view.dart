@@ -14,9 +14,10 @@ import 'movie_details.dart';
 class AllClassAndCrewV3Args {
   final List<Cast> casts;
   final String backdropPath;
+  final bool includeProfilePathPrefix;
 
   const AllClassAndCrewV3Args(
-      {required this.casts, required this.backdropPath});
+      {required this.casts, required this.backdropPath, required this.includeProfilePathPrefix});
 }
 
 class AllCastAndCrewV3View extends HookWidget {
@@ -60,8 +61,8 @@ class AllCastAndCrewV3View extends HookWidget {
               color: const Color.fromRGBO(0, 0, 0, 1).withOpacity(.8),
               child: SingleChildScrollView(
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 12.0, horizontal: 40),
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 12.0, horizontal: 40),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -84,10 +85,18 @@ class AllCastAndCrewV3View extends HookWidget {
                         itemCount: args.casts.length,
                         itemBuilder: (context, index) {
                           final cast = args.casts[index];
-                          return CastTile(
-                              name: cast.name,
-                              character: cast.characterName,
-                              profilePath: cast.profilePath);
+
+                          final profileImage = cast.urlsImage?.firstWhere(
+                              (element) => element.size?.value == "original",
+                              orElse: () => cast.urlsImage!.first);
+
+                          return CastTileV3(
+                            name: cast.name,
+                            character: cast.characterName,
+                            profilePath: profileImage?.url,
+                            blurHash: profileImage?.blurHash,
+                            includeProfilePathPrefix: args.includeProfilePathPrefix,
+                          );
                         },
                       ),
                     ],

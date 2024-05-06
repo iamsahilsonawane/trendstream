@@ -441,7 +441,7 @@ class MovieDetailsView extends HookConsumerWidget {
                                                 }
                                                 final cast =
                                                     movie.credits?.cast?[index];
-                                                return CastTile(
+                                                return CastTileV1(
                                                     name: cast?.name,
                                                     character: cast?.character,
                                                     profilePath:
@@ -672,17 +672,45 @@ class CreatorItem extends StatelessWidget {
   }
 }
 
+class CastTileV1 extends CastTile {
+  const CastTileV1({
+    super.key,
+    required super.name,
+    required super.character,
+    required super.profilePath,
+    super.blurHash,
+    super.includeProfilePathPrefix = true,
+  }) : super(prefix: Configs.mediumBaseImagePath);
+}
+
+class CastTileV3 extends CastTile {
+  const CastTileV3({
+    super.key,
+    required super.name,
+    required super.character,
+    required super.profilePath,
+    super.blurHash,
+    super.includeProfilePathPrefix = true,
+  }) : super(prefix: Configs.v3ImagePrefix);
+}
+
 class CastTile extends ConsumerWidget {
   const CastTile({
     super.key,
     required this.name,
     required this.character,
     required this.profilePath,
+    required this.prefix,
+    this.blurHash,
+    this.includeProfilePathPrefix = true,
   });
 
   final String? name;
   final String? character;
   final String? profilePath;
+  final String? blurHash;
+  final String? prefix;
+  final bool includeProfilePathPrefix;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -733,7 +761,10 @@ class CastTile extends ConsumerWidget {
                 ),
                 clipBehavior: Clip.antiAlias,
                 child: AppImage(
-                  imageUrl: "${Configs.mediumBaseImagePath}$profilePath",
+                  imageUrl: includeProfilePathPrefix
+                      ? "$prefix$profilePath"
+                      : profilePath ?? '',
+                  blurHash: blurHash,
                 ),
               ),
               Padding(

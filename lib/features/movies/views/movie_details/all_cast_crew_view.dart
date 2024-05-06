@@ -81,7 +81,7 @@ class AllCastAndCrewView extends HookWidget {
                       itemCount: args.credits.cast!.length,
                       itemBuilder: (context, index) {
                         final cast = args.credits.cast![index];
-                        return CastTile(
+                        return CastTileV1(
                             name: cast.name,
                             character: cast.character,
                             profilePath: cast.profilePath);
@@ -105,7 +105,7 @@ class AllCastAndCrewView extends HookWidget {
                       itemCount: args.credits.crew!.length,
                       itemBuilder: (context, index) {
                         final crew = args.credits.crew![index];
-                        return CastTile(
+                        return CastTileV1(
                           name: crew.name,
                           character: crew.job,
                           profilePath: crew.profilePath,

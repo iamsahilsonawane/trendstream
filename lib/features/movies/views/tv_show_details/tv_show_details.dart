@@ -413,7 +413,7 @@ class TvShowDetailsView extends HookConsumerWidget {
                                                   }
                                                   final cast = show
                                                       .credits?.cast?[index];
-                                                  return md.CastTile(
+                                                  return md.CastTileV1(
                                                       name: cast?.name,
                                                       character:
                                                           cast?.character,
