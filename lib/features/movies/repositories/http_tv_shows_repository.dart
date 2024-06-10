@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:latest_movies/core/config/config.dart';
 import 'package:latest_movies/core/services/http/http_service.dart';
 import 'package:latest_movies/core/models/paginated_response.dart';
@@ -12,14 +13,19 @@ import '../models/season_details/season_details.dart';
 
 class HttpTvShowsRepository implements TvShowsRepository {
   final HttpService httpService;
+  final Locale locale;
 
-  HttpTvShowsRepository(this.httpService);
+  HttpTvShowsRepository(this.httpService, this.locale);
 
   @override
   String get apiKey => Configs.apiKey;
 
   @override
   String get path => "/tv";
+
+  late Map<String, String> commonQueryParams = {
+    'language': locale.languageCode,
+  };
 
   @override
   Future<PaginatedResponse<TvShow>> getPopularTvShows(
@@ -106,8 +112,7 @@ class HttpTvShowsRepository implements TvShowsRepository {
       forceRefresh: forceRefresh,
       queryParameters: {
         'id_season': seasonId,
-        'language': 'en',
-      },
+      }..addAll(commonQueryParams),
     );
 
     return List<Episode>.from(
@@ -125,8 +130,7 @@ class HttpTvShowsRepository implements TvShowsRepository {
       forceRefresh: forceRefresh,
       queryParameters: {
         'id_tv_show': tvShowId,
-        'language': 'en',
-      },
+      }..addAll(commonQueryParams),
     );
 
     return TvShowV3.fromJson(responseData);
@@ -140,8 +144,7 @@ class HttpTvShowsRepository implements TvShowsRepository {
       forceRefresh: forceRefresh,
       queryParameters: {
         'id_tv_show': tvShowId,
-        'language': 'en',
-      },
+      }..addAll(commonQueryParams),
     );
 
     return SeasonDetailsV3.fromJson(responseData);
@@ -152,9 +155,7 @@ class HttpTvShowsRepository implements TvShowsRepository {
     final responseData = await httpService.get(
       'http://15.235.12.125:8081/api-tv-movies/app/tv_shows/getTvShows',
       forceRefresh: forceRefresh,
-      queryParameters: {
-        'language': 'en',
-      },
+      queryParameters: {}..addAll(commonQueryParams),
     );
 
     return List<TvShowV3>.from(responseData.map((x) => TvShowV3.fromJson(x)));
@@ -168,8 +169,7 @@ class HttpTvShowsRepository implements TvShowsRepository {
       forceRefresh: forceRefresh,
       queryParameters: {
         'id_tv_show': tvShowId,
-        'language': 'en',
-      },
+      }..addAll(commonQueryParams),
     );
 
     return List<SeasonDetailsV3>.from(

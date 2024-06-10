@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:latest_movies/core/config/config.dart';
 import 'package:latest_movies/core/services/http/http_service.dart';
 import 'package:latest_movies/features/movies/models/movie/movie.dart';
@@ -12,14 +13,19 @@ import '../models/movie_video/movie_video.dart';
 
 class HttpMoviesRepository implements MoviesRepository {
   final HttpService httpService;
+  final Locale locale;
 
-  HttpMoviesRepository(this.httpService);
+  HttpMoviesRepository(this.httpService, this.locale);
 
   @override
   String get apiKey => Configs.apiKey;
 
   @override
   String get path => "/movie";
+
+  late Map<String, String> commonQueryParams = {
+    'language': locale.languageCode,
+  };
 
   @override
   Future<PaginatedResponse<Movie>> getPopularMovies(
@@ -130,9 +136,7 @@ class HttpMoviesRepository implements MoviesRepository {
     final responseData = await httpService.get(
       'http://15.235.12.125:8081/api-tv-movies/app/movies/getMovies',
       forceRefresh: forceRefresh,
-      queryParameters: {
-        "language": "en",
-      },
+      queryParameters: {}..addAll(commonQueryParams),
     );
 
     return List<MovieV3>.from(responseData.map((x) => MovieV3.fromJson(x)));
@@ -145,9 +149,8 @@ class HttpMoviesRepository implements MoviesRepository {
       'http://15.235.12.125:8081/api-tv-movies/app/movies/getMovies',
       forceRefresh: forceRefresh,
       queryParameters: {
-        "language": "en",
         "id_category": categoryId,
-      },
+      }..addAll(commonQueryParams),
     );
 
     return List<MovieV3>.from(responseData.map((x) => MovieV3.fromJson(x)));
@@ -161,8 +164,7 @@ class HttpMoviesRepository implements MoviesRepository {
       forceRefresh: forceRefresh,
       queryParameters: {
         "id_movie": movieId,
-        "language": "en",
-      },
+      }..addAll(commonQueryParams),
     );
 
     return MovieV3.fromJson(responseData);
@@ -173,9 +175,7 @@ class HttpMoviesRepository implements MoviesRepository {
     final responseData = await httpService.get(
       'http://15.235.12.125:8081/api-tv-movies/app/movies/getCategories',
       forceRefresh: forceRefresh,
-      queryParameters: {
-        "language": "en",
-      },
+      queryParameters: {}..addAll(commonQueryParams),
     );
 
     return List<CategoryV3>.from(
@@ -189,9 +189,8 @@ class HttpMoviesRepository implements MoviesRepository {
       'http://15.235.12.125:8081/api-tv-movies/app/movies/getUrls',
       forceRefresh: forceRefresh,
       queryParameters: {
-        "language": "en",
         "id_movie": movieId,
-      },
+      }..addAll(commonQueryParams),
     );
 
     return List<VersionV3>.from(responseData.map((x) => VersionV3.fromJson(x)));

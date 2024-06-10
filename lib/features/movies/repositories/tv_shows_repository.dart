@@ -1,5 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/services/http/http_service_provider.dart';
+import 'package:latest_movies/core/shared_providers/locale_provider.dart';
 import 'package:latest_movies/features/movies/models/season_details/season_details.dart';
 import 'package:latest_movies/features/movies/models/season_details_v3/episode.dart';
 import 'package:latest_movies/features/movies/models/tv_show/tv_show.dart';
@@ -13,8 +14,9 @@ import '../models/tv_show_v3/tv_show_v3.dart';
 final tvShowsRepositoryProvider = Provider<TvShowsRepository>(
   (ref) {
     final httpService = ref.watch(httpServiceProvider);
+    final locale = ref.watch(localeProvider);
 
-    return HttpTvShowsRepository(httpService);
+    return HttpTvShowsRepository(httpService, locale);
   },
 );
 

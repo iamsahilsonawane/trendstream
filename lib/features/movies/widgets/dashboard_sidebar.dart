@@ -8,6 +8,7 @@ import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/side_bar_controller.dart';
 import 'package:latest_movies/features/movies/widgets/enter_passcode_dialog.dart';
 import 'package:latest_movies/features/movies/widgets/set_passcode_dialog.dart';
+import 'package:latest_movies/l10n/app_localisations.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../core/router/router.dart';
@@ -91,7 +92,8 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'Movies',
+                  title: "Movies",
+                  // title: AppLocalizations.of(context)!.helloWorld,
                   iconData: Icons.home_outlined,
                   selectedIconData: Icons.home,
                   focusNode: topMostItemNode,
@@ -279,6 +281,18 @@ class DashboardSideBar extends HookConsumerWidget {
                   onTap: () {
                     sidebarStateNotifier
                         .setSidebarOption(SidebarOptions.apiMoviesV3);
+                  },
+                ),
+                DrawerItem(
+                  title: 'Settings',
+                  iconData: Icons.settings_outlined,
+                  selectedIconData: Icons.settings,
+                  isSelected:
+                      sidebarState.sidebarOptions == SidebarOptions.settings,
+                  onlyIcon: shouldHide,
+                  onTap: () {
+                    sidebarStateNotifier
+                        .setSidebarOption(SidebarOptions.settings);
                   },
                 ),
                 DrawerItem(

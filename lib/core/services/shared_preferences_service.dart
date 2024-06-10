@@ -11,6 +11,7 @@ class SharedPreferencesService {
   static const isLoggedInKey = 'isLoggedIn';
   static const isPasscodeSet = 'isPasscodeSet';
   static const adultContentPasscode = 'adultContentPasscode';
+  static const language = 'language';
 
   //Utilities
   Future<void> setIsLoggedIn() async {
@@ -18,6 +19,10 @@ class SharedPreferencesService {
   }
 
   bool isLoggedIn() => sharedPreferences.getBool(isLoggedInKey) ?? false;
+
+  String? getCurrentLocale() {
+    return sharedPreferences.getString(language);
+  }
 
   //removes all keys
   Future<void> clear() async {

@@ -271,6 +271,29 @@ class AppUtils {
     int b = color.blue;
     return (r << 16) | (g << 8) | b;
   }
+
+  ///[locale] should be in the format of ln_CT ex. `en_US`
+  static Locale getLocaleFromString(String locale) {
+    switch (locale) {
+      case "en":
+        return const Locale("en");
+      case "es":
+        return const Locale("es");
+      default:
+        return const Locale("en");
+    }
+  }
+
+  static String getLocaleNameFromCode(String code) {
+    switch (code) {
+      case "en":
+        return "English";
+      case "es":
+        return "Spanish";
+      default:
+        return "English";
+    }
+  }
 }
 
 class AppDebouncer {

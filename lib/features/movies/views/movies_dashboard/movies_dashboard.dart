@@ -13,6 +13,7 @@ import 'package:latest_movies/features/movies/views/movies_dashboard/search/sear
 import 'package:latest_movies/features/movies/widgets/movies_grid.dart';
 import 'package:latest_movies/features/movies/widgets/tvshows_grid.dart';
 import 'package:latest_movies/features/movies/widgets/tvshows_grid_v3.dart';
+import 'package:latest_movies/features/settings/settings_page.dart';
 import 'package:latest_movies/features/sports/views/sports_view.dart';
 
 import '../../../../core/utilities/design_utility.dart';
@@ -135,6 +136,8 @@ class HomeView extends HookConsumerWidget {
                       return const MoviesV2Grid();
                     case SidebarOptions.apiMoviesV3:
                       return const MoviesV3Grid();
+                    case SidebarOptions.settings:
+                      return const SettingsPage();
                     default:
                       return const MoviesGrid();
                   }
