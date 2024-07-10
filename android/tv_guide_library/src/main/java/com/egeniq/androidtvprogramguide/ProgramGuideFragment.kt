@@ -463,7 +463,8 @@ abstract class ProgramGuideFragment<T> : Fragment(), ProgramGuideManager.Listene
             it.setOnClickListener { onTestVideoButtonClicked("http://23.237.117.10/test-am-1080.mkv") }
         }
         view.findViewById<Button>(R.id.testVideoButton2)?.let {
-            it.setOnClickListener { onTestVideoButtonClicked("https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8") }
+//            it.setOnClickListener { onTestVideoButtonClicked("https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8") }
+            it.setOnClickListener { onTestVideoButtonClicked("https://github.com/ietf-wg-cellar/matroska-test-files/raw/master/test_files/test5.mkv") }
         }
         view.findViewById<Button>(R.id.testVideoButton3)?.let {
             it.setOnClickListener { onTestVideoButtonClicked("http://23.237.117.10/testmax1080.mkv") }

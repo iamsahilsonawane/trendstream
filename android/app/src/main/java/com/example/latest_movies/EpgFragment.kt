@@ -67,7 +67,8 @@ class EpgFragment : ProgramGuideFragment<EpgFragment.SimpleProgram>() {
         } else {
             Toast.makeText(context, "Open detail page", Toast.LENGTH_LONG).show()
             val intent = Intent(context, PlayerActivity::class.java)
-            intent.putExtra("url", "http://23.237.220.42:8080/live/pruebas/pruebas/150.m3u8")
+//            intent.putExtra("url", "http://23.237.220.42:8080/live/pruebas/pruebas/150.m3u8")
+            intent.putExtra("url", "https://cdn.media.ccc.de/congress/2019/h264-sd/36c3-11235-eng-deu-fra-36C3_Infrastructure_Review_sd.mp4")
 //            intent.putExtra("url", "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8")
             startActivity(intent)
 //            val intent = Intent(context, PlayerActivity::class.java)

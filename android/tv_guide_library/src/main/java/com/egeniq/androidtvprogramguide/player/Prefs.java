@@ -1,11 +1,14 @@
 package com.egeniq.androidtvprogramguide.player;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.ui.AspectRatioFrameLayout;
@@ -55,6 +58,7 @@ class Prefs {
 
     final Context mContext;
     final SharedPreferences mSharedPreferences;
+    final SharedPreferences flutterSharedPreferences;
 
     public Uri mediaUri;
     public Uri subtitleUri;
@@ -85,6 +89,8 @@ class Prefs {
     public boolean subtitleStyleBold = false;
 
     private LinkedHashMap positions;
+    private LinkedHashMap subtitles;
+    private LinkedHashMap audios;
 
     public boolean persistentMode = true;
     public long nonPersitentPosition = -1L;
@@ -92,8 +98,25 @@ class Prefs {
     public Prefs(Context context) {
         mContext = context;
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        flutterSharedPreferences = mContext.getSharedPreferences("FlutterSharedPreferences", MODE_PRIVATE);
         loadSavedPreferences();
         loadPositions();
+        loadSubtitles();
+        loadAudioTracks();
+    }
+
+    public void loadSubtitlesAndAudio() {
+        final String savedSubtitleTrackId = getSubtitle();
+        if (savedSubtitleTrackId  != null) {
+            subtitleTrackId = savedSubtitleTrackId;
+        }
+
+        final String savedAudioTrackId = getAudioTrack();
+        if (savedAudioTrackId != null) {
+            audioTrackId = savedAudioTrackId;
+        }
+
+        Log.d("mPrefs", "loadSubtitlesAndAudio: audioTrackId: " + audioTrackId + " subtitleTrackId: " + subtitleTrackId);
     }
 
     private void loadSavedPreferences() {
@@ -105,10 +128,10 @@ class Prefs {
         firstRun = mSharedPreferences.getBoolean(PREF_KEY_FIRST_RUN, firstRun);
         if (mSharedPreferences.contains(PREF_KEY_SUBTITLE_URI))
             subtitleUri = Uri.parse(mSharedPreferences.getString(PREF_KEY_SUBTITLE_URI, null));
-        if (mSharedPreferences.contains(PREF_KEY_AUDIO_TRACK_ID))
-            audioTrackId = mSharedPreferences.getString(PREF_KEY_AUDIO_TRACK_ID, audioTrackId);
-        if (mSharedPreferences.contains(PREF_KEY_SUBTITLE_TRACK_ID))
-            subtitleTrackId = mSharedPreferences.getString(PREF_KEY_SUBTITLE_TRACK_ID, subtitleTrackId);
+        // if (mSharedPreferences.contains(PREF_KEY_AUDIO_TRACK_ID))
+        //     audioTrackId = mSharedPreferences.getString(PREF_KEY_AUDIO_TRACK_ID, audioTrackId);
+//        if (mSharedPreferences.contains(PREF_KEY_SUBTITLE_TRACK_ID))
+//            subtitleTrackId = mSharedPreferences.getString(PREF_KEY_SUBTITLE_TRACK_ID, subtitleTrackId);
         if (mSharedPreferences.contains(PREF_KEY_RESIZE_MODE))
             resizeMode = mSharedPreferences.getInt(PREF_KEY_RESIZE_MODE, resizeMode);
         orientation = Utils.Orientation.values()[mSharedPreferences.getInt(PREF_KEY_ORIENTATION, orientation.value)];
@@ -137,8 +160,11 @@ class Prefs {
     public void updateMedia(final Context context, final Uri uri, final String type) {
         mediaUri = uri;
         mediaType = type;
-        updateSubtitle(null);
-        updateMeta(null, null, AspectRatioFrameLayout.RESIZE_MODE_FIT, 1.f, 1.f);
+        //updateSubtitle(null);
+        //check saved pref media is same as current media
+//        if (!(mediaUri != null && mediaUri.equals(Uri.parse(mSharedPreferences.getString(PREF_KEY_MEDIA_URI, null))))) {
+//            updateMeta(null, null, AspectRatioFrameLayout.RESIZE_MODE_FIT, 1.f, 1.f);
+//        }
 
         if (mediaType != null && mediaType.endsWith("/*")) {
             mediaType = null;
@@ -193,6 +219,31 @@ class Prefs {
         }
     }
 
+    public void updateSubtitleTrackMap(final String subtitleTrackId) {
+        if (mediaUri == null)
+            return;
+
+        while (subtitles.size() > 100)
+            subtitles.remove(subtitles.keySet().toArray()[0]);
+
+        //if (persistentMode) { } else { }
+        subtitles.put(mediaUri.toString(), subtitleTrackId);
+        saveSubtitles();
+    }
+
+
+    public void updateAudioTrackMap(final String audioTrackId) {
+        if (mediaUri == null)
+            return;
+
+        while (audios.size() > 100)
+            audios.remove(audios.keySet().toArray()[0]);
+
+        //if (persistentMode) { } else { }
+        audios.put(mediaUri.toString(), audioTrackId);
+        saveAudioTracks();
+    }
+
     public void updateBrightness(final int brightness) {
         if (brightness >= -1) {
             this.brightness = brightness;
@@ -218,9 +269,33 @@ class Prefs {
 
     private void savePositions() {
         try {
-            FileOutputStream fos = mContext.openFileOutput("positions", Context.MODE_PRIVATE);
+            FileOutputStream fos = mContext.openFileOutput("positions", MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(positions);
+            os.close();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveSubtitles() {
+        try {
+            FileOutputStream fos = mContext.openFileOutput("subtitles", MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(subtitles);
+            os.close();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+     private void saveAudioTracks() {
+        try {
+            FileOutputStream fos = mContext.openFileOutput("audios", MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(audios);
             os.close();
             fos.close();
         } catch (Exception e) {
@@ -239,6 +314,93 @@ class Prefs {
             e.printStackTrace();
             positions = new LinkedHashMap(10);
         }
+    }
+
+    private void loadSubtitles() {
+        try {
+            FileInputStream fis = mContext.openFileInput("subtitles");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            subtitles = (LinkedHashMap) is.readObject();
+            is.close();
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            subtitles = new LinkedHashMap(10);
+        }
+    }
+
+    private void loadAudioTracks() {
+        try {
+            FileInputStream fis = mContext.openFileInput("audios");
+            ObjectInputStream is = new ObjectInputStream(fis);
+            audios = (LinkedHashMap) is.readObject();
+            is.close();
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            audios = new LinkedHashMap(10);
+        }
+    }
+
+    public String getSubtitle() {
+        if (!persistentMode) {
+            return "";
+        }
+
+        Object val = subtitles.get(mediaUri.toString());
+        if (val != null)
+            return (String) val;
+
+        // Return position for uri from limited scope (loaded after using Next action)
+        if (ContentResolver.SCHEME_CONTENT.equals(mediaUri.getScheme())) {
+            final String searchPath = SubtitleUtils.getTrailPathFromUri(mediaUri);
+            if (searchPath == null || searchPath.length() < 1)
+                return "";
+            final Set<String> keySet = subtitles.keySet();
+            final Object[] keys = keySet.toArray();
+            for (int i = keys.length; i > 0; i--) {
+                final String key = (String) keys[i - 1];
+                final Uri uri = Uri.parse(key);
+                if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
+                    final String keyPath = SubtitleUtils.getTrailPathFromUri(uri);
+                    if (searchPath.equals(keyPath)) {
+                        return (String) subtitles.get(key);
+                    }
+                }
+            }
+        }
+
+        return "";
+    }
+
+    public String getAudioTrack() {
+        if (!persistentMode) {
+            return "";
+        }
+
+        Object val = audios.get(mediaUri.toString());
+        if (val != null)
+            return (String) val;
+
+        if (ContentResolver.SCHEME_CONTENT.equals(mediaUri.getScheme())) {
+            final String searchPath = SubtitleUtils.getTrailPathFromUri(mediaUri);
+            if (searchPath == null || searchPath.length() < 1)
+                return "";
+            final Set<String> keySet = subtitles.keySet();
+            final Object[] keys = keySet.toArray();
+            for (int i = keys.length; i > 0; i--) {
+                final String key = (String) keys[i - 1];
+                final Uri uri = Uri.parse(key);
+                if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
+                    final String keyPath = SubtitleUtils.getTrailPathFromUri(uri);
+                    if (searchPath.equals(keyPath)) {
+                        return (String) subtitles.get(key);
+                    }
+                }
+            }
+        }
+
+        return "";
     }
 
     public long getPosition() {
@@ -285,20 +447,24 @@ class Prefs {
         this.scale = scale;
         this.speed = speed;
         if (persistentMode) {
+            Log.d("mPrefs", "updateMeta: Saving audioTrackId: " + audioTrackId + " subtitleTrackId: " + subtitleTrackId);
+            updateSubtitleTrackMap(subtitleTrackId);
+            updateAudioTrackMap(audioTrackId);
             final SharedPreferences.Editor sharedPreferencesEditor = mSharedPreferences.edit();
-            if (audioTrackId == null)
-                sharedPreferencesEditor.remove(PREF_KEY_AUDIO_TRACK_ID);
-            else
-                sharedPreferencesEditor.putString(PREF_KEY_AUDIO_TRACK_ID, audioTrackId);
-            if (subtitleTrackId == null)
-                sharedPreferencesEditor.remove(PREF_KEY_SUBTITLE_TRACK_ID);
-            else
-                sharedPreferencesEditor.putString(PREF_KEY_SUBTITLE_TRACK_ID, subtitleTrackId);
+            // if (audioTrackId == null)
+            //     sharedPreferencesEditor.remove(PREF_KEY_AUDIO_TRACK_ID);
+            // else
+            //     sharedPreferencesEditor.putString(PREF_KEY_AUDIO_TRACK_ID, audioTrackId);
+            // if (subtitleTrackId == null)
+            //     sharedPreferencesEditor.remove(PREF_KEY_SUBTITLE_TRACK_ID);
+            // else
+            //     sharedPreferencesEditor.putString(PREF_KEY_SUBTITLE_TRACK_ID, subtitleTrackId);
             sharedPreferencesEditor.putInt(PREF_KEY_RESIZE_MODE, resizeMode);
             sharedPreferencesEditor.putFloat(PREF_KEY_SCALE, scale);
             sharedPreferencesEditor.putFloat(PREF_KEY_SPEED, speed);
             sharedPreferencesEditor.apply();
         }
+        Log.d("PREFERRED_LANG", "PREFSAVE updateMeta: Setting pref values from player (this should be second)");
     }
 
     public void updateScope(final Uri uri) {

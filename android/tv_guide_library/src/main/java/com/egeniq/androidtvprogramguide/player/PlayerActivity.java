@@ -221,6 +221,8 @@ public class PlayerActivity extends Activity {
     DisplayManager.DisplayListener displayListener;
     SubtitleFinder subtitleFinder;
 
+    boolean isTextAudioSet = false;
+
     Runnable barsHider = () -> {
         if (playerView != null && !controllerVisible) {
             Utils.toggleSystemUi(PlayerActivity.this, playerView, false);
@@ -241,6 +243,7 @@ public class PlayerActivity extends Activity {
         } else {
             setContentView(R.layout.activity_player);
         }
+
 
         if (Build.VERSION.SDK_INT >= 31) {
             Window window = getWindow();
@@ -337,6 +340,9 @@ public class PlayerActivity extends Activity {
             focusPlay = true;
         }
 
+        mPrefs.loadSubtitlesAndAudio();
+        //setSelectedTracks(mPrefs.subtitleTrackId, mPrefs.audioTrackId);
+
         coordinatorLayout = findViewById(R.id.coordinatorLayout);
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         playerView = findViewById(R.id.video_view);
@@ -398,7 +404,7 @@ public class PlayerActivity extends Activity {
         playerView.setControllerHideOnTouch(false);
         playerView.setControllerAutoShow(true);
 
-        ((DoubleTapPlayerView)playerView).setDoubleTapEnabled(false);
+        ((DoubleTapPlayerView) playerView).setDoubleTapEnabled(false);
 
         timeBar = playerView.findViewById(R.id.exo_progress);
         timeBar.addListener(new TimeBar.OnScrubListener() {
@@ -1239,31 +1245,41 @@ public class PlayerActivity extends Activity {
                     .setTunnelingEnabled(true)
             );
         }
-        switch (mPrefs.languageAudio) {
-            case Prefs.TRACK_DEFAULT:
-                break;
-            case Prefs.TRACK_DEVICE:
-                trackSelector.setParameters(trackSelector.buildUponParameters()
-                        .setPreferredAudioLanguages(Utils.getDeviceLanguages())
-                );
-                break;
-            default:
-                trackSelector.setParameters(trackSelector.buildUponParameters()
-                        .setPreferredAudioLanguages(mPrefs.languageAudio)
-                );
-        }
+//        switch (mPrefs.languageAudio) {
+//            case Prefs.TRACK_DEFAULT:
+//                break;
+//            case Prefs.TRACK_DEVICE:
+//                trackSelector.setParameters(trackSelector.buildUponParameters()
+//                        .setPreferredAudioLanguages(Utils.getDeviceLanguages())
+//                );
+//                break;
+//            default:
+//                trackSelector.setParameters(trackSelector.buildUponParameters()
+//                        .setPreferredAudioLanguages(mPrefs.languageAudio)
+//                );
+//        }
+        //TODO(preferred): complete preferred audio
+
         final CaptioningManager captioningManager = (CaptioningManager) getSystemService(Context.CAPTIONING_SERVICE);
         if (!captioningManager.isEnabled()) {
             trackSelector.setParameters(trackSelector.buildUponParameters()
                     .setIgnoredTextSelectionFlags(C.SELECTION_FLAG_DEFAULT)
             );
         }
-        Locale locale = captioningManager.getLocale();
-        if (locale != null) {
-            trackSelector.setParameters(trackSelector.buildUponParameters()
-                    .setPreferredTextLanguage(locale.getISO3Language())
-            );
-        }
+//        setSelectedTracks(mPrefs.subtitleTrackId, mPrefs.audioTrackId);
+        //TODO(preferred): complete preferred subtitles/text
+        final String savedLanguage = mPrefs.flutterSharedPreferences.getString("flutter.language", "en");
+        Log.d(TAG, "initializePlayer: savedLanguage: " + savedLanguage);
+
+//        Locale locale = captioningManager.getLocale(); if (locale != null) { }
+        trackSelector.setParameters(trackSelector.buildUponParameters()
+                .setPreferredTextLanguage(savedLanguage)
+        );
+        trackSelector.setParameters(trackSelector.buildUponParameters()
+                .setPreferredAudioLanguages(savedLanguage)
+        );
+
+
         // https://github.com/google/ExoPlayer/issues/8571
         DefaultExtractorsFactory extractorsFactory = new DefaultExtractorsFactory()
                 .setTsExtractorFlags(DefaultTsPayloadReaderFactory.FLAG_ENABLE_HDMV_DTS_AUDIO_STREAMS)
@@ -1271,7 +1287,7 @@ public class PlayerActivity extends Activity {
 
         @SuppressLint("WrongConstant") RenderersFactory renderersFactory = new DefaultRenderersFactory(this)
                 .setExtensionRendererMode(mPrefs.decoderPriority);
-                //.setMapDV7ToHevc(mPrefs.mapDV7ToHevc); previously used with old exoplayer
+        //.setMapDV7ToHevc(mPrefs.mapDV7ToHevc); previously used with old exoplayer
 
         ExoPlayer.Builder playerBuilder = new ExoPlayer.Builder(this, renderersFactory)
                 .setTrackSelector(trackSelector)
@@ -1291,6 +1307,7 @@ public class PlayerActivity extends Activity {
         }
 
         player = playerBuilder.build();
+
 
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
@@ -1392,7 +1409,7 @@ public class PlayerActivity extends Activity {
 
             updateButtons(true);
 
-            ((DoubleTapPlayerView)playerView).setDoubleTapEnabled(true);
+            ((DoubleTapPlayerView) playerView).setDoubleTapEnabled(true);
 
             if (!apiAccess) {
                 if (nextUriThread != null) {
@@ -1416,6 +1433,8 @@ public class PlayerActivity extends Activity {
             playerView.showController();
         }
 
+        //setSelectedTracks("5", "2");
+
         player.addListener(playerListener);
         player.prepare();
 
@@ -1429,11 +1448,11 @@ public class PlayerActivity extends Activity {
         }
 
         player.addListener(new Player.Listener() {
-           @Override
-           public void onEvents(Player player, Player.Events events) {
-               Player.Listener.super.onEvents(player, events);
-               hideControlsIfLive();
-           }
+            @Override
+            public void onEvents(Player player, Player.Events events) {
+                Player.Listener.super.onEvents(player, events);
+                hideControlsIfLive();
+            }
         });
     }
 
@@ -1462,8 +1481,10 @@ public class PlayerActivity extends Activity {
                 if (player.isCurrentMediaItemSeekable()) {
                     mPrefs.updatePosition(player.getCurrentPosition());
                 }
-                mPrefs.updateMeta(getSelectedTrack(C.TRACK_TYPE_AUDIO),
-                        getSelectedTrack(C.TRACK_TYPE_TEXT),
+                Log.d(TAG, "savePlayer: is sub/audio set? isTextAudioSet " + isTextAudioSet);
+                mPrefs.updateMeta(
+                        isTextAudioSet ? getSelectedTrack(C.TRACK_TYPE_AUDIO, null) : mPrefs.audioTrackId,
+                        isTextAudioSet ? getSelectedTrack(C.TRACK_TYPE_TEXT, null) : mPrefs.subtitleTrackId,
                         playerView.getResizeMode(),
                         playerView.getVideoSurfaceView().getScaleX(),
                         player.getPlaybackParameters().speed);
@@ -1544,6 +1565,7 @@ public class PlayerActivity extends Activity {
                 PlayerActivity.locked = false;
             }
         }
+
 
         @SuppressLint("SourceLockedOrientationActivity")
         @Override
@@ -1654,7 +1676,9 @@ public class PlayerActivity extends Activity {
                         player.setPlaybackSpeed(mPrefs.speed);
                     }
                     if (!apiAccess) {
-                        setSelectedTracks(mPrefs.subtitleTrackId, mPrefs.audioTrackId);
+//                        setSelectedTracks("5", "2");
+                        //setSelectedTracks(mPrefs.subtitleTrackId, mPrefs.audioTrackId);
+                        player.getCurrentTracks().getGroups();
                     }
                 }
             } else if (state == Player.STATE_BUFFERING) {
@@ -1667,8 +1691,7 @@ public class PlayerActivity extends Activity {
                 Log.d(TAG, "onPlaybackStateChanged: Idle");
                 videoLoading = false;
                 updateLoading(false);
-            }
-            else if (state == Player.STATE_ENDED) {
+            } else if (state == Player.STATE_ENDED) {
                 Log.d(TAG, "onPlaybackStateChanged: Ended");
                 playbackFinished = true;
                 if (apiAccess) {
@@ -1800,7 +1823,7 @@ public class PlayerActivity extends Activity {
     }
 
     private TrackGroup getTrackGroupFromFormatId(int trackType, String id) {
-        if ((id == null && trackType == C.TRACK_TYPE_AUDIO ) || player == null) {
+        if ((id == null && trackType == C.TRACK_TYPE_AUDIO) || player == null) {
             return null;
         }
         for (Tracks.Group group : player.getCurrentTracks().getGroups()) {
@@ -1827,24 +1850,31 @@ public class PlayerActivity extends Activity {
         TrackGroup audioGroup = getTrackGroupFromFormatId(C.TRACK_TYPE_AUDIO, audioId);
 
         TrackSelectionParameters.Builder overridesBuilder = new TrackSelectionParameters.Builder(this);
-        TrackSelectionOverride trackSelectionOverride = null;
-        final List<Integer> tracks = new ArrayList<>(); tracks.add(0);
-        if (subtitleGroup != null) {
-            trackSelectionOverride = new TrackSelectionOverride(subtitleGroup, tracks);
-            overridesBuilder.addOverride(trackSelectionOverride);
-        }
+        TrackSelectionOverride subtitleTrackSelectionOverride = null;
+        TrackSelectionOverride audioTrackSelectionOverride = null;
+        final List<Integer> tracks = new ArrayList<>();
+        tracks.add(0);
         if (audioGroup != null) {
-            trackSelectionOverride = new TrackSelectionOverride(audioGroup, tracks);
-            overridesBuilder.addOverride(trackSelectionOverride);
+            audioTrackSelectionOverride = new TrackSelectionOverride(audioGroup, tracks);
+            overridesBuilder.addOverride(audioTrackSelectionOverride);
+        }
+        if (subtitleGroup != null) {
+            subtitleTrackSelectionOverride = new TrackSelectionOverride(subtitleGroup, tracks);
+            overridesBuilder.addOverride(subtitleTrackSelectionOverride);
         }
 
         if (player != null) {
             TrackSelectionParameters.Builder trackSelectionParametersBuilder = player.getTrackSelectionParameters().buildUpon();
-            if (trackSelectionOverride != null) {
-                trackSelectionParametersBuilder.setOverrideForType(trackSelectionOverride);
+            if (subtitleTrackSelectionOverride != null) {
+                trackSelectionParametersBuilder.setOverrideForType(subtitleTrackSelectionOverride);
+            }
+            if (audioTrackSelectionOverride != null) {
+                trackSelectionParametersBuilder.setOverrideForType(audioTrackSelectionOverride);
             }
             player.setTrackSelectionParameters(trackSelectionParametersBuilder.build());
         }
+
+        isTextAudioSet = true;
     }
 
     private boolean hasOverrideType(final int trackType) {
@@ -1856,14 +1886,15 @@ public class PlayerActivity extends Activity {
         return false;
     }
 
-    public String getSelectedTrack(final int trackType) {
+    public String getSelectedTrack(final int trackType, final Tracks tracks) {
         if (player == null) {
             return null;
         }
-        Tracks tracks = player.getCurrentTracks();
+        Tracks _tracks = tracks != null ? tracks :
+                player.getCurrentTracks();
 
         // Disabled (e.g. selected subtitle "None" - different than default)
-        if (!tracks.isTypeSelected(trackType)) {
+        if (!_tracks.isTypeSelected(trackType)) {
             return "#none";
         }
 
@@ -1874,7 +1905,7 @@ public class PlayerActivity extends Activity {
             }
         }
 
-        for (Tracks.Group group : tracks.getGroups()) {
+        for (Tracks.Group group : _tracks.getGroups()) {
             if (group.isSelected() && group.getType() == trackType) {
                 Format format = group.getMediaTrackGroup().getFormat(0);
                 return format.id;
@@ -1897,7 +1928,7 @@ public class PlayerActivity extends Activity {
                 size = SubtitleView.DEFAULT_TEXT_SIZE_FRACTION * subtitlesScale;
             } else {
                 DisplayMetrics metrics = getResources().getDisplayMetrics();
-                float ratio = ((float)metrics.heightPixels / (float)metrics.widthPixels);
+                float ratio = ((float) metrics.heightPixels / (float) metrics.widthPixels);
                 if (ratio < 1)
                     ratio = 1 / ratio;
                 size = SubtitleView.DEFAULT_TEXT_SIZE_FRACTION * subtitlesScale / ratio;
@@ -2200,7 +2231,7 @@ public class PlayerActivity extends Activity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onUserLeaveHint() {
-        if (mPrefs!= null && mPrefs.autoPiP && player != null && player.isPlaying() && Utils.isPiPSupported(this))
+        if (mPrefs != null && mPrefs.autoPiP && player != null && player.isPlaying() && Utils.isPiPSupported(this))
             enterPiP();
         else
             super.onUserLeaveHint();
@@ -2231,23 +2262,23 @@ public class PlayerActivity extends Activity {
             // TODO: Test/disable on Android 11+
             final View videoSurfaceView = playerView.getVideoSurfaceView();
             if (videoSurfaceView instanceof SurfaceView) {
-                ((SurfaceView)videoSurfaceView).getHolder().setFixedSize(format.width, format.height);
+                ((SurfaceView) videoSurfaceView).getHolder().setFixedSize(format.width, format.height);
             }
 
             Rational rational = Utils.getRational(format);
             if (Build.VERSION.SDK_INT >= 33 &&
                     getPackageManager().hasSystemFeature(FEATURE_EXPANDED_PICTURE_IN_PICTURE) &&
                     (rational.floatValue() > rationalLimitWide.floatValue() || rational.floatValue() < rationalLimitTall.floatValue())) {
-                ((PictureInPictureParams.Builder)mPictureInPictureParamsBuilder).setExpandedAspectRatio(rational);
+                ((PictureInPictureParams.Builder) mPictureInPictureParamsBuilder).setExpandedAspectRatio(rational);
             }
             if (rational.floatValue() > rationalLimitWide.floatValue())
                 rational = rationalLimitWide;
             else if (rational.floatValue() < rationalLimitTall.floatValue())
                 rational = rationalLimitTall;
 
-            ((PictureInPictureParams.Builder)mPictureInPictureParamsBuilder).setAspectRatio(rational);
+            ((PictureInPictureParams.Builder) mPictureInPictureParamsBuilder).setAspectRatio(rational);
         }
-        enterPictureInPictureMode(((PictureInPictureParams.Builder)mPictureInPictureParamsBuilder).build());
+        enterPictureInPictureMode(((PictureInPictureParams.Builder) mPictureInPictureParamsBuilder).build());
     }
 
     void setEndControlsVisible(boolean visible) {
@@ -2271,7 +2302,8 @@ public class PlayerActivity extends Activity {
                 skipToNext();
             }
         });
-        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {});
+        builder.setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+        });
         final AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -2348,7 +2380,7 @@ public class PlayerActivity extends Activity {
         scaleFactor = playerView.getVideoSurfaceView().getScaleX();
         playerView.removeCallbacks(playerView.textClearRunnable);
         playerView.clearIcon();
-        playerView.setCustomErrorMessage((int)(scaleFactor * 100) + "%");
+        playerView.setCustomErrorMessage((int) (scaleFactor * 100) + "%");
         playerView.hideController();
         isScaleStarting = true;
     }
@@ -2361,7 +2393,7 @@ public class PlayerActivity extends Activity {
         }
         scaleFactor = Utils.normalizeScaleFactor(scaleFactor, playerView.getScaleFit());
         playerView.setScale(scaleFactor);
-        playerView.setCustomErrorMessage((int)(scaleFactor * 100) + "%");
+        playerView.setCustomErrorMessage((int) (scaleFactor * 100) + "%");
     }
 
     private void scaleEnd() {
