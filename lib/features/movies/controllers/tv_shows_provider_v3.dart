@@ -37,3 +37,10 @@ final episodesForSeasonProvider =
       .watch(tvShowsRepositoryProvider)
       .fetchEpisodesForSeasonV3(seasonId: seasonId);
 });
+
+final episodesForTvShowProvider =
+    FutureProvider.family<List<Episode>, int>((ref, tvShowId) async {
+  return ref
+      .watch(tvShowsRepositoryProvider)
+      .fetchEpisodesForTvShowV3(tvShowId: tvShowId);
+});

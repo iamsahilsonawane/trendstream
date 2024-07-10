@@ -56,6 +56,12 @@ abstract class TvShowsRepository {
     bool forceRefresh = false,
   });
 
+  ///Mostly used for feching all the episodes from all the seasons
+  Future<List<Episode>> fetchEpisodesForTvShowV3({
+    required int tvShowId,
+    bool forceRefresh = false,
+  });
+
   Future<TvShowV3> getTvShowDetailsV3({
     required int tvShowId,
     bool forceRefresh = false,

@@ -23,8 +23,10 @@ class TvShowSeasonsV3 extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tvShowSeasonsAsync = ref.watch(tvShowAllSeasonsV3Provider(tvShow.id!));
-    final allSeasonDetailsAsync = ref.watch(tvShowAllSeasonsV3Provider(tvShow.id!));
+    final tvShowSeasonsAsync =
+        ref.watch(tvShowAllSeasonsV3Provider(tvShow.id!));
+    final allSeasonDetailsAsync =
+        ref.watch(tvShowAllSeasonsV3Provider(tvShow.id!));
 
     final currentSeason = useState<int>(1);
 
@@ -158,14 +160,17 @@ class TvShowSeasonsV3 extends HookConsumerWidget {
                               flex: 8,
                               child: allSeasonDetailsAsync.when(
                                 data: (data) {
-                                  return currentSeason.value != -1
-                                      ? SeasonEpisodesListV3(
-                                          seasonDetails: data.firstWhere(
-                                              (element) =>
-                                                  element.seasonNumber ==
-                                                  currentSeason.value),
-                                          showSeasonNumber: true)
-                                      : AllSeasonEpisodesListV3(seasons: data);
+                                  if (currentSeason.value != -1) {
+                                    final cs = data.firstWhere((element) =>
+                                        element.seasonNumber ==
+                                        currentSeason.value);
+                                    return SeasonEpisodesListV3(
+                                        seasonDetails: cs,
+                                        showSeasonNumber: true);
+                                  } else {
+                                    return AllSeasonEpisodesListV3(
+                                        tvShowId: tvShow.id!);
+                                  }
                                 },
                                 error: (err, st) => const SizedBox.shrink(),
                                 loading: () => const SizedBox.shrink(),

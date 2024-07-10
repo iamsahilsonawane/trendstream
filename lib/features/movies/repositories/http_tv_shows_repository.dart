@@ -123,6 +123,26 @@ class HttpTvShowsRepository implements TvShowsRepository {
   }
 
   @override
+  Future<List<Episode>> fetchEpisodesForTvShowV3({
+    required int tvShowId,
+    bool forceRefresh = false,
+  }) async {
+    final responseData = await httpService.get(
+      'http://15.235.12.125:8081/api-tv-movies/app/tv_shows/getEpisodesByTvShow',
+      forceRefresh: forceRefresh,
+      queryParameters: {
+        'id_tv_show': tvShowId,
+      }..addAll(commonQueryParams),
+    );
+
+    return List<Episode>.from(
+      responseData.map(
+        (x) => Episode.fromJson(x),
+      ),
+    );
+  }
+
+  @override
   Future<TvShowV3> getTvShowDetailsV3(
       {required int tvShowId, bool forceRefresh = false}) async {
     final responseData = await httpService.get(

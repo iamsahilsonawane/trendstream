@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/shared_widgets/app_loader.dart';
+import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/features/movies/controllers/tv_shows_provider_v3.dart';
 import 'package:latest_movies/features/movies/models/season_details_v3/season_details_v3.dart';
 import '../../../core/shared_widgets/image.dart';
@@ -61,55 +63,35 @@ class SeasonEpisodesListV3 extends HookConsumerWidget {
   }
 }
 
-class AllSeasonEpisodesListV3 extends StatelessWidget {
-  const AllSeasonEpisodesListV3({Key? key, required this.seasons})
+class AllSeasonEpisodesListV3 extends ConsumerWidget {
+  const AllSeasonEpisodesListV3({Key? key, required this.tvShowId})
       : super(key: key);
 
-  final List<SeasonDetailsV3> seasons;
+  final int tvShowId;
 
   @override
-  Widget build(BuildContext context) {
-    final allEpisodes = seasons.expand((e) => e.episodes ?? []).toList();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final allEpisodesAsync = ref.watch(episodesForTvShowProvider(tvShowId));
 
-    return ListView.builder(
-      key: const Key('allSeasonsList'),
-      itemCount: allEpisodes.length,
-      itemBuilder: (context, index) {
-        final episode = allEpisodes[index];
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: EpisodeTileV3(
-            episode: episode,
-            showSeasonNumber: true,
-          ),
+    return allEpisodesAsync.when(
+      data: (allEpisodes) {
+        return ListView.builder(
+          key: const Key('allSeasonsList'),
+          itemCount: allEpisodes.length,
+          itemBuilder: (context, index) {
+            final episode = allEpisodes[index];
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: EpisodeTileV3(
+                episode: episode,
+                showSeasonNumber: true,
+              ),
+            );
+          },
         );
-
-        // final season = seasons[index];
-
-        // return Column(
-        //   children: [
-        //     ListTile(
-        //       title: Text('Season ${season.seasonNumber}'),
-        //     ),
-        //     ListView.builder(
-        //       key: Key('season${season.seasonNumber}EpisodesList'),
-        //       shrinkWrap: true,
-        //       physics: const NeverScrollableScrollPhysics(),
-        //       itemCount: season.episodes!.length,
-        //       itemBuilder: (context, index) {
-        //         final episode = season.episodes![index];
-        //         return Padding(
-        //           padding: const EdgeInsets.only(bottom: 12.0),
-        //           child: EpisodeTileV3(
-        //             episode: episode,
-        //             showSeasonNumber: true,
-        //           ),
-        //         );
-        //       },
-        //     ),
-        //   ],
-        // );
       },
+      error: (err, st) => const ErrorView(),
+      loading: () => const AppLoader(),
     );
   }
 }
