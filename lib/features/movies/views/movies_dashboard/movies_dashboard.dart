@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/paths.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/shared_widgets/button.dart';
 import 'package:latest_movies/core/shared_widgets/default_app_padding.dart';
 import 'package:latest_movies/core/shared_widgets/loading_overlay.dart';
@@ -68,7 +69,7 @@ class HomeView extends HookConsumerWidget {
         if (backCounter.value == 0) {
           backCounter.value++;
           AppUtils.showSnackBar(context,
-              message: "Press back again to exit the app", color: Colors.white);
+              message: context.localisations.exitAppConfirmation, color: Colors.white);
           Future.delayed(const Duration(seconds: 3), () {
             backCounter.value = 0;
           });
@@ -90,12 +91,12 @@ class HomeView extends HookConsumerWidget {
                 visible: showUpdatePrompt.value,
                 child: Row(children: [
                   Text(
-                    "New Update Available v${FirebaseRemoteConfig.instance.getString('latest_version_code')} #${FirebaseRemoteConfig.instance.getInt('latest_build_number')}",
+                    "${context.localisations.newUpdateAvailable} v${FirebaseRemoteConfig.instance.getString('latest_version_code')} #${FirebaseRemoteConfig.instance.getInt('latest_build_number')}",
                     style: const TextStyle(fontSize: 12),
                   ),
                   horizontalSpaceSmall,
                   AppButton(
-                    text: "Download",
+                    text: context.localisations.download,
                     onTap: () {
                       ref
                           .read(updateDownloadManagerProvider)

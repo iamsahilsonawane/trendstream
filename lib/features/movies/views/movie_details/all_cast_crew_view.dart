@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/features/movies/models/movie/credits/credits.dart';
 
 import '../../../../core/config/config.dart';
@@ -22,7 +23,7 @@ class AllClassAndCrewArgs {
 class AllCastAndCrewView extends HookWidget {
   const AllCastAndCrewView({super.key});
 
-  Widget _buildBackButton() {
+  Widget _buildBackButton(BuildContext context) {
     return TextButton.icon(
         onPressed: () {
           Debouncer(delay: const Duration(milliseconds: 500)).call(() {
@@ -33,7 +34,7 @@ class AllCastAndCrewView extends HookWidget {
           foregroundColor: Colors.white,
         ),
         icon: const Icon(Icons.arrow_back),
-        label: const Text("Back"));
+        label: Text(context.localisations.back));
   }
 
   @override
@@ -62,10 +63,10 @@ class AllCastAndCrewView extends HookWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildBackButton(),
+                    _buildBackButton(context),
                     verticalSpaceRegular,
-                    const Text(
-                      "Cast",
+                    Text(
+                      context.localisations.cast,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -88,9 +89,9 @@ class AllCastAndCrewView extends HookWidget {
                       },
                     ),
                     verticalSpaceMedium,
-                    const Text(
-                      "Crew",
-                      style: TextStyle(
+                    Text(
+                      context.localisations.crew,
+                      style: const TextStyle(
                           color: Colors.white,
                           fontSize: 20,
                           fontWeight: FontWeight.bold),

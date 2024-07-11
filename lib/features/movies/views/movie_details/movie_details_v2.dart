@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/shared_widgets/app_loader.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
@@ -55,7 +56,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildBackButton(),
+                        _buildBackButton(context),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 40.0),
                           height: posterContainerHeight,
@@ -167,15 +168,15 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                       ),
                                     ),
                                     const SizedBox(height: 20),
-                                    const Row(
+                                    Row(
                                       children: [
-                                        Icon(Icons.info_outline,
+                                        const Icon(Icons.info_outline,
                                             color: Colors.grey, size: 14),
-                                        SizedBox(width: 4),
+                                        const SizedBox(width: 4),
                                         Expanded(
                                           child: Text(
-                                            "Click on the overview text to read more",
-                                            style: TextStyle(
+                                            context.localisations.overviewTextClickDesc,
+                                            style: const TextStyle(
                                               color: Colors.grey,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w300,
@@ -194,9 +195,9 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                               return AlertDialog(
                                                 backgroundColor:
                                                     kBackgroundColor,
-                                                title: const Text(
-                                                  "Overview",
-                                                  style: TextStyle(
+                                                title:  Text(
+                                                  context.localisations.overview,
+                                                  style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 20,
                                                       fontWeight:
@@ -216,7 +217,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                                 actions: [
                                                   AppButton(
                                                     autofocus: true,
-                                                    text: "Close",
+                                                    text: context.localisations.close,
                                                     onTap: () {
                                                       Navigator.pop(context);
                                                     },
@@ -259,7 +260,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                       children: [
                                         AppButton(
                                           autofocus: true,
-                                          text: "Watch Now",
+                                          text: context.localisations.watchNow,
                                           onTap: () async {
                                             const platform = MethodChannel(
                                                 'com.example.latest_movies/channel');
@@ -286,7 +287,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                         //             element.site == "YouTube");
 
                                         AppButton(
-                                          text: "Watch Trailer",
+                                          text: context.localisations.watchTrailer,
                                           onTap: () async {
                                             const platform = MethodChannel(
                                                 'com.example.latest_movies/channel');
@@ -339,7 +340,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
     );
   }
 
-  Padding _buildBackButton() {
+  Padding _buildBackButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: TextButton.icon(
@@ -352,7 +353,7 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
             foregroundColor: Colors.white,
           ),
           icon: const Icon(Icons.arrow_back),
-          label: const Text("Back")),
+          label: Text(context.localisations.back)),
     );
   }
 }

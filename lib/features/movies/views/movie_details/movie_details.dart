@@ -7,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/shared_providers/device_details_provider.dart';
 import 'package:latest_movies/core/shared_widgets/app_loader.dart';
@@ -93,7 +94,7 @@ class MovieDetailsView extends HookConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildBackButton(),
+                      _buildBackButton(context),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 40.0),
                         height: posterContainerHeight,
@@ -195,15 +196,16 @@ class MovieDetailsView extends HookConsumerWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 20),
-                                  const Row(
+                                  Row(
                                     children: [
-                                      Icon(Icons.info_outline,
+                                      const Icon(Icons.info_outline,
                                           color: Colors.grey, size: 14),
-                                      SizedBox(width: 4),
+                                      const SizedBox(width: 4),
                                       Expanded(
                                         child: Text(
-                                          "Click on the overview text to read more",
-                                          style: TextStyle(
+                                          context.localisations
+                                              .overviewTextClickDesc,
+                                          style: const TextStyle(
                                             color: Colors.grey,
                                             fontSize: 14,
                                             fontWeight: FontWeight.w300,
@@ -221,9 +223,9 @@ class MovieDetailsView extends HookConsumerWidget {
                                           builder: (context) {
                                             return AlertDialog(
                                               backgroundColor: kBackgroundColor,
-                                              title: const Text(
-                                                "Overview",
-                                                style: TextStyle(
+                                              title: Text(
+                                                context.localisations.overview,
+                                                style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 20,
                                                     fontWeight:
@@ -242,7 +244,8 @@ class MovieDetailsView extends HookConsumerWidget {
                                               actions: [
                                                 AppButton(
                                                   autofocus: true,
-                                                  text: "Close",
+                                                  text: context
+                                                      .localisations.close,
                                                   onTap: () {
                                                     Navigator.pop(context);
                                                   },
@@ -296,7 +299,7 @@ class MovieDetailsView extends HookConsumerWidget {
                                     children: [
                                       AppButton(
                                         autofocus: true,
-                                        text: "Watch Now",
+                                        text: context.localisations.watchNow,
                                         onTap: () async {
                                           // AppRouter.navigateToPage(
                                           //     Routes.playerView);
@@ -320,7 +323,8 @@ class MovieDetailsView extends HookConsumerWidget {
                                                   element.site == "YouTube");
 
                                           return AppButton(
-                                            text: "Watch Trailer",
+                                            text: context
+                                                .localisations.watchTrailer,
                                             onTap: !hasTrailer
                                                 ? null
                                                 : () async {
@@ -360,8 +364,9 @@ class MovieDetailsView extends HookConsumerWidget {
                                                   },
                                           );
                                         },
-                                        loading: () => const AppButton(
-                                            text: "Watch Trailer",
+                                        loading: () => AppButton(
+                                            text: context
+                                                .localisations.watchTrailer,
                                             isLoading: true,
                                             onTap: null),
                                         error: (e, s) =>
@@ -384,9 +389,9 @@ class MovieDetailsView extends HookConsumerWidget {
                             Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    "Cast",
-                                    style: TextStyle(
+                                  Text(
+                                    context.localisations.cast,
+                                    style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,
                                         fontWeight: FontWeight.bold),
@@ -435,8 +440,9 @@ class MovieDetailsView extends HookConsumerWidget {
                                                         ),
                                                         icon: const Icon(Icons
                                                             .arrow_forward),
-                                                        label: const Text(
-                                                            "View all")),
+                                                        label: Text(context
+                                                            .localisations
+                                                            .viewAll)),
                                                   );
                                                 }
                                                 final cast =
@@ -512,9 +518,9 @@ class MovieDetailsView extends HookConsumerWidget {
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      "Stats",
-                                      style: TextStyle(
+                                    Text(
+                                      context.localisations.stats,
+                                      style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold),
@@ -536,19 +542,19 @@ class MovieDetailsView extends HookConsumerWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           StatsItem(
-                                            stat: "Budget",
+                                            stat: context.localisations.budget,
                                             value:
                                                 "\$${NumberFormat.currency(name: "").format(movie.budget)}",
                                           ),
                                           verticalSpaceRegular,
                                           StatsItem(
-                                            stat: "Revenue",
+                                            stat: context.localisations.revenue,
                                             value:
                                                 "\$${NumberFormat.currency(name: "").format(movie.revenue ?? 0)}",
                                           ),
                                           verticalSpaceRegular,
                                           StatsItem(
-                                            stat: "Original Language",
+                                            stat: context.localisations.originalLang,
                                             value: movie.spokenLanguages
                                                     ?.firstWhere(
                                                         (element) =>
@@ -586,7 +592,7 @@ class MovieDetailsView extends HookConsumerWidget {
     );
   }
 
-  Padding _buildBackButton() {
+  Padding _buildBackButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: TextButton.icon(
@@ -599,7 +605,7 @@ class MovieDetailsView extends HookConsumerWidget {
             foregroundColor: Colors.white,
           ),
           icon: const Icon(Icons.arrow_back),
-          label: const Text("Back")),
+          label: Text(context.localisations.back)),
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/features/movies/controllers/tv_shows_provider.dart';
 import 'package:latest_movies/features/movies/models/tv_show/tv_show.dart';
 
@@ -191,7 +192,7 @@ class RawAsyncTvShowTile extends ConsumerWidget {
                         ? DateFormat("dd MMM yyyy").format(
                             DateFormat("yyyy-MM-dd").parse(show.firstAirDate!))
                         : null),
-                    orElse: () => "Loading"),
+                    orElse: () => context.localisations.loading),
                 style: TextStyle(
                     fontSize: 14,
                     color: hasFocus ? Colors.white : Colors.grey[700],
@@ -199,7 +200,7 @@ class RawAsyncTvShowTile extends ConsumerWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                "⭐️ ${tvShowAsync.maybeWhen(data: (show) => validString(show.voteAverage.toString()), orElse: () => "Loading")}",
+                "⭐️ ${tvShowAsync.maybeWhen(data: (show) => validString(show.voteAverage.toString()), orElse: () => context.localisations.loading)}",
                 style: TextStyle(
                     fontSize: 14,
                     color: hasFocus ? Colors.white : Colors.grey[700],

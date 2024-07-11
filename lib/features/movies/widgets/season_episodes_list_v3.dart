@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/shared_widgets/app_loader.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/features/movies/controllers/tv_shows_provider_v3.dart';
@@ -26,7 +27,7 @@ class SeasonEpisodesListV3 extends HookConsumerWidget {
     return episodesAsync.when(
       data: buildEpisodesList,
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: buildErrorWidget,
+      error: (e, st) => buildErrorWidget(context, e, st),
     );
   }
 
@@ -45,16 +46,16 @@ class SeasonEpisodesListV3 extends HookConsumerWidget {
     );
   }
 
-  Widget buildErrorWidget(Object error, StackTrace stackTrace) {
-    return const Center(
+  Widget buildErrorWidget(BuildContext context, Object error, StackTrace stackTrace) {
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.error, color: Colors.white, size: 50),
+          const Icon(Icons.error, color: Colors.white, size: 50),
           verticalSpaceTiny,
           Text(
-            'Cannot fetch episodes for this season.\nPlease try again later.',
-            style: TextStyle(color: Colors.white),
+            context.localisations.cannotFetchEpisodesForSeasonDesc,
+            style: const TextStyle(color: Colors.white),
             textAlign: TextAlign.center,
           ),
         ],
@@ -167,7 +168,7 @@ class EpisodeTileV3 extends StatelessWidget {
                     verticalSpaceSmall,
                     if (showSeasonNumber) ...[
                       Text(
-                        "Season ${episode.seasonNumber}",
+                        "${context.localisations.season} ${episode.seasonNumber}",
                         style: const TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.w300,

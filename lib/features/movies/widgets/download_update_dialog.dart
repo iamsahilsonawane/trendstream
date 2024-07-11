@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/shared_widgets/button.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 
@@ -31,10 +32,10 @@ class DownloadUpdateDialog extends HookWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-                "There's an update available ($newUpdateVersion), do you want to update to latest version?"),
+                context.localisations.newUpdateAvailableDesc(newUpdateVersion)),
             verticalSpaceRegular,
             AppButton(
-              text: "Yes, update",
+              text: context.localisations.yesUpdate,
               onTap: () {
                 Navigator.pop(context, true);
               },
@@ -42,7 +43,7 @@ class DownloadUpdateDialog extends HookWidget {
               focusNode: focusNode,
             ),
             AppButton(
-              text: "Not now",
+              text: context.localisations.notNow,
               onTap: () {
                 Navigator.pop(context, false);
               },

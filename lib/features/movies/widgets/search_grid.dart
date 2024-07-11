@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/movie_search_controller.dart';
@@ -67,14 +68,14 @@ class MovieSearchGrid extends HookConsumerWidget {
                   .contains('query must be provided')) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
+                  children: [
+                    const Icon(
                       CupertinoIcons.search,
                       size: 100,
                       color: kPrimaryColor,
                     ),
                     verticalSpaceRegular,
-                    Text("Try searching for \"Top Gun Maverick\""),
+                    Text("${context.localisations.trySearchingFor}\"Top Gun Maverick...\""),
                   ],
                 );
               }

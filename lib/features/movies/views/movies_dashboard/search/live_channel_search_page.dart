@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/live_channel_controller.dart';
 import 'package:latest_movies/features/movies/views/movies_dashboard/search/live_channels_search_grid.dart';
@@ -61,7 +62,7 @@ class LiveChannelSearchPage extends HookConsumerWidget {
                             horizontalSpaceSmall,
                             Text(
                               keyword.isEmpty
-                                  ? "Search for live channels..."
+                                  ? context.localisations.searchForLiveChannels
                                   : keyword,
                               style: TextStyle(
                                   fontSize: 18,
@@ -105,8 +106,8 @@ class LiveChannelSearchPage extends HookConsumerWidget {
                         fontWeight: FontWeight.bold,
                         fontSize: 16)),
                 verticalSpaceSmall,
-                const Text("Live Preview",
-                    style: TextStyle(color: Colors.grey)),
+                Text(context.localisations.livePreview,
+                    style: const TextStyle(color: Colors.grey)),
               ],
             ),
           ),

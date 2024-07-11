@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 
 import '../../../../core/config/config.dart';
 import '../../../../core/router/router.dart';
@@ -23,7 +24,7 @@ class AllClassAndCrewV3Args {
 class AllCastAndCrewV3View extends HookWidget {
   const AllCastAndCrewV3View({super.key});
 
-  Widget _buildBackButton() {
+  Widget _buildBackButton(BuildContext context) {
     return TextButton.icon(
         onPressed: () {
           Debouncer(delay: const Duration(milliseconds: 500)).call(() {
@@ -34,7 +35,7 @@ class AllCastAndCrewV3View extends HookWidget {
           foregroundColor: Colors.white,
         ),
         icon: const Icon(Icons.arrow_back),
-        label: const Text("Back"));
+        label: Text(context.localisations.back));
   }
 
   @override
@@ -66,10 +67,10 @@ class AllCastAndCrewV3View extends HookWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildBackButton(),
+                      _buildBackButton(context),
                       verticalSpaceRegular,
-                      const Text(
-                        "Cast",
+                      Text(
+                        context.localisations.cast,
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,

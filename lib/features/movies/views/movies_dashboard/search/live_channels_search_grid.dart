@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/live_channel_controller.dart';
 import 'package:latest_movies/features/movies/controllers/live_channels_provider.dart';
@@ -55,14 +56,14 @@ class LiveChannelsSearchGrid extends HookConsumerWidget {
                   .contains('query must be provided')) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
+                  children: [
+                    const Icon(
                       CupertinoIcons.search,
                       size: 100,
                       color: kPrimaryColor,
                     ),
                     verticalSpaceRegular,
-                    Text("Try searching for \"Top Gun Maverick\""),
+                    Text("${context.localisations.trySearchingFor} \"Top Gun Maverick\""),
                   ],
                 );
               }

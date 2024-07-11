@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 
 import '../../../../core/utilities/design_utility.dart';
 import '../../controllers/update_dowload_providers/update_download_info_provider.dart';
@@ -17,7 +18,7 @@ class DownloadingOverlay extends StatelessWidget {
               value: ref.watch(updateDownloadPercentageProvider));
         }),
         horizontalSpaceRegular,
-        const Text("Downloading application"),
+        Text(context.localisations.downloadingApplication),
       ],
     );
   }

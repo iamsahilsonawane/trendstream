@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/services/shared_preferences_service.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/side_bar_controller.dart';
@@ -92,7 +93,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: "Movies",
+                  title: context.localisations.movies,
                   // title: AppLocalizations.of(context)!.helloWorld,
                   iconData: Icons.home_outlined,
                   selectedIconData: Icons.home,
@@ -105,7 +106,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'TV Shows',
+                  title: context.localisations.tvShows,
                   iconData: Icons.tv_outlined,
                   selectedIconData: Icons.tv,
                   isSelected:
@@ -117,7 +118,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'TV Shows V3',
+                  title: "${context.localisations.tvShows} V3",
                   iconData: Icons.tv_outlined,
                   selectedIconData: Icons.tv,
                   isSelected:
@@ -129,7 +130,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'TV Guide',
+                  title: context.localisations.tvGuide,
                   iconData: Icons.live_tv_outlined,
                   selectedIconData: Icons.live_tv,
                   isSelected:
@@ -145,7 +146,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'TV Guide (L)',
+                  title: "${context.localisations.tvGuide} \(L)",
                   iconData: Icons.live_tv_outlined,
                   selectedIconData: Icons.live_tv,
                   isSelected: sidebarState.sidebarOptions ==
@@ -158,7 +159,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'Adult',
+                  title: context.localisations.adult,
                   iconData: Icons.eighteen_up_rating_outlined,
                   selectedIconData: Icons.eighteen_up_rating,
                   isSelected:
@@ -206,7 +207,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'Search',
+                  title: context.localisations.search,
                   iconData: Icons.search_outlined,
                   selectedIconData: Icons.search,
                   isSelected:
@@ -218,7 +219,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'Live Channel Search',
+                  title: context.localisations.liveChannelSearch,
                   iconData: Icons.search_outlined,
                   selectedIconData: Icons.search,
                   isSelected: sidebarState.sidebarOptions ==
@@ -230,7 +231,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'Sports',
+                  title: context.localisations.sports,
                   iconData: Icons.sports_basketball_outlined,
                   selectedIconData: Icons.sports_basketball,
                   isSelected:
@@ -242,7 +243,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'Favorites',
+                  title: context.localisations.favorites,
                   iconData: Icons.favorite_border,
                   selectedIconData: Icons.favorite,
                   isSelected:
@@ -251,7 +252,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   onTap: () {},
                 ),
                 DrawerItem(
-                  title: 'Watchlist',
+                  title: context.localisations.watchlist,
                   iconData: Icons.list_outlined,
                   selectedIconData: Icons.list,
                   isSelected:
@@ -260,7 +261,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   onTap: () {},
                 ),
                 DrawerItem(
-                  title: 'API V2 Movies',
+                  title: 'API V2 ${context.localisations.movies}',
                   iconData: Icons.movie_outlined,
                   selectedIconData: Icons.movie,
                   isSelected:
@@ -272,7 +273,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'API V3 Movies',
+                  title: 'API V3 ${context.localisations.movies}',
                   iconData: Icons.movie_outlined,
                   selectedIconData: Icons.movie,
                   isSelected:
@@ -284,7 +285,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'Settings',
+                  title: context.localisations.settings,
                   iconData: Icons.settings_outlined,
                   selectedIconData: Icons.settings,
                   isSelected:
@@ -296,7 +297,7 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 DrawerItem(
-                  title: 'Reset',
+                  title: context.localisations.reset,
                   iconData: Icons.refresh,
                   selectedIconData: Icons.refresh,
                   isSelected: false,

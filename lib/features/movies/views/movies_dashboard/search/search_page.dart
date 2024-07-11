@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/constants.dart';
 import 'package:latest_movies/features/movies/views/movies_dashboard/search/tv_show_search_grid.dart';
@@ -60,15 +61,16 @@ class SearchPage extends HookConsumerWidget {
                           children: [
                             const Icon(Icons.search),
                             horizontalSpaceSmall,
-                            Text(
-                              keyword.isEmpty
-                                  ? "Search for movies or tv shows..."
-                                  : keyword,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  color: keyword.isEmpty
-                                      ? Colors.grey[600]
-                                      : Colors.white),
+                            FittedBox(
+                              child: Text(
+                                keyword.isEmpty
+                                    ? context.localisations.searchForMoviesOrTvShows
+                                    : keyword,
+                                style: TextStyle(
+                                    color: keyword.isEmpty
+                                        ? Colors.grey[600]
+                                        : Colors.white),
+                              ),
                             )
                           ],
                         ),
@@ -96,7 +98,7 @@ class SearchPage extends HookConsumerWidget {
                                 DropdownMenuItem(
                                   value: SearchTypeConstants.all,
                                   child: Text(
-                                    "All",
+                                    context.localisations.all,
                                     style: TextStyle(
                                       color: searchType == SearchType.all
                                           ? kPrimaryAccentColor
@@ -107,7 +109,7 @@ class SearchPage extends HookConsumerWidget {
                                 DropdownMenuItem(
                                   value: SearchTypeConstants.movie,
                                   child: Text(
-                                    "Movies",
+                                    context.localisations.movies,
                                     style: TextStyle(
                                       color: searchType == SearchType.movies
                                           ? kPrimaryAccentColor
@@ -118,7 +120,7 @@ class SearchPage extends HookConsumerWidget {
                                 DropdownMenuItem(
                                   value: SearchTypeConstants.tvShows,
                                   child: Text(
-                                    "TV Shows",
+                                    context.localisations.tvShows,
                                     style: TextStyle(
                                         color: searchType == SearchType.tvShows
                                             ? kPrimaryAccentColor

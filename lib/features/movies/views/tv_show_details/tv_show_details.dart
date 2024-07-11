@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/shared_widgets/app_loader.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
@@ -114,7 +115,7 @@ class TvShowDetailsView extends HookConsumerWidget {
                                 foregroundColor: Colors.white,
                               ),
                               icon: const Icon(Icons.arrow_back),
-                              label: const Text("Back")),
+                              label: Text(context.localisations.back)),
                         ),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 40.0),
@@ -224,15 +225,16 @@ class TvShowDetailsView extends HookConsumerWidget {
                                       ],
                                     ),
                                     const SizedBox(height: 20),
-                                    const Row(
+                                    Row(
                                       children: [
-                                        Icon(Icons.info_outline,
+                                        const Icon(Icons.info_outline,
                                             color: Colors.grey, size: 14),
-                                        SizedBox(width: 4),
+                                        const SizedBox(width: 4),
                                         Expanded(
                                           child: Text(
-                                            "Click on the overview text to read more",
-                                            style: TextStyle(
+                                            context.localisations
+                                                .overviewTextClickDesc,
+                                            style: const TextStyle(
                                               color: Colors.grey,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w300,
@@ -251,9 +253,10 @@ class TvShowDetailsView extends HookConsumerWidget {
                                               return AlertDialog(
                                                 backgroundColor:
                                                     kBackgroundColor,
-                                                title: const Text(
-                                                  "Overview",
-                                                  style: TextStyle(
+                                                title: Text(
+                                                  context
+                                                      .localisations.overview,
+                                                  style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 20,
                                                       fontWeight:
@@ -273,7 +276,8 @@ class TvShowDetailsView extends HookConsumerWidget {
                                                 actions: [
                                                   AppButton(
                                                     autofocus: true,
-                                                    text: "Close",
+                                                    text: context
+                                                        .localisations.close,
                                                     onTap: () {
                                                       Navigator.pop(context);
                                                     },
@@ -324,10 +328,11 @@ class TvShowDetailsView extends HookConsumerWidget {
                                     Row(
                                       children: [
                                         Expanded(
-                                            child: _buildWatchButtons(show)),
+                                            child: _buildWatchButtons(context, show)),
                                         AppButton(
                                           autofocus: true,
-                                          text: "All Seasons",
+                                          text:
+                                              context.localisations.allSeasons,
                                           onTap: () async {
                                             AppRouter.navigateToPage(
                                               Routes.tvShowSeasons,
@@ -357,9 +362,9 @@ class TvShowDetailsView extends HookConsumerWidget {
                               Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
-                                      "Cast",
-                                      style: TextStyle(
+                                    Text(
+                                      context.localisations.cast,
+                                      style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold),
@@ -407,8 +412,9 @@ class TvShowDetailsView extends HookConsumerWidget {
                                                           ),
                                                           icon: const Icon(Icons
                                                               .arrow_forward),
-                                                          label: const Text(
-                                                              "View all")),
+                                                          label: Text(context
+                                                              .localisations
+                                                              .viewAll)),
                                                     );
                                                   }
                                                   final cast = show
@@ -489,9 +495,9 @@ class TvShowDetailsView extends HookConsumerWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      const Text(
-                                        "Stats",
-                                        style: TextStyle(
+                                      Text(
+                                        context.localisations.stats,
+                                        style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold),
@@ -514,19 +520,22 @@ class TvShowDetailsView extends HookConsumerWidget {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             md.StatsItem(
-                                              stat: "Status",
+                                              stat:
+                                                  context.localisations.status,
                                               value: show.status ?? "N/A",
                                             ),
                                             verticalSpaceRegular,
                                             md.StatsItem(
-                                              stat: "Network",
+                                              stat:
+                                                  context.localisations.network,
                                               value:
                                                   show.networks?.first.name ??
                                                       "N/A",
                                             ),
                                             verticalSpaceRegular,
                                             md.StatsItem(
-                                              stat: "Original Language",
+                                              stat: context
+                                                  .localisations.originalLang,
                                               value: show.spokenLanguages
                                                       ?.firstWhere(
                                                           (element) =>
@@ -578,12 +587,12 @@ class TvShowDetailsView extends HookConsumerWidget {
     );
   }
 
-  Row _buildWatchButtons(TvShowDetails show) {
+  Row _buildWatchButtons(BuildContext context, TvShowDetails show) {
     return Row(
       children: [
         AppButton(
           autofocus: true,
-          text: "Watch Now",
+          text: context.localisations.watchNow,
           onTap: () async {
             const platform = MethodChannel('com.example.latest_movies/channel');
             await platform.invokeMethod("navigateToPlayer");
@@ -604,7 +613,7 @@ class TvShowDetailsView extends HookConsumerWidget {
                 false);
 
             return AppButton(
-              text: "Watch Trailer",
+              text: context.localisations.watchTrailer,
               onTap: !hasTrailer
                   ? null
                   : () async {
@@ -666,9 +675,9 @@ class _SeasonPickerDialogState extends State<SeasonPickerDialog> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    "Select Season",
-                    style: TextStyle(
+                  Text(
+                    context.localisations.selectSeason,
+                    style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold),
@@ -677,7 +686,7 @@ class _SeasonPickerDialogState extends State<SeasonPickerDialog> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       AppButton(
-                        text: "View all episodes",
+                        text: context.localisations.viewAllEpisodes,
                         onTap: () {
                           AppRouter.navigateToPage(Routes.tvShowAllEpisodes,
                               arguments: widget.tvShowId);
@@ -685,7 +694,7 @@ class _SeasonPickerDialogState extends State<SeasonPickerDialog> {
                       ),
                       horizontalSpaceRegular,
                       AppButton(
-                        text: "Cancel",
+                        text: context.localisations.cancel,
                         onTap: () {
                           Navigator.of(context).pop();
                         },
@@ -822,14 +831,14 @@ class EpisodePickerDialog extends HookConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "${selectedSeason.name} - Episodes",
+                        "${selectedSeason.name} - ${context.localisations.episodes}",
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
                       ),
                       AppButton(
-                        text: "Back",
+                        text: context.localisations.back,
                         onTap: () {
                           Navigator.of(context).pop();
                         },
@@ -839,7 +848,7 @@ class EpisodePickerDialog extends HookConsumerWidget {
                 ),
                 Center(
                   child: AppButton(
-                    text: "Select this season",
+                    text: context.localisations.selectSeason,
                     prefix: const Icon(Icons.arrow_forward),
                     onTap: () {
                       Navigator.pop(context, true);

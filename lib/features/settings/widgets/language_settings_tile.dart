@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/services/shared_preferences_service.dart';
 import 'package:latest_movies/core/shared_providers/locale_provider.dart';
 import 'package:latest_movies/core/utilities/app_utility.dart';
@@ -44,7 +45,7 @@ class _LanguageSettingsTileState extends ConsumerState<LanguageSettingsTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text('Language'),
+      title: Text(context.localisations.language),
       trailing: DropdownButton<String>(
         value: _selectedLanguage,
         items: _languages.map<DropdownMenuItem<String>>((String value) {

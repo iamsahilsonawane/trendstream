@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/features/movies/controllers/tv_show_season_details_provider.dart';
 import 'package:latest_movies/features/movies/models/season_details/episode.dart';
 import 'package:latest_movies/features/movies/models/tv_show/tv_show.dart';
@@ -199,7 +200,7 @@ class EpisodeTile extends StatelessWidget {
                     verticalSpaceSmall,
                     if (showSeasonNumber) ...[
                       Text(
-                        "Season ${episode.seasonNumber}",
+                        "${context.localisations.season} ${episode.seasonNumber}",
                         style: const TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.w300,

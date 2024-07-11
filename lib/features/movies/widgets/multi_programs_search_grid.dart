@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/exceptions/app_error_codes.dart';
 import 'package:latest_movies/core/exceptions/general_exception.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/core/utilities/responsive.dart';
 import 'package:latest_movies/features/movies/controllers/current_multi_program_provider.dart';
@@ -64,8 +65,8 @@ class MultiProgramsSearchGrid extends HookConsumerWidget {
 
             if (dioError.response?.data['errors']
                 .contains('query must be provided')) {
-              return const SearchErrorWidget(
-                  message: "Try searching for a movie or tv show");
+              return SearchErrorWidget(
+                  message: context.localisations.trySearchingForMovieOrTvShow);
             }
           } else if (e.error is GeneralException) {
             final GeneralException generalException =

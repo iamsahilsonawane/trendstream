@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/services/shared_preferences_service.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -60,7 +61,7 @@ class _EnterPasscodeDialogState extends ConsumerState<EnterPasscodeDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Text("Enter passcode to access adult content"),
+              Text(context.localisations.adultContentPassDesc),
               verticalSpaceRegular,
               Center(
                 child: PinCodeTextField(
@@ -99,9 +100,9 @@ class _EnterPasscodeDialogState extends ConsumerState<EnterPasscodeDialog> {
               if (mounted &&
                   passcodeCtrl.text.length == 4 &&
                   !isPasscodeCorrect) ...[
-                const Text(
-                  "Incorrect Password",
-                  style: TextStyle(color: Colors.red),
+                Text(
+                  context.localisations.incorrectPassword,
+                  style: const TextStyle(color: Colors.red),
                   textAlign: TextAlign.center,
                 ),
                 verticalSpaceSmall,

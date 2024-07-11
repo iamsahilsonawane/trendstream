@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 
 import '../../../../core/config/config.dart';
 import '../../../../core/router/router.dart';
@@ -39,7 +40,7 @@ class TvShowSeasons extends HookConsumerWidget {
           final seasons = [
             ...show.seasons!,
             Season(
-                name: "All Seasons",
+                name: context.localisations.allSeasons,
                 seasonNumber: -1,
                 episodeCount: allEpisodesCount)
           ];
@@ -70,7 +71,7 @@ class TvShowSeasons extends HookConsumerWidget {
                           style: TextButton.styleFrom(
                               foregroundColor: Colors.white),
                           icon: const Icon(Icons.arrow_back),
-                          label: const Text("Back"),
+                          label: Text(context.localisations.back),
                         ),
                       ),
                       Expanded(
@@ -98,7 +99,7 @@ class TvShowSeasons extends HookConsumerWidget {
                                         ),
                                         verticalSpaceSmall,
                                         Text(
-                                          "${show.seasons!.length} Seasons",
+                                          "${show.seasons!.length} ${context.localisations.seasons}",
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyLarge!
@@ -247,7 +248,7 @@ class SeasonSelectionButton extends StatelessWidget {
                 ),
                 if (isFocused)
                   Text(
-                    "$totalNumberOfEpisodes Episodes",
+                    "$totalNumberOfEpisodes ${context.localisations.episodes}",
                     style: const TextStyle(color: Colors.grey),
                   ),
               ],

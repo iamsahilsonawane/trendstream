@@ -1,6 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/features/movies/controllers/current_popular_movies_provider.dart';
 
@@ -202,7 +203,7 @@ class RawAsyncMovieTile extends ConsumerWidget {
               Text(
                 movieAsync.maybeWhen(
                     data: (movie) => validString(movie.title?.toString()),
-                    orElse: () => "Loading"),
+                    orElse: () => context.localisations.loading),
                 style: TextStyle(
                     fontSize: 14,
                     color: hasFocus ? Colors.white : Colors.grey[700],
@@ -216,7 +217,7 @@ class RawAsyncMovieTile extends ConsumerWidget {
                         ? DateFormat("dd MMM yyyy").format(
                             DateFormat("yyyy-MM-dd").parse(movie.releaseDate!))
                         : null),
-                    orElse: () => "Loading"),
+                    orElse: () => context.localisations.loading),
                 style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[700],
@@ -224,7 +225,7 @@ class RawAsyncMovieTile extends ConsumerWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                "⭐️ ${movieAsync.maybeWhen(data: (movie) => validString(movie.voteAverage.toString()), orElse: () => "Loading")}",
+                "⭐️ ${movieAsync.maybeWhen(data: (movie) => validString(movie.voteAverage.toString()), orElse: () => context.localisations.loading)}",
                 style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey[700],

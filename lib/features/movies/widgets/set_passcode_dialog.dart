@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -27,7 +28,7 @@ class SetPasscodeDialog extends HookConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text("Set a passcode to access adult content"),
+              Text(context.localisations.setAdultContentPassDesc),
               verticalSpaceRegular,
               Center(
                 child: PinCodeTextField(

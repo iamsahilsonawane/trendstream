@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 
 class ErrorView extends StatelessWidget {
@@ -14,7 +15,7 @@ class ErrorView extends StatelessWidget {
         children: [
           const Icon(Icons.error, size: 40),
           verticalSpaceSmall,
-          Text(error ?? 'Something went wrong!'),
+          Text(error ?? context.localisations.somethingWentWrong),
         ],
       ),
     );

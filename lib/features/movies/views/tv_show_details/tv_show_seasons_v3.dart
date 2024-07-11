@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
+import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/features/movies/models/season_details_v3/season_details_v3.dart';
 import 'package:latest_movies/features/movies/models/tv_show_v3/tv_show_v3.dart';
 
@@ -39,7 +40,7 @@ class TvShowSeasonsV3 extends HookConsumerWidget {
           final seasons = <SeasonDetailsV3>[
             ...allSeasons,
             SeasonDetailsV3(
-                name: "All Seasons",
+                name: context.localisations.allSeasons,
                 seasonNumber: -1,
                 numberOfEpisodes: allEpisodesCount)
           ];
@@ -74,7 +75,7 @@ class TvShowSeasonsV3 extends HookConsumerWidget {
                           style: TextButton.styleFrom(
                               foregroundColor: Colors.white),
                           icon: const Icon(Icons.arrow_back),
-                          label: const Text("Back"),
+                          label: Text(context.localisations.back),
                         ),
                       ),
                       Expanded(
@@ -102,7 +103,7 @@ class TvShowSeasonsV3 extends HookConsumerWidget {
                                         ),
                                         verticalSpaceSmall,
                                         Text(
-                                          "${allSeasons.length} Seasons",
+                                          "${allSeasons.length} ${context.localisations.seasons}",
                                           style: Theme.of(context)
                                               .textTheme
                                               .bodyLarge!

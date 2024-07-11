@@ -19,7 +19,7 @@ final searchMultiProgramsCountProvider = Provider<AsyncValue<int>>((ref) {
         throw GeneralException(
           code: AppErrorCodes.noItems,
           message: keyword.isNotEmpty
-              ? "No programs found for your search"
+              ? "No programs found for your search" //TODO(localisation)
               : "Try searching for a movie or tv show",
         );
       }
