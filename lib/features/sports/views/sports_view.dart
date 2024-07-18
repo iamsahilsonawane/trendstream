@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/shared_widgets/clock.dart';
 import 'package:latest_movies/core/shared_widgets/error_view.dart';
+import 'package:latest_movies/core/utilities/debouncer.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/sports/controllers/current_focused_program_controller.dart';
 import 'package:latest_movies/features/sports/controllers/events_provider.dart';
 import 'package:latest_movies/features/sports/widgtes/category_selector.dart';
 import 'package:latest_movies/features/sports/widgtes/current_sports_details.dart';
 import 'package:latest_movies/features/sports/widgtes/sports_program_list_tile.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../core/router/router.dart';
 
@@ -93,74 +95,88 @@ class _SportsPageState extends ConsumerState<SportsPage> {
   }
 }
 
-
-
 class LivePreviewPlayer extends StatefulWidget {
   const LivePreviewPlayer({super.key, this.onControllerInitialized});
 
-  final Function(VlcPlayerController controller)? onControllerInitialized;
+  final Function(VideoPlayerController controller)? onControllerInitialized;
 
   @override
   State<LivePreviewPlayer> createState() => _LivePreviewPlayerState();
 }
 
 class _LivePreviewPlayerState extends State<LivePreviewPlayer> {
-  late VlcPlayerController _videoPlayerController;
-
-  void initListener() {
-    if (_videoPlayerController.value.isInitialized) {
-      _videoPlayerController.setVolume(0);
-    }
-  }
+  late VideoPlayerController _videoPlayerController;
+  final FocusNode _focusNode = FocusNode();
+  final ValueNotifier<bool> _isPlaying = ValueNotifier(true);
 
   @override
   void initState() {
     super.initState();
-    _videoPlayerController = VlcPlayerController.network(
-      'http://x.lamtv.tv:8080/live/test/test/130.m3u8',
-      // 'https://media.w3.org/2010/05/sintel/trailer.mp4',
-      hwAcc: HwAcc.full,
-      autoPlay: true,
-      options: VlcPlayerOptions(
-        advanced: VlcAdvancedOptions([
-          VlcAdvancedOptions.networkCaching(2000),
-        ]),
-        subtitle: VlcSubtitleOptions([
-          VlcSubtitleOptions.boldStyle(true),
-          VlcSubtitleOptions.fontSize(30),
-          VlcSubtitleOptions.color(VlcSubtitleColor.white),
-        ]),
-        http: VlcHttpOptions([
-          VlcHttpOptions.httpReconnect(true),
-        ]),
-        rtp: VlcRtpOptions([
-          VlcRtpOptions.rtpOverRtsp(true),
-        ]),
-      ),
-    );
-    widget.onControllerInitialized?.call(_videoPlayerController);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _videoPlayerController.addOnInitListener(initListener);
-    });
+    _videoPlayerController = VideoPlayerController.networkUrl(
+      Uri.parse(
+          'http://sample.vodobox.com/big_buck_bunny_4k/big_buck_bunny_4k.m3u8'),
+    )..initialize().then(
+        (_) {
+          setState(() {});
+          _videoPlayerController.setVolume(0);
+          _videoPlayerController.play();
+        },
+      );
   }
 
   @override
-  void dispose() async {
+  void dispose() {
+    _videoPlayerController.dispose();
+    _focusNode.dispose();
     super.dispose();
-    await _videoPlayerController.dispose();
+  }
+
+  void _togglePlayPause() {
+    if (_videoPlayerController.value.isPlaying) {
+      _videoPlayerController.pause();
+      _isPlaying.value = false;
+      print("Video paused");
+    } else {
+      _videoPlayerController.play();
+      _isPlaying.value = true;
+      print("Video playing");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.black,
-        border: Border.all(color: kPrimaryColor, width: 3),
-      ),
-      child: VlcPlayer(
-        controller: _videoPlayerController,
-        aspectRatio: 16 / 9,
-        placeholder: const Center(child: CircularProgressIndicator()),
+    return InkWell(
+      focusNode: _focusNode,
+      onFocusChange: (hasFocus) {
+        setState(() {});
+      },
+      onTap: () {
+        print("Player tapped");
+        _togglePlayPause();
+      },
+      child: Stack(
+        children: [
+          _videoPlayerController.value.isInitialized
+              ? AspectRatio(
+                  aspectRatio: _videoPlayerController.value.aspectRatio,
+                  child: VideoPlayer(_videoPlayerController),
+                )
+              : Container(),
+          if (_focusNode.hasFocus)
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: FloatingActionButton(
+                onPressed: _togglePlayPause,
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: _isPlaying,
+                  builder: (context, isPlaying, child) {
+                    return Icon(isPlaying ? Icons.pause : Icons.play_arrow);
+                  },
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

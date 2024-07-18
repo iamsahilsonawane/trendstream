@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/sports/controllers/current_focused_program_controller.dart';
+import 'package:latest_movies/features/sports/views/sports_view.dart';
 
 class CurrentSportsDetails extends ConsumerWidget {
   const CurrentSportsDetails({super.key});
@@ -31,6 +32,8 @@ class CurrentSportsDetails extends ConsumerWidget {
             children: [
               Text(
                 focusedEvent.name ?? "N/A",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold, color: kPrimaryAccentColor),
               ),
@@ -48,19 +51,19 @@ class CurrentSportsDetails extends ConsumerWidget {
           ),
         ),
         const Spacer(),
-        const SizedBox(
+        SizedBox(
           height: 100,
-          child: AspectRatio(
-            aspectRatio: 16 / 9,
-            child: SizedBox.expand(
-              child: ColoredBox(color: Colors.black),
-            ),
-          ),
-          // child: LivePreviewPlayer(
-          //   onControllerInitialized: (controller) {
-          //     previewController = controller;
-          //   },
+          // child: AspectRatio(
+          //   aspectRatio: 16 / 9,
+          //   child: SizedBox.expand(
+          //     child: ColoredBox(color: Colors.black),
+          //   ),
           // ),
+          child: LivePreviewPlayer(
+            onControllerInitialized: (controller) {
+              // previewController = controller;
+            },
+          ),
         ),
       ],
     );
