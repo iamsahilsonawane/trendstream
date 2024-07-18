@@ -41,7 +41,7 @@ class MoviesV2Grid extends HookConsumerWidget {
           },
         );
       },
-      error: (e,st) => ErrorView(error: e.toString()),
+      error: (e, st) => ErrorView(error: e.toString()),
       loading: () => const AppLoader(),
     );
   }

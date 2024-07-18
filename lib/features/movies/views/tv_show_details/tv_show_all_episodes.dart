@@ -81,7 +81,8 @@ class TvShowAllEpisodes extends HookConsumerWidget {
                             children: [
                               verticalSpaceMedium,
                               DefaultAppPadding.horizontal(
-                                child: Text("${season.name} - ${context.localisations.allEpisodes}",
+                                child: Text(
+                                    "${season.name} - ${context.localisations.allEpisodes}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .titleMedium!
@@ -157,7 +158,8 @@ class TvShowAllEpisodes extends HookConsumerWidget {
                       if (!await launchUrl(Uri.parse(
                           "https://youtube.com/watch?v=${firstTrailer.key}"))) {
                         AppUtils.showSnackBar(null,
-                            message: context.localisations.tvDoesNotSupportOpeningUrlsDesc);
+                            message: context
+                                .localisations.tvDoesNotSupportOpeningUrlsDesc);
                       }
                     },
             );

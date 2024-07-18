@@ -69,7 +69,8 @@ class HomeView extends HookConsumerWidget {
         if (backCounter.value == 0) {
           backCounter.value++;
           AppUtils.showSnackBar(context,
-              message: context.localisations.exitAppConfirmation, color: Colors.white);
+              message: context.localisations.exitAppConfirmation,
+              color: Colors.white);
           Future.delayed(const Duration(seconds: 3), () {
             backCounter.value = 0;
           });

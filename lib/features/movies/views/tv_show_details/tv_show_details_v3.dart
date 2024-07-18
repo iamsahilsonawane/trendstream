@@ -264,7 +264,8 @@ class TvShowDetailsViewV3 extends HookConsumerWidget {
                                                 backgroundColor:
                                                     kBackgroundColor,
                                                 title: Text(
-                                                  context.localisations.overview,
+                                                  context
+                                                      .localisations.overview,
                                                   style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 20,
@@ -285,7 +286,8 @@ class TvShowDetailsViewV3 extends HookConsumerWidget {
                                                 actions: [
                                                   AppButton(
                                                     autofocus: true,
-                                                    text: context.localisations.close,
+                                                    text: context
+                                                        .localisations.close,
                                                     onTap: () {
                                                       Navigator.pop(context);
                                                     },
@@ -335,10 +337,12 @@ class TvShowDetailsViewV3 extends HookConsumerWidget {
                                     verticalSpaceSmall,
                                     Row(
                                       children: [
-                                        Expanded(child: _buildWatchButtons(context)),
+                                        Expanded(
+                                            child: _buildWatchButtons(context)),
                                         AppButton(
                                           autofocus: true,
-                                          text: context.localisations.allSeasons,
+                                          text:
+                                              context.localisations.allSeasons,
                                           onTap: () async {
                                             AppRouter.navigateToPage(
                                               Routes.tvShowSeasonsV3,
@@ -631,12 +635,14 @@ class TvShowDetailsViewV3 extends HookConsumerWidget {
                                                       .spaceBetween,
                                               children: [
                                                 md.StatsItem(
-                                                  stat: context.localisations.status,
+                                                  stat: context
+                                                      .localisations.status,
                                                   value: show.status ?? "N/A",
                                                 ),
                                                 verticalSpaceRegular,
                                                 md.StatsItem(
-                                                  stat: context.localisations.network,
+                                                  stat: context
+                                                      .localisations.network,
                                                   value: show.network ?? "N/A",
                                                 ),
                                               ],

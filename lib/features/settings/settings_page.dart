@@ -10,12 +10,10 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  @override 
+  @override
   Widget build(BuildContext context) {
     return ListView(
-      children: const [
-        LanguageSettingsTile()
-      ],
+      children: const [LanguageSettingsTile()],
     );
   }
 }

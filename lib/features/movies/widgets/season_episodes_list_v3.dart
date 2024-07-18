@@ -46,7 +46,8 @@ class SeasonEpisodesListV3 extends HookConsumerWidget {
     );
   }
 
-  Widget buildErrorWidget(BuildContext context, Object error, StackTrace stackTrace) {
+  Widget buildErrorWidget(
+      BuildContext context, Object error, StackTrace stackTrace) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

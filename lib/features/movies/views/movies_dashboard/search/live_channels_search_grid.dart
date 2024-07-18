@@ -63,7 +63,8 @@ class LiveChannelsSearchGrid extends HookConsumerWidget {
                       color: kPrimaryColor,
                     ),
                     verticalSpaceRegular,
-                    Text("${context.localisations.trySearchingFor} \"Top Gun Maverick\""),
+                    Text(
+                        "${context.localisations.trySearchingFor} \"Top Gun Maverick\""),
                   ],
                 );
               }

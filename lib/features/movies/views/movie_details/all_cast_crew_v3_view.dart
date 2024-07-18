@@ -18,7 +18,9 @@ class AllClassAndCrewV3Args {
   final bool includeProfilePathPrefix;
 
   const AllClassAndCrewV3Args(
-      {required this.casts, required this.backdropPath, required this.includeProfilePathPrefix});
+      {required this.casts,
+      required this.backdropPath,
+      required this.includeProfilePathPrefix});
 }
 
 class AllCastAndCrewV3View extends HookWidget {
@@ -96,7 +98,8 @@ class AllCastAndCrewV3View extends HookWidget {
                             character: cast.characterName,
                             profilePath: profileImage?.url,
                             blurHash: profileImage?.blurHash,
-                            includeProfilePathPrefix: args.includeProfilePathPrefix,
+                            includeProfilePathPrefix:
+                                args.includeProfilePathPrefix,
                           );
                         },
                       ),

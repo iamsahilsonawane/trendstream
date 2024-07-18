@@ -64,7 +64,8 @@ class SearchPage extends HookConsumerWidget {
                             FittedBox(
                               child: Text(
                                 keyword.isEmpty
-                                    ? context.localisations.searchForMoviesOrTvShows
+                                    ? context
+                                        .localisations.searchForMoviesOrTvShows
                                     : keyword,
                                 style: TextStyle(
                                     color: keyword.isEmpty

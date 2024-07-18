@@ -73,7 +73,8 @@ class TvShowSearchGrid extends HookConsumerWidget {
                       color: kPrimaryColor,
                     ),
                     verticalSpaceRegular,
-                    Text("${context.localisations.trySearchingFor} \"Money Heist\""),
+                    Text(
+                        "${context.localisations.trySearchingFor} \"Money Heist\""),
                   ],
                 );
               }

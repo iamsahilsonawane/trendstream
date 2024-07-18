@@ -328,7 +328,8 @@ class TvShowDetailsView extends HookConsumerWidget {
                                     Row(
                                       children: [
                                         Expanded(
-                                            child: _buildWatchButtons(context, show)),
+                                            child: _buildWatchButtons(
+                                                context, show)),
                                         AppButton(
                                           autofocus: true,
                                           text:

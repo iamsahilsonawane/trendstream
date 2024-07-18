@@ -175,7 +175,8 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                         const SizedBox(width: 4),
                                         Expanded(
                                           child: Text(
-                                            context.localisations.overviewTextClickDesc,
+                                            context.localisations
+                                                .overviewTextClickDesc,
                                             style: const TextStyle(
                                               color: Colors.grey,
                                               fontSize: 14,
@@ -195,8 +196,9 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                               return AlertDialog(
                                                 backgroundColor:
                                                     kBackgroundColor,
-                                                title:  Text(
-                                                  context.localisations.overview,
+                                                title: Text(
+                                                  context
+                                                      .localisations.overview,
                                                   style: const TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 20,
@@ -217,7 +219,8 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                                 actions: [
                                                   AppButton(
                                                     autofocus: true,
-                                                    text: context.localisations.close,
+                                                    text: context
+                                                        .localisations.close,
                                                     onTap: () {
                                                       Navigator.pop(context);
                                                     },
@@ -287,7 +290,8 @@ class MovieDetailsViewV2 extends HookConsumerWidget {
                                         //             element.site == "YouTube");
 
                                         AppButton(
-                                          text: context.localisations.watchTrailer,
+                                          text: context
+                                              .localisations.watchTrailer,
                                           onTap: () async {
                                             const platform = MethodChannel(
                                                 'com.example.latest_movies/channel');

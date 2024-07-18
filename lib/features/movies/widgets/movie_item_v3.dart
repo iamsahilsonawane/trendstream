@@ -12,7 +12,6 @@ import '../../../core/shared_widgets/error_view.dart';
 import '../../../core/shared_widgets/image.dart';
 import '../models/movie_v3/urls_image.dart';
 
-
 class MovieTileV3 extends HookConsumerWidget {
   const MovieTileV3({
     this.autofocus = false,

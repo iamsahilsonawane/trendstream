@@ -554,7 +554,8 @@ class MovieDetailsView extends HookConsumerWidget {
                                           ),
                                           verticalSpaceRegular,
                                           StatsItem(
-                                            stat: context.localisations.originalLang,
+                                            stat: context
+                                                .localisations.originalLang,
                                             value: movie.spokenLanguages
                                                     ?.firstWhere(
                                                         (element) =>

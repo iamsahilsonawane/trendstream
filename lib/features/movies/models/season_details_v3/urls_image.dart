@@ -9,7 +9,8 @@ class UrlsImage extends Equatable {
   final Size? size;
   final int? idUrlImage;
 
-  const UrlsImage({this.id, this.url, this.blurHash, this.size, this.idUrlImage});
+  const UrlsImage(
+      {this.id, this.url, this.blurHash, this.size, this.idUrlImage});
 
   factory UrlsImage.fromJson(Map<String, dynamic> json) => UrlsImage(
         id: json['id'] as int?,

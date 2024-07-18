@@ -33,8 +33,7 @@ class TvShowsGridV3 extends HookConsumerWidget {
           itemBuilder: (BuildContext context, int index) {
             return ProviderScope(
               overrides: [
-                currentTvShowProvider
-                    .overrideWithValue(AsyncData(shows[index]))
+                currentTvShowProvider.overrideWithValue(AsyncData(shows[index]))
               ],
               child: TvShowTileV3(autofocus: index == 0),
             );

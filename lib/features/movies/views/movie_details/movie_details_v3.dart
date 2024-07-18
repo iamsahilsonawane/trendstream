@@ -285,7 +285,8 @@ class MovieDetailsViewV3 extends HookConsumerWidget {
                                         ),
                                         horizontalSpaceRegular,
                                         AppButton(
-                                          text: context.localisations.watchTrailer,
+                                          text: context
+                                              .localisations.watchTrailer,
                                           onTap: () async {
                                             const platform = MethodChannel(
                                                 'com.example.latest_movies/channel');
@@ -361,7 +362,7 @@ class MovieDetailsViewV3 extends HookConsumerWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                       Text(
+                                      Text(
                                         context.localisations.cast,
                                         style: const TextStyle(
                                             color: Colors.white,
@@ -431,8 +432,9 @@ class MovieDetailsViewV3 extends HookConsumerWidget {
                                                             ),
                                                             icon: const Icon(Icons
                                                                 .arrow_forward),
-                                                            label: Text(
-                                                                context.localisations.viewAll)),
+                                                            label: Text(context
+                                                                .localisations
+                                                                .viewAll)),
                                                       );
                                                     }
 
@@ -508,19 +510,22 @@ class MovieDetailsViewV3 extends HookConsumerWidget {
                                                       .spaceBetween,
                                               children: [
                                                 StatsItem(
-                                                  stat: context.localisations.budget,
+                                                  stat: context
+                                                      .localisations.budget,
                                                   value:
                                                       "\$${NumberFormat.currency(name: "").format(movie.budget)}",
                                                 ),
                                                 verticalSpaceRegular,
                                                 StatsItem(
-                                                  stat: context.localisations.revenue,
+                                                  stat: context
+                                                      .localisations.revenue,
                                                   value:
                                                       "\$${NumberFormat.currency(name: "").format(movie.revenue)}",
                                                 ),
                                                 verticalSpaceRegular,
                                                 StatsItem(
-                                                  stat: context.localisations.originalLang,
+                                                  stat: context.localisations
+                                                      .originalLang,
                                                   value: validString(
                                                       movie.originalLanguage),
                                                 ),

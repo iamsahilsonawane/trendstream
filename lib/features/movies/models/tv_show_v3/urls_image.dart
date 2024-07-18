@@ -7,9 +7,14 @@ class UrlsImage extends Equatable {
   final num? idUrlImage;
   final Size? size;
   final String? url;
-  final String? blurHash; 
+  final String? blurHash;
 
-  const UrlsImage({this.id, this.idUrlImage, this.size, this.url, this.blurHash}); // Update this line
+  const UrlsImage(
+      {this.id,
+      this.idUrlImage,
+      this.size,
+      this.url,
+      this.blurHash}); // Update this line
 
   factory UrlsImage.fromJson(Map<String, dynamic> json) => UrlsImage(
         id: json['id'] as num?,
@@ -37,17 +42,16 @@ class UrlsImage extends Equatable {
     String? blurHash,
   }) {
     return UrlsImage(
-      id: id ?? this.id,
-      idUrlImage: idUrlImage ?? this.idUrlImage,
-      size: size ?? this.size,
-      url: url ?? this.url,
-      blurHash: blurHash ?? this.blurHash
-    );
+        id: id ?? this.id,
+        idUrlImage: idUrlImage ?? this.idUrlImage,
+        size: size ?? this.size,
+        url: url ?? this.url,
+        blurHash: blurHash ?? this.blurHash);
   }
 
   @override
   bool get stringify => true;
 
   @override
-  List<Object?> get props => [id, idUrlImage, size, url, blurHash]; 
+  List<Object?> get props => [id, idUrlImage, size, url, blurHash];
 }
