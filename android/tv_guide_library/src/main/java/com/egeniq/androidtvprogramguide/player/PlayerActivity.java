@@ -1677,8 +1677,8 @@ public class PlayerActivity extends Activity {
                     }
                     if (!apiAccess) {
 //                        setSelectedTracks("5", "2");
-                        //setSelectedTracks(mPrefs.subtitleTrackId, mPrefs.audioTrackId);
-                        player.getCurrentTracks().getGroups();
+                        setSelectedTracks(mPrefs.subtitleTrackId, mPrefs.audioTrackId);
+//                        player.getCurrentTracks().getGroups();
                     }
                 }
             } else if (state == Player.STATE_BUFFERING) {
