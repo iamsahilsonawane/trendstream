@@ -7,16 +7,18 @@ class SportsProgramChannelTile extends StatelessWidget {
     super.key,
     required this.title,
     required this.onTap,
+    this.isSelected = false,
   });
 
   final String title;
   final VoidCallback onTap;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      focusColor: Colors.white,
+      focusColor: Colors.transparent ,
       hoverColor: Colors.transparent,
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
@@ -25,7 +27,7 @@ class SportsProgramChannelTile extends StatelessWidget {
           final isFocused = Focus.of(context).hasPrimaryFocus;
           return Container(
             decoration: BoxDecoration(
-              color: isFocused ? Colors.white : Colors.transparent,
+              color: isFocused ? Colors.white : isSelected ? kPrimaryColor : Colors.transparent,
               border: const Border(
                 left: BorderSide(
                   color: kBackgroundColor,
@@ -36,8 +38,9 @@ class SportsProgramChannelTile extends StatelessWidget {
                   width: 1.5,
                 ),
               ),
+              borderRadius: BorderRadius.circular(50),
             ),
-            padding: const EdgeInsets.all(5),
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             child: Center(
               child: Text(
                 title,

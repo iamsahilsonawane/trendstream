@@ -1,129 +1,99 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_vlc_player/flutter_vlc_player.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/shared_widgets/clock.dart';
+import 'package:latest_movies/core/shared_widgets/error_view.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
-import 'package:latest_movies/features/sports/widgtes/sports_program_channel_tile.dart';
+import 'package:latest_movies/features/sports/controllers/current_focused_program_controller.dart';
+import 'package:latest_movies/features/sports/controllers/events_provider.dart';
+import 'package:latest_movies/features/sports/widgtes/category_selector.dart';
+import 'package:latest_movies/features/sports/widgtes/current_sports_details.dart';
 import 'package:latest_movies/features/sports/widgtes/sports_program_list_tile.dart';
 
 import '../../../core/router/router.dart';
 
-class SportsPage extends StatefulWidget {
+class SportsPage extends ConsumerStatefulWidget {
   const SportsPage({super.key});
 
   @override
-  State<SportsPage> createState() => _SportsPageState();
+  ConsumerState<SportsPage> createState() => _SportsPageState();
 }
 
-class _SportsPageState extends State<SportsPage> {
+class _SportsPageState extends ConsumerState<SportsPage> {
   late VlcPlayerController previewController;
 
   @override
   Widget build(BuildContext context) {
+    final eventAsync = ref.watch(sportsEventsProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        buildHeader(context),
+        const CurrentSportsDetails(),
         verticalSpaceMedium,
-        SizedBox(
+        const SizedBox(
           height: 30,
           child: Row(
             children: [
-              const Clock(),
+              Clock(),
               horizontalSpaceMedium,
               Expanded(
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return SportsProgramChannelTile(
-                      title: "NBA Regular Season",
-                      onTap: () {},
-                    );
-                  },
-                  separatorBuilder: (context, _) => horizontalSpaceSmall,
-                  itemCount: 20,
-                ),
+                child: CategorySelector(),
               ),
             ],
           ),
         ),
         verticalSpaceRegular,
         Expanded(
-          child: ListView.separated(
-            itemCount: 15,
-            itemBuilder: (context, index) {
-              return SportsProgramListTile(
-                title:
-                    "07:00 p.m. - lunes ${index + 1} - NBA Regular Season - Orlando Magic vs Chicago Bulls",
-                icon: Icons.sports_football,
-                autofocus: index == 0,
-                onTap: () async {
-                  if (previewController.value.isBuffering ||
-                      previewController.value.isPlaying) {
-                    previewController.pause();
-                  }
-                  await AppRouter.navigateToPage(Routes.playerView,
-                      arguments:
-                          "http://x.lamtv.tv:8080/live/test/test/130.m3u8");
-                  if (mounted) {
-                    previewController..seekTo(const Duration(days: 3))..play();
-                  }
+          child: eventAsync.when(
+            data: (events) {
+              return ListView.separated(
+                itemCount: events.length,
+                itemBuilder: (context, index) {
+                  final event = events[index];
+                  return SportsProgramListTile(
+                    title:
+                        "${DateFormat("HH:mm a").format(event.eventDate!)} - ${event.name ?? "N/A"}",
+                    icon: Icons.sports_football,
+                    autofocus: index == 0,
+                    onFocused: () {
+                      ref
+                          .read(currentFocusedEventController.notifier)
+                          .update((state) => event);
+                    },
+                    onTap: () async {
+                      if (previewController.value.isBuffering ||
+                          previewController.value.isPlaying) {
+                        previewController.pause();
+                      }
+                      await AppRouter.navigateToPage(Routes.playerView,
+                          arguments:
+                              "http://x.lamtv.tv:8080/live/test/test/130.m3u8");
+                      if (mounted) {
+                        previewController
+                          ..seekTo(const Duration(days: 3))
+                          ..play();
+                      }
+                    },
+                  );
                 },
+                separatorBuilder: (contetxt, _) => const Divider(height: 0),
               );
             },
-            separatorBuilder: (contetxt, _) => const Divider(height: 0),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Row buildHeader(BuildContext context) {
-    return Row(
-      children: [
-        Image.network(
-          "https://static.vecteezy.com/system/resources/previews/010/994/361/original/nba-logo-symbol-red-and-blue-design-america-basketball-american-countries-basketball-teams-illustration-with-black-background-free-vector.jpg",
-          height: 100,
-        ),
-        horizontalSpaceRegular,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Orlando Regular Season",
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold, color: kPrimaryAccentColor),
+            error: (err, st) => ErrorView(error: err.toString()),
+            loading: () => const Center(
+              child: CircularProgressIndicator(),
             ),
-            verticalSpaceSmall,
-            Text(
-              "Orlando Magic vs Chicago Bulls",
-              style: textTheme(context)
-                  .titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w700),
-            ),
-            verticalSpaceTiny,
-            const Text("13 May, 2022 at 8:00 PM"),
-          ],
-        ),
-        const Spacer(),
-        SizedBox(
-          height: 100,
-          // child: AspectRatio(
-          //   aspectRatio: 16 / 9,
-          //   child: SizedBox.expand(
-          //     child: ColoredBox(color: Colors.black),
-          //   ),
-          // ),
-          child: LivePreviewPlayer(
-            onControllerInitialized: (controller) {
-              previewController = controller;
-            },
           ),
         ),
       ],
     );
   }
 }
+
+
 
 class LivePreviewPlayer extends StatefulWidget {
   const LivePreviewPlayer({super.key, this.onControllerInitialized});

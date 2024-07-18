@@ -1,6 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:latest_movies/features/tv_guide/models/program_guide/program.dart';
+import 'package:latest_movies/features/sports/models/sports_event/sports_event.dart';
 
-final currentFocusedSportsProgramProvider = StateProvider<Program?>((ref) {
+final currentFocusedEventController = StateProvider<SportsEvent?>((ref) {
   return null;
 });
