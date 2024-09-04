@@ -3,10 +3,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/services/shared_preferences_service.dart';
 import 'package:latest_movies/core/shared_providers/locale_provider.dart';
-import 'package:latest_movies/core/utilities/app_utility.dart';
 
 class LanguageSettingsTile extends ConsumerStatefulWidget {
-  const LanguageSettingsTile({super.key});
+  const LanguageSettingsTile({
+    super.key,
+    required this.tileTitle,
+    this.languagePrefKey = SharedPreferencesService.language,
+  });
+
+  final String tileTitle;
+  final String languagePrefKey;
 
   @override
   ConsumerState<LanguageSettingsTile> createState() =>
@@ -14,38 +20,21 @@ class LanguageSettingsTile extends ConsumerStatefulWidget {
 }
 
 class _LanguageSettingsTileState extends ConsumerState<LanguageSettingsTile> {
-  late String _selectedLanguage = ref.watch(localeProvider).languageCode;
+  late String _selectedLanguage = ref.read(localeProvider).languageCode;
   final List<String> _languages = ['en', 'es'];
-
-  @override
-  void initState() {
-    super.initState();
-    // _loadLanguagePreference();
-  }
-
-  void _loadLanguagePreference() async {
-    final prefs = ref.read(sharedPreferencesServiceProvider).sharedPreferences;
-
-    setState(() {
-      _selectedLanguage =
-          (prefs.getString(SharedPreferencesService.language) ?? 'en');
-    });
-  }
 
   void _updateLanguagePreference(String language) async {
     final prefs = ref.read(sharedPreferencesServiceProvider).sharedPreferences;
 
-    await prefs.setString(SharedPreferencesService.language, language);
-    setState(() {
-      _selectedLanguage = language;
-    });
+    await prefs.setString(widget.languagePrefKey, language);
+    setState(() => _selectedLanguage = language);
     ref.invalidate(localeProvider); //update the provider
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(context.localisations.language),
+      title: Text(widget.tileTitle),
       trailing: DropdownButton<String>(
         value: _selectedLanguage,
         items: _languages.map<DropdownMenuItem<String>>((String value) {

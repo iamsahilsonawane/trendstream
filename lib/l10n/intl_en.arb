@@ -37,6 +37,8 @@
   "@incorrectPassword": {},
   "language": "Language",
   "@language": {},
+  "audioSubtitleLanguage": "Audio & Subtitle Language",
+  "@audioSubtitleLanguage": {},
   "liveChannelSearch": "Live Channel Search",
   "@liveChannelSearch": {},
   "livePreview": "Live Preview",

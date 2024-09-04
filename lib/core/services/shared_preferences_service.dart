@@ -12,6 +12,8 @@ class SharedPreferencesService {
   static const isPasscodeSet = 'isPasscodeSet';
   static const adultContentPasscode = 'adultContentPasscode';
   static const language = 'language';
+  //used for preferred audio/subtitle language for player
+  static const mediaLanguage = 'mediaLanguage'; 
 
   //Utilities
   Future<void> setIsLoggedIn() async {

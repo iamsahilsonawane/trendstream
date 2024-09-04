@@ -37,6 +37,8 @@
   "@incorrectPassword": {},
   "language": "Idioma",
   "@language": {},
+  "audioSubtitleLanguage": "Idioma de audio y subtítulos",
+  "@audioSubtitleLanguage": {},
   "liveChannelSearch": "Búsqueda de canales en vivo",
   "@liveChannelSearch": {},
   "livePreview": "Vista previa en vivo",

@@ -1266,10 +1266,8 @@ public class PlayerActivity extends Activity {
                     .setIgnoredTextSelectionFlags(C.SELECTION_FLAG_DEFAULT)
             );
         }
-//        setSelectedTracks(mPrefs.subtitleTrackId, mPrefs.audioTrackId);
-        //TODO(preferred): complete preferred subtitles/text
-        final String savedLanguage = mPrefs.flutterSharedPreferences.getString("flutter.language", "en");
-        Log.d(TAG, "initializePlayer: savedLanguage: " + savedLanguage);
+        final String savedLanguage = mPrefs.flutterSharedPreferences.getString("flutter.mediaLanguage", "en");
+        Log.d(TAG, "initializePlayer: saved media language: " + savedLanguage);
 
 //        Locale locale = captioningManager.getLocale(); if (locale != null) { }
         trackSelector.setParameters(trackSelector.buildUponParameters()
