@@ -47,6 +47,7 @@ dependencies:
   flutter_blurhash: ^0.8.2
   octo_image: ^2.0.0
   device_info_plus: 
+  android_id: ^0.4.0
   flutter_native_splash: 
   ensure_visible_when_focused: ^1.2.0
   localizely_sdk: ^2.5.7

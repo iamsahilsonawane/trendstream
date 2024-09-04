@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/services/shared_preferences_service.dart';
+import 'package:latest_movies/core/shared_providers/device_details_provider.dart';
 import 'package:latest_movies/core/utilities/design_utility.dart';
 import 'package:latest_movies/features/movies/controllers/side_bar_controller.dart';
 import 'package:latest_movies/features/movies/widgets/enter_passcode_dialog.dart';
@@ -318,6 +319,14 @@ class DashboardSideBar extends HookConsumerWidget {
                   },
                 ),
                 verticalSpaceRegular,
+                DrawerItem(
+                  title: 'Build ID: ${ref.watch(androidDeviceInfoProvider).id}',
+                  iconData: Icons.info,
+                  selectedIconData: Icons.info,
+                  isSelected: false,
+                  onTap: null,
+                  onlyIcon: shouldHide,
+                ),
                 FutureBuilder(
                   future: platformInfo,
                   builder: (context, AsyncSnapshot<PackageInfo> snapshot) {
@@ -382,7 +391,8 @@ class DrawerItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       focusNode: focusNode,
-      leading: Icon(isSelected ? selectedIconData : iconData, size: 20),
+      // leading: Icon(isSelected ? selectedIconData : iconData, size: 20),
+      // minLeadingWidth: 20,
       title: onlyIcon ? null : Text(title),
       horizontalTitleGap: onlyIcon ? 0 : 5,
       style: ListTileStyle.drawer,

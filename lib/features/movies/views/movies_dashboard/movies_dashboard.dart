@@ -1,7 +1,9 @@
+import 'package:android_id/android_id.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/constants/paths.dart';
 import 'package:latest_movies/core/extensions/context_extension.dart';
 import 'package:latest_movies/core/shared_widgets/button.dart';
@@ -39,6 +41,8 @@ class HomeView extends HookConsumerWidget {
 
     final isSidebarExpanded = ref.watch(dashboardSidebarStatusProvider) ==
         DashboardSidebarStatus.expanded;
+
+    final androidId = useMemoized(() => const AndroidId().getId());
 
     useEffect(() {
       Future.microtask(() async {
@@ -88,9 +92,19 @@ class HomeView extends HookConsumerWidget {
               // horizontalSpaceSmall,
               // const Text("Latest Movies"),
               const Spacer(),
+              FutureBuilder(
+                future: androidId,
+                builder: (context, snapshot) {
+                  return Text(
+                    "UID: ${snapshot.hasData ? snapshot.data : "###"}",
+                    style: const TextStyle(fontSize: 12),
+                  );
+                },
+              ),
               Visibility(
                 visible: showUpdatePrompt.value,
                 child: Row(children: [
+                  horizontalSpaceMedium,
                   Text(
                     "${context.localisations.newUpdateAvailable} v${FirebaseRemoteConfig.instance.getString('latest_version_code')} #${FirebaseRemoteConfig.instance.getInt('latest_build_number')}",
                     style: const TextStyle(fontSize: 12),
