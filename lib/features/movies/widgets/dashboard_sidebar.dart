@@ -391,8 +391,7 @@ class DrawerItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       focusNode: focusNode,
-      // leading: Icon(isSelected ? selectedIconData : iconData, size: 20),
-      // minLeadingWidth: 20,
+      leading: Icon(isSelected ? selectedIconData : iconData, size: 20),
       title: onlyIcon ? null : Text(title),
       horizontalTitleGap: onlyIcon ? 0 : 5,
       style: ListTileStyle.drawer,
