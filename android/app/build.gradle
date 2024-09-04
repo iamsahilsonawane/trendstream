@@ -54,8 +54,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.latest_movies"
-        minSdkVersion 21
-        targetSdkVersion 33
+        minSdkVersion 23
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
