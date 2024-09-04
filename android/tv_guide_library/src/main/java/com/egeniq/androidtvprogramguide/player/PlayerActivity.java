@@ -1287,20 +1287,31 @@ public class PlayerActivity extends Activity {
                 .setExtensionRendererMode(mPrefs.decoderPriority);
         //.setMapDV7ToHevc(mPrefs.mapDV7ToHevc); previously used with old exoplayer
 
+        final String fetchedUserAgent = mPrefs.flutterSharedPreferences.getString("flutter.user_agent", "Trendstream/1.0");
+        final String fetchedReferrer = mPrefs.flutterSharedPreferences.getString("flutter.referrer", "https://app.trendstream.com");
+
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("User-Agent", fetchedUserAgent);
+        headers.put("Referer", fetchedReferrer);
+        DefaultHttpDataSource.Factory defaultHttpDataSourceFactory = new DefaultHttpDataSource.Factory();
+        defaultHttpDataSourceFactory.setDefaultRequestProperties(headers);
+
         ExoPlayer.Builder playerBuilder = new ExoPlayer.Builder(this, renderersFactory)
                 .setTrackSelector(trackSelector)
-                .setMediaSourceFactory(new DefaultMediaSourceFactory(this, extractorsFactory));
+                .setMediaSourceFactory(new DefaultMediaSourceFactory(defaultHttpDataSourceFactory, extractorsFactory));
 
         if (haveMedia && isNetworkUri) {
             if (mPrefs.mediaUri.getScheme().toLowerCase().startsWith("http")) {
-                HashMap<String, String> headers = new HashMap<>();
-                String userInfo = mPrefs.mediaUri.getUserInfo();
-                if (userInfo != null && userInfo.length() > 0 && userInfo.contains(":")) {
-                    headers.put("Authorization", "Basic " + Base64.encodeToString(userInfo.getBytes(), Base64.NO_WRAP));
-                    DefaultHttpDataSource.Factory defaultHttpDataSourceFactory = new DefaultHttpDataSource.Factory();
-                    defaultHttpDataSourceFactory.setDefaultRequestProperties(headers);
-                    playerBuilder.setMediaSourceFactory(new DefaultMediaSourceFactory(defaultHttpDataSourceFactory, extractorsFactory));
-                }
+                // HashMap<String, String> headers = new HashMap<>();
+                // String userInfo = mPrefs.mediaUri.getUserInfo();
+                // if (userInfo != null && userInfo.length() > 0 && userInfo.contains(":")) {
+//                     headers.put("Authorization", "Basic " + Base64.encodeToString(userInfo.getBytes(), Base64.NO_WRAP));
+// //                    headers.put("User-Agent", "");
+// //                    headers.put("Referer", "");
+//                     DefaultHttpDataSource.Factory defaultHttpDataSourceFactory = new DefaultHttpDataSource.Factory();
+//                     defaultHttpDataSourceFactory.setDefaultRequestProperties(headers);
+//                     playerBuilder.setMediaSourceFactory(new DefaultMediaSourceFactory(defaultHttpDataSourceFactory, extractorsFactory));
+                // }
             }
         }
 

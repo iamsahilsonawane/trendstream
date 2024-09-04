@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:latest_movies/core/shared_providers/device_details_provider.dart';
 import 'package:latest_movies/core/shared_providers/locale_provider.dart';
-import 'package:latest_movies/core/utilities/app_utility.dart';
 import 'package:latest_movies/features/auth/views/splash_page.dart';
+import 'package:localizely_sdk/localizely_sdk.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
 import 'package:firebase_core/firebase_core.dart';
@@ -17,7 +17,7 @@ import 'package:latest_movies/core/constants/colors.dart';
 import 'package:latest_movies/core/router/router.dart';
 import 'package:latest_movies/core/services/shared_preferences_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/localizely_localizations.dart';
 
 import 'firebase_options.dart';
 
@@ -32,6 +32,10 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  Localizely.init('22f76f7757494049859292dd0646abd6329fbedc',
+      'ff5a1d3ec7b5481f827d95c19417df37');
+  Localizely.setPreRelease(true);
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeRight,
@@ -93,7 +97,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
-    print("locale: $locale");
+    debugPrint("locale: $locale");
 
     return Shortcuts(
       shortcuts: <LogicalKeySet, Intent>{
@@ -108,8 +112,8 @@ class MyApp extends ConsumerWidget {
               Theme.of(context).appBarTheme.copyWith(color: kBackgroundColor),
           scaffoldBackgroundColor: kBackgroundColor,
         ),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: LocalizelyLocalizations.localizationsDelegates,
+        supportedLocales: LocalizelyLocalizations.supportedLocales,
         locale: locale,
         home: const SplashView(),
         // home: Consumer(

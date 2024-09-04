@@ -35,14 +35,6 @@ class UpdateDownloadManager {
   final platform = const MethodChannel('com.example.latest_movies/channel');
 
   Future<UpdateCheckResult> checkForUpdate() async {
-    // Get latest build number and url from remote config
-    await remoteConfig.ensureInitialized();
-    await remoteConfig.setConfigSettings(RemoteConfigSettings(
-      fetchTimeout: const Duration(minutes: 1),
-      minimumFetchInterval: const Duration(seconds: 0),
-    ));
-
-    await remoteConfig.fetchAndActivate();
     final downloadUrl = remoteConfig.getString('download_url');
     final serverBuildNumber = remoteConfig.getInt('latest_build_number');
     debugPrint("Download URL: $downloadUrl | Build Number: $serverBuildNumber");
